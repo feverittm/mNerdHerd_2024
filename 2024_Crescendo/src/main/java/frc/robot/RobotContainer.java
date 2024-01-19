@@ -4,12 +4,21 @@
 
 package frc.robot;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.Drive;
+import frc.robot.subsystems.Drivebase;
+
+import java.util.function.DoubleSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -21,14 +30,43 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final Drivebase drivebase = new Drivebase();
+
   private final AHRS gyro = new AHRS();
 
+  private MedianFilter filter = new MedianFilter(DriveConstants.TargetConstants.medianFilter);
+  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  private final DoubleSupplier xPose = () -> filter.calculate(limelightTable.getEntry("tx").getDouble(0));
+
   private static CommandXboxController driveStick = new CommandXboxController(0);
+
+  SendableChooser<Command> commandChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+      drivebase.setDefaultCommand(
+        new Drive(
+          drivebase,
+          gyro,
+          () -> deadband(-driveStick.getLeftY(), DriveConstants.deadband) * drivebase.getMaxVelocity(),
+          () -> deadband(-driveStick.getLeftX(), DriveConstants.deadband) * drivebase.getMaxVelocity(),
+          () -> deadband(driveStick.getRightX(), DriveConstants.deadband) * drivebase.getMaxAngleVelocity())
+        );
+
     configureBindings();
+  }
+
+  private double deadband(double input, double deadband) {
+    if (Math.abs(input) < deadband) {
+      return 0;
+    } else {
+      return input;
+    }
+  }
+
+  public void resetGyro() {
+    gyro.reset();
   }
 
   /**
@@ -41,12 +79,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    driveStick.pov(0).onTrue(new InstantCommand(gyro::reset));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -55,6 +91,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return commandChooser.getSelected();
   }
 }
