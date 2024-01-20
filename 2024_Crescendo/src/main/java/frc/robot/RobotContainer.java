@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Drive;
+import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Drivebase;
 
 import java.util.function.DoubleSupplier;

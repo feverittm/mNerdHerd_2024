@@ -63,11 +63,6 @@ public class SwerveModule {
 		return clamp(getEncoder() + offset);
 	}
 
-	// public void resetEncoder() {
-	// 	offset = -getEncoder();
-	// 	// encoder.configMagnetOffset(offset);
-	// }
-
 	public double clamp(double n) {
 		if(n > 180) {
 			return n - 360;
