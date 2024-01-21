@@ -64,9 +64,9 @@ public abstract class TriPIDSubsystem extends SubsystemBase {
     }
   }
 
-    public PIDController[] getControllers() {
-        return new PIDController[] { m_controllerA, m_controllerB, m_controllerC };
-    }
+  public PIDController[] getControllers() {
+    return new PIDController[] { m_controllerA, m_controllerB, m_controllerC };
+  }
 
   public PIDController getController(Controller controller) {
     switch(controller) {

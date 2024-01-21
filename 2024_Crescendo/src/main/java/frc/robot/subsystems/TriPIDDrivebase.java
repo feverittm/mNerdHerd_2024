@@ -29,7 +29,8 @@ public class TriPIDDrivebase extends TriPIDSubsystem {
 
   @Override
   public double[] getMeasurement() {
-    // Return the process variable measurement here
+    // Return the process variable measurements here
+    // insert AprilTag values here
     return new double[]{0,0,0};
   }
 }
