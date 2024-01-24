@@ -76,7 +76,7 @@ public class RobotContainer {
   }
 
   private double squared(double input) {
-    return (input * input) * Math.signum(input);
+    return Math.copySign(input * input, input);
   }
 
   private double scaleTranslationAxis(double input) {
