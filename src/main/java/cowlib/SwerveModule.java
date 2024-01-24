@@ -69,17 +69,4 @@ public class SwerveModule {
   public double getEncoderRadians() {
     return Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble());
   }
-
-  public double getRelativeEncoder() {
-    return clamp(getEncoder() + offset);
-  }
-
-  public double clamp(double n) {
-    if (n > 180) {
-      return n - 360;
-    } else if (n < -180) {
-      return 360 + n;
-    }
-    return n;
-  }
 }
