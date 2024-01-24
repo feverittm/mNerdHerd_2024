@@ -9,10 +9,10 @@ import java.util.function.DoubleSupplier;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivebase;
 
-public class Drive extends CommandBase {
+public class Drive extends Command {
 
   private final Drivebase drivebase;
   private final DoubleSupplier speedX;

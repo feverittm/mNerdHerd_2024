@@ -5,10 +5,10 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivebase;
 
-public class TimeDrive extends CommandBase {
+public class TimeDrive extends Command {
   private final Drivebase drivebase;
   private final double speed;
   private final double delay;
