@@ -48,10 +48,9 @@ public class Drivebase extends SubsystemBase {
     this.drive(speeds);
   }
 
-  public void drive(ChassisSpeeds speeds) {
+  private void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds); // new Tanslation2d(0,0) <--- center of
                                                                                 // rotation
-
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY + 30); // this needs to be adjusted for our
 
     this.frontLeft.drive(moduleStates[0]);
@@ -78,6 +77,8 @@ public class Drivebase extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // TODO: Sendables?
+    //
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("FL Encoder", frontLeft.getEncoder());
     SmartDashboard.putNumber("FR Encoder", frontRight.getEncoder());
