@@ -9,20 +9,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 
 /**
- * A subsystem that uses a {@link PIDController} to control an output. The controller is run
+ * A subsystem that uses a {@link PIDController} to control an output. The
+ * controller is run
  * synchronously from the subsystem's periodic() method.
  *
- * <p>This class is provided by the NewCommands VendorDep
+ * <p>
+ * This class is provided by the NewCommands VendorDep
  */
 public abstract class TriPIDSubsystem extends SubsystemBase {
-    /*
-     * enum used throughout the TriPIDSubsystem class to select which controller to use
-     */
-    public enum Controller {
-        A,
-        B,
-        C
-    }
+  /*
+   * enum used throughout the TriPIDSubsystem class to select which controller to
+   * use
+   */
+  public enum Controller {
+    A,
+    B,
+    C
+  }
 
   protected final PIDController m_controllerA;
   protected final PIDController m_controllerB;
@@ -32,10 +35,11 @@ public abstract class TriPIDSubsystem extends SubsystemBase {
   /**
    * Creates a new PIDSubsystem.
    *
-   * @param controller the PIDController to use
+   * @param controller      the PIDController to use
    * @param initialPosition the initial setpoint of the subsystem
    */
-  public TriPIDSubsystem(PIDController controllerA, PIDController controllerB, PIDController controllerC, double initialPositionA, double initialPositionB, double initialPositionC) {
+  public TriPIDSubsystem(PIDController controllerA, PIDController controllerB, PIDController controllerC,
+      double initialPositionA, double initialPositionB, double initialPositionC) {
     m_controllerA = requireNonNullParam(controllerA, "controllerA", "PIDSubsystem");
     m_controllerB = requireNonNullParam(controllerB, "controllerB", "PIDSubsystem");
     m_controllerC = requireNonNullParam(controllerC, "controllerC", "PIDSubsystem");
@@ -59,8 +63,8 @@ public abstract class TriPIDSubsystem extends SubsystemBase {
   public void periodic() {
     if (m_enabled) {
       useOutput(m_controllerA.calculate(getMeasurement()[0]), m_controllerA.getSetpoint(),
-      m_controllerB.calculate(getMeasurement()[1]), m_controllerB.getSetpoint(),
-      m_controllerC.calculate(getMeasurement()[2]), m_controllerC.getSetpoint());
+          m_controllerB.calculate(getMeasurement()[1]), m_controllerB.getSetpoint(),
+          m_controllerC.calculate(getMeasurement()[2]), m_controllerC.getSetpoint());
     }
   }
 
@@ -69,14 +73,18 @@ public abstract class TriPIDSubsystem extends SubsystemBase {
   }
 
   public PIDController getController(Controller controller) {
-    switch(controller) {
-        case A: return m_controllerA;
-        case B: return m_controllerB;
-        case C: return m_controllerC;
+    switch (controller) {
+      case A:
+        return m_controllerA;
+      case B:
+        return m_controllerB;
+      case C:
+        return m_controllerC;
 
-        default: return null;
-        }
+      default:
+        return null;
     }
+  }
 
   /**
    * Sets the setpoint for the subsystem.
@@ -95,21 +103,26 @@ public abstract class TriPIDSubsystem extends SubsystemBase {
    * @return The current setpoint
    */
   public double getSetpoint(Controller controller) {
-    switch(controller) {
-        case A: return m_controllerA.getSetpoint();
-        case B: return m_controllerB.getSetpoint();
-        case C: return m_controllerC.getSetpoint();
-        default: return 0;
+    switch (controller) {
+      case A:
+        return m_controllerA.getSetpoint();
+      case B:
+        return m_controllerB.getSetpoint();
+      case C:
+        return m_controllerC.getSetpoint();
+      default:
+        return 0;
     }
   }
 
   /**
    * Uses the output from the PIDController.
    *
-   * @param output the output of the PIDController
+   * @param output   the output of the PIDController
    * @param setpoint the setpoint of the PIDController (for feedforward)
    */
-  protected abstract void useOutput(double outputA, double outputB, double outputC, double setpointA, double setpointB, double setpointC);
+  protected abstract void useOutput(double outputA, double outputB, double outputC, double setpointA, double setpointB,
+      double setpointC);
 
   /**
    * Returns the measurement of the process variable used by the PIDController.

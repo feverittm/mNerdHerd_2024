@@ -13,6 +13,7 @@ public class TimeDrive extends CommandBase {
   private final double speed;
   private final double delay;
   private double startTime = 0;
+
   /** Creates a new TimeDrive. */
   public TimeDrive(Drivebase drivebase, double speed, double delay) {
     this.drivebase = drivebase;

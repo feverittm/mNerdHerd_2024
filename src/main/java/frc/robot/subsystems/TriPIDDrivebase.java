@@ -14,15 +14,16 @@ public class TriPIDDrivebase extends TriPIDSubsystem {
   public TriPIDDrivebase(Drivebase drivebase) {
     super(
         // The PIDControllers used by the subsystem
-        new PIDController(0, 0, 0), //x-translation
-        new PIDController(0, 0, 0), //y-translation
-        new PIDController(0, 0, 0)); //rotation
+        new PIDController(0, 0, 0), // x-translation
+        new PIDController(0, 0, 0), // y-translation
+        new PIDController(0, 0, 0)); // rotation
 
     this.drivebase = drivebase;
   }
 
   @Override
-  public void useOutput(double outputA, double outputB, double outputC, double setpointA, double setpointB, double setpointC) {
+  public void useOutput(double outputA, double outputB, double outputC, double setpointA, double setpointB,
+      double setpointC) {
     // Use the output here
     drivebase.robotOrientedDrive(outputA, outputB, outputC);
   }
@@ -31,6 +32,6 @@ public class TriPIDDrivebase extends TriPIDSubsystem {
   public double[] getMeasurement() {
     // Return the process variable measurements here
     // insert AprilTag values here
-    return new double[]{0,0,0};
+    return new double[] { 0, 0, 0 };
   }
 }

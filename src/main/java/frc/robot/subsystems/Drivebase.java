@@ -34,15 +34,15 @@ public class Drivebase extends SubsystemBase {
   private SwerveModuleState backRightOptimised;
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-    ModuleLocations.frontLeft,
-    ModuleLocations.frontRight,
-    ModuleLocations.backLeft,
-    ModuleLocations.backRight
-  );
+      ModuleLocations.frontLeft,
+      ModuleLocations.frontRight,
+      ModuleLocations.backLeft,
+      ModuleLocations.backRight);
 
   /** Creates a new Drivebase. */
-  public Drivebase() {}
-  
+  public Drivebase() {
+  }
+
   public void fieldOrientedDrive(double speedX, double speedY, double rot, double angle) {
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rot, Rotation2d.fromDegrees(angle));
     this.drive(speeds);
@@ -52,11 +52,13 @@ public class Drivebase extends SubsystemBase {
     ChassisSpeeds speeds = new ChassisSpeeds(speedX, speedY, rot);
     this.drive(speeds);
   }
-  
-  public void drive(ChassisSpeeds speeds) {
-    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds); //new Tanslation2d(0,0) <--- center of rotation
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY + 30); //this needs to be adjusted for our real max speed
+  public void drive(ChassisSpeeds speeds) {
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds); // new Tanslation2d(0,0) <--- center of
+                                                                                // rotation
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY + 30); // this needs to be adjusted for our
+                                                                                  // real max speed
     frontLeftOptimised = SwerveModuleState.optimize(moduleStates[0], new Rotation2d(frontLeft.getEncoderRadians()));
     frontRightOptimised = SwerveModuleState.optimize(moduleStates[1], new Rotation2d(frontRight.getEncoderRadians()));
     backLeftOptimised = SwerveModuleState.optimize(moduleStates[2], new Rotation2d(backLeft.getEncoderRadians()));
@@ -68,9 +70,12 @@ public class Drivebase extends SubsystemBase {
     this.backRight.drive(backRightOptimised);
 
     SmartDashboard.putNumber("FL Target Angle", moduleStates[0].angle.getDegrees());
-    // SmartDashboard.putNumber("FR Target Angle", moduleStates[1].angle.getDegrees());
-    // SmartDashboard.putNumber("BR Target Angle", moduleStates[2].angle.getDegrees());
-    // SmartDashboard.putNumber("BL Target Angle", moduleStates[3].angle.getDegrees());
+    // SmartDashboard.putNumber("FR Target Angle",
+    // moduleStates[1].angle.getDegrees());
+    // SmartDashboard.putNumber("BR Target Angle",
+    // moduleStates[2].angle.getDegrees());
+    // SmartDashboard.putNumber("BL Target Angle",
+    // moduleStates[3].angle.getDegrees());
   }
 
   public double getMaxVelocity() {
@@ -80,7 +85,6 @@ public class Drivebase extends SubsystemBase {
   public double getMaxAngleVelocity() {
     return MAX_ANGULAR_VELOCITY;
   }
-
 
   @Override
   public void periodic() {
