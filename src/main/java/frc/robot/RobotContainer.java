@@ -75,12 +75,16 @@ public class RobotContainer {
     }
   }
 
+  private double squared(double input) {
+    return (input * input) * Math.signum(input);
+  }
+
   private double scaleTranslationAxis(double input) {
-    return deadband(-input, DriveConstants.deadband) * drivebase.getMaxVelocity();
+    return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
   }
 
   private double scaleRotationAxis(double input) {
-    return deadband(input, DriveConstants.deadband) * drivebase.getMaxAngleVelocity();
+    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity();
   }
 
   public void resetGyro() {
