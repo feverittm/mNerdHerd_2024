@@ -22,18 +22,16 @@ public class SwerveModule {
   private PIDController pidController;
   private CANcoder encoder;
   private boolean inverted;
-  private double offset;
   private double maxVelocity;
   private double maxVoltage;
 
-  public SwerveModule(int angleMotor, int speedMotor, int encoder, boolean drive_inverted, double offset,
+  public SwerveModule(int angleMotorId, int speedMotorId, int encoderId, boolean driveInverted,
       double maxVelocity, double maxVoltage) {
-    this.angleMotor = new CANSparkMax(angleMotor, MotorType.kBrushless);
-    this.speedMotor = new CANSparkMax(speedMotor, MotorType.kBrushless);
+    this.angleMotor = new CANSparkMax(angleMotorId, MotorType.kBrushless);
+    this.speedMotor = new CANSparkMax(speedMotorId, MotorType.kBrushless);
     this.pidController = new PIDController(SwervePID.p, SwervePID.i, SwervePID.d);
-    this.encoder = new CANcoder(encoder);
-    this.inverted = drive_inverted;
-    this.offset = offset;
+    this.encoder = new CANcoder(encoderId);
+    this.inverted = driveInverted;
     this.maxVelocity = maxVelocity;
     this.maxVoltage = maxVoltage;
 
@@ -45,7 +43,6 @@ public class SwerveModule {
         config.driveMotorId,
         config.encoderId,
         config.drive_inverted,
-        config.offset,
         maxVelocity,
         maxVoltage);
 
