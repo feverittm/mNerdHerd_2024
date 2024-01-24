@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DriveConstants;
@@ -52,14 +53,15 @@ public class SwerveModule {
     speedMotor.setSmartCurrentLimit(DriveConstants.currentLimit);
   }
 
-  public void drive(double speedMetersPerSecond, double angle) {
+  private void drive(double speedMetersPerSecond, double angle) {
     double voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
     speedMotor.setVoltage(voltage * (this.inverted ? -1 : 1));
     angleMotor.setVoltage(-pidController.calculate(this.getEncoder(), angle));
   }
 
   public void drive(SwerveModuleState state) {
-    this.drive(state.speedMetersPerSecond, state.angle.getDegrees());
+    SwerveModuleState optimized = SwerveModuleState.optimize(state, new Rotation2d(getEncoderRadians()));
+    this.drive(optimized.speedMetersPerSecond, optimized.angle.getDegrees());
   }
 
   public double getEncoder() {
