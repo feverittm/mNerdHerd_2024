@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.SwervePID;
 
@@ -66,7 +67,7 @@ public class SwerveModule {
   }
 
   public double getEncoderRadians() {
-    return encoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI / 360.0;
+    return Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble());
   }
 
   public double getRelativeEncoder() {
