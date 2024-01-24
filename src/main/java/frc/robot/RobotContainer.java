@@ -55,9 +55,9 @@ public class RobotContainer {
         new Drive(
             drivebase,
             gyro,
-            () -> deadband(-driveStick.getLeftY(), DriveConstants.deadband) * drivebase.getMaxVelocity(),
-            () -> deadband(-driveStick.getLeftX(), DriveConstants.deadband) * drivebase.getMaxVelocity(),
-            () -> deadband(driveStick.getRightX(), DriveConstants.deadband) * drivebase.getMaxAngleVelocity()));
+            () -> scaleTranslationAxis(driveStick.getLeftY()),
+            () -> scaleTranslationAxis(driveStick.getLeftX()),
+            () -> scaleRotationAxis(driveStick.getRightX())));
 
     configureBindings();
   }
@@ -73,6 +73,14 @@ public class RobotContainer {
     } else {
       return input;
     }
+  }
+
+  private double scaleTranslationAxis(double input) {
+    return deadband(-input, DriveConstants.deadband) * drivebase.getMaxVelocity();
+  }
+
+  private double scaleRotationAxis(double input) {
+    return deadband(input, DriveConstants.deadband) * drivebase.getMaxAngleVelocity();
   }
 
   public void resetGyro() {
