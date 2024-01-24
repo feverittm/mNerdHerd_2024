@@ -62,6 +62,11 @@ public class RobotContainer {
     configureBindings();
   }
 
+  /**
+   * TODO: Investigate which has an applyDeadband function
+   *
+   * {@link edu.wpi.first.math.MathUtil}
+   */
   private double deadband(double input, double deadband) {
     if (Math.abs(input) < deadband) {
       return 0;
