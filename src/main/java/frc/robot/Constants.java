@@ -44,11 +44,28 @@ public final class Constants {
       public static final Translation2d backLeft = new Translation2d(-dist, -dist);
       public static final Translation2d backRight = new Translation2d(dist, -dist);
     }
+  }
 
-    public static final class TargetConstants {
-      public static final double xCenter = 0;
-      public static final int medianFilter = 5;
+  public static final class AutoConstants {
+    public static final class xPID {
+      public static final double p = 0;
+      public static final double i = 0;
+      public static final double d = 0;
     }
+
+    public static final class yPID {
+      public static final double p = 0;
+      public static final double i = 0;
+      public static final double d = 0;
+    }
+
+    public static final class rPID {
+      public static final double p = 0;
+      public static final double i = 0;
+      public static final double d = 0;
+    }
+    
+      public static final int medianFilter = 5;
   }
 
   public static class OperatorConstants {

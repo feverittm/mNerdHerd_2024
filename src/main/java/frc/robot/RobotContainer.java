@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Drive;
+import frc.robot.commands.autoCommands.TestTriPID;
 import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Drivebase;
 
@@ -38,9 +40,22 @@ public class RobotContainer {
 
   private final AHRS gyro = new AHRS();
 
-  private MedianFilter filter = new MedianFilter(DriveConstants.TargetConstants.medianFilter);
+  private MedianFilter filter = new MedianFilter(AutoConstants.medianFilter);
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-  private final DoubleSupplier xPose = () -> filter.calculate(limelightTable.getEntry("tx").getDouble(0));
+  private final DoubleSupplier filteredXPose = 
+    () -> filter.calculate(
+      Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]));
+
+    private final DoubleSupplier filteredYPose = 
+    () -> filter.calculate(
+      Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1])); //TODO, make sure these are the right values for TY and RZ
+
+    private final DoubleSupplier filteredAnlge = 
+    () -> filter.calculate(
+      Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]));
+
+  private final TimeDrive timeDrive = new TimeDrive(drivebase, 0.5, 5);
+  private final TestTriPID testAuto = new TestTriPID(drivebase, filteredXPose, filteredYPose, filteredAnlge);
 
   private static CommandXboxController driveStick = new CommandXboxController(0);
 
