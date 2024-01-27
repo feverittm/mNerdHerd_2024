@@ -51,8 +51,7 @@ public class Drivebase extends SubsystemBase {
   private void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds); // new Tanslation2d(0,0) <--- center of
                                                                                 // rotation
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY + 30); // this needs to be adjusted for our
-                                                                                  // TODO: can we get rid of the +30?
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY);
 
     this.frontLeft.drive(moduleStates[0]);
     this.frontRight.drive(moduleStates[1]);
