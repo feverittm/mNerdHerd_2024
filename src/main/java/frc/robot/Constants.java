@@ -21,7 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double deadband = 0.15;
+    public static final double deadband = 0.08;
     public static final int currentLimit = 30;
 
     public static final class SwervePID {
@@ -65,7 +65,7 @@ public final class Constants {
       public static final double d = 0;
     }
     
-      public static final int medianFilter = 5;
+    public static final int medianFilter = 5;
   }
 
   public static class OperatorConstants {

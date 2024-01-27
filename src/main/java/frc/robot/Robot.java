@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.AutoConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +26,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  private MedianFilter filter = new MedianFilter(AutoConstants.medianFilter);
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -56,6 +63,15 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    try{
+      SmartDashboard.putNumber("X Pose", filter.calculate(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]));
+      SmartDashboard.putNumber("Y Pose", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]);
+      SmartDashboard.putNumber("Angle", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
+      SmartDashboard.putBoolean("Limelight Connected", true);
+    }
+    catch(Exception e){
+      SmartDashboard.putBoolean("Limelight Connected", false);
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

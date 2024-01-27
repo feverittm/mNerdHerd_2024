@@ -62,10 +62,10 @@ public class SwerveModule {
   }
 
   public double getEncoder() {
-    return encoder.getAbsolutePosition().getValueAsDouble();
+    return encoder.getAbsolutePosition().getValueAsDouble()*360.0;
   }
 
   public double getEncoderRadians() {
-    return Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble());
+    return Units.degreesToRadians(getEncoder());
   }
 }

@@ -44,7 +44,7 @@ public class Drive extends Command {
     var y = speedY.getAsDouble();
     var r = rot.getAsDouble();
 
-    SmartDashboard.putNumber("Yaw", gyro.getYaw());
+    SmartDashboard.putNumber("Yaw", -gyro.getYaw());
 
     // drivebase.robotOrientedDrive(x, y, r);
     drivebase.fieldOrientedDrive(x, y, r, -gyro.getYaw());

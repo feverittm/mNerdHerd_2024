@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.autoCommands.TestTriPID;
 import frc.robot.commands.autoCommands.TimeDrive;
@@ -41,21 +40,21 @@ public class RobotContainer {
   private final AHRS gyro = new AHRS();
 
   private MedianFilter filter = new MedianFilter(AutoConstants.medianFilter);
-  // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-  // private final DoubleSupplier filteredXPose = 
-  //   () -> filter.calculate(
-  //     Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]));
+  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  private final DoubleSupplier filteredXPose = 
+    () -> filter.calculate(
+      Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0])); //TODO make sure abs doesn't screw things up
 
-  //   private final DoubleSupplier filteredYPose = 
-  //   () -> filter.calculate(
-  //     Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1])); //TODO, make sure these are the right values for TY and RZ
+    private final DoubleSupplier filteredYPose = 
+    () -> filter.calculate(
+      limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO, make sure these are the right values for TY and RZ
 
-  //   private final DoubleSupplier filteredAnlge = 
-  //   () -> filter.calculate(
-  //     Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]));
+    private final DoubleSupplier filteredAnlge = 
+    () -> filter.calculate(
+      limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
 
-  private final TimeDrive timeDrive = new TimeDrive(drivebase, 0.5, 5);
-  // private final TestTriPID testAuto = new TestTriPID(drivebase, filteredXPose, filteredYPose, filteredAnlge);
+  private final TimeDrive timeDrive = new TimeDrive(drivebase, 0.2, 5);
+  private final TestTriPID testAuto = new TestTriPID(drivebase, gyro, filteredXPose, filteredYPose, filteredAnlge);
 
   private static CommandXboxController driveStick = new CommandXboxController(0);
 
@@ -65,6 +64,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    commandChooser.addOption("Timed drive", timeDrive);
+    commandChooser.addOption("AprilTag Auto Test", testAuto);
+
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
         new Drive(
@@ -105,7 +107,7 @@ public class RobotContainer {
   public void resetGyro() {
     gyro.reset();
   }
-
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the

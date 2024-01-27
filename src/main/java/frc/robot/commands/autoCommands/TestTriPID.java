@@ -6,6 +6,8 @@ package frc.robot.commands.autoCommands;
 
 import java.util.function.DoubleSupplier;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivebase;
 
@@ -15,11 +17,11 @@ import frc.robot.subsystems.Drivebase;
 public class TestTriPID extends SequentialCommandGroup {
 
   /** Creates a new TestTriPID. */
-  public TestTriPID(Drivebase drivebase, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
+  public TestTriPID(Drivebase drivebase, AHRS gyro, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new TriPIDDrive(drivebase, 0, 0, 0, xPose, yPose, angle)
+      new TriPIDDrive(drivebase, gyro, 0, 0, 0, xPose, yPose, angle)
     );
   }
 }

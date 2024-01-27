@@ -6,6 +6,8 @@ package frc.robot.commands.autoCommands;
 
 import java.util.function.DoubleSupplier;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
@@ -13,6 +15,7 @@ import frc.robot.subsystems.Drivebase;
 
 public class TriPIDDrive extends Command {
   private Drivebase drivebase;
+  private AHRS gyro;
   private PIDController xPID;
   private PIDController yPID;
   private PIDController rPID;
@@ -24,8 +27,9 @@ public class TriPIDDrive extends Command {
   double rTarget;
 
   /** Creates a new TriPIDDrive. */
-  public TriPIDDrive(Drivebase drivebase, double xTarget, double yTarget, double rTarget, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
+  public TriPIDDrive(Drivebase drivebase, AHRS gyro, double xTarget, double yTarget, double rTarget, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
     this.drivebase = drivebase;
+    this.gyro = gyro;
     this.xTarget = xTarget;
     this.yTarget = yTarget;
     this.rTarget = rTarget;
@@ -47,16 +51,17 @@ public class TriPIDDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.robotOrientedDrive(
+    drivebase.fieldOrientedDrive(
       xPID.calculate(xPose.getAsDouble(), xTarget),
       yPID.calculate(yPose.getAsDouble(), yTarget),
-      rPID.calculate(angle.getAsDouble(), rTarget));
+      rPID.calculate(angle.getAsDouble(), rTarget),
+      -gyro.getYaw());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivebase.robotOrientedDrive(0, 0, 0);
+    drivebase.fieldOrientedDrive(0, 0, 0, -gyro.getYaw());
   }
 
   // Returns true when the command should end.
