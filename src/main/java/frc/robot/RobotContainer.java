@@ -19,6 +19,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,18 +40,20 @@ public class RobotContainer {
 
   private final AHRS gyro = new AHRS();
 
-  private MedianFilter filter = new MedianFilter(AutoConstants.medianFilter);
+  private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
+  private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
+  private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   private final DoubleSupplier filteredXPose = 
-    () -> filter.calculate(
+    () -> xFilter.calculate(
       Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0])); //TODO make sure abs doesn't screw things up
 
     private final DoubleSupplier filteredYPose = 
-    () -> filter.calculate(
+    () -> yFilter.calculate(
       limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO, make sure these are the right values for TY and RZ
 
     private final DoubleSupplier filteredAnlge = 
-    () -> filter.calculate(
+    () -> angleFilter.calculate(
       limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
 
   private final TimeDrive timeDrive = new TimeDrive(drivebase, 0.2, 5);
@@ -66,15 +69,16 @@ public class RobotContainer {
   public RobotContainer() {
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("AprilTag Auto Test", testAuto);
+    SmartDashboard.putData(commandChooser);
 
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
         new Drive(
             drivebase,
             gyro,
-            () -> scaleTranslationAxis(driveStick.getLeftY()),
-            () -> scaleTranslationAxis(driveStick.getLeftX()),
-            () -> scaleRotationAxis(driveStick.getRightX())));
+            () -> scaleTranslationAxis(driveStick.getLeftY()*0.8),
+            () -> scaleTranslationAxis(driveStick.getLeftX()*0.8),
+            () -> scaleRotationAxis(driveStick.getRightX())*0.8));
 
     configureBindings();
   }
@@ -106,6 +110,10 @@ public class RobotContainer {
 
   public void resetGyro() {
     gyro.reset();
+  }
+
+  public Double[] getBotposeDoubles() {
+    return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
   }
   
   /**

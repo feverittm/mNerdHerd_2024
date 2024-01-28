@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.Drivebase;
@@ -51,10 +52,13 @@ public class TriPIDDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("X PID Output", xPID.calculate(xPose.getAsDouble(), xTarget));
+    SmartDashboard.putNumber("Y PID Output", yPID.calculate(yPose.getAsDouble(), yTarget));
+    SmartDashboard.putNumber("Angle PID Output", rPID.calculate(angle.getAsDouble(), rTarget));
     drivebase.fieldOrientedDrive(
       xPID.calculate(xPose.getAsDouble(), xTarget),
       yPID.calculate(yPose.getAsDouble(), yTarget),
-      rPID.calculate(angle.getAsDouble(), rTarget),
+      -rPID.calculate(angle.getAsDouble(), rTarget)*0.5,
       -gyro.getYaw());
   }
 
