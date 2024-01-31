@@ -9,6 +9,8 @@ import java.util.function.DoubleSupplier;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
@@ -19,7 +21,7 @@ public class TriPIDDrive extends Command {
   private AHRS gyro;
   private PIDController xPID;
   private PIDController yPID;
-  private PIDController rPID;
+  private ProfiledPIDController rPID;
   DoubleSupplier xPose;
   DoubleSupplier yPose;
   DoubleSupplier angle;
@@ -39,7 +41,8 @@ public class TriPIDDrive extends Command {
     this.angle = angle;
     this.xPID = new PIDController(AutoConstants.xPID.p, AutoConstants.xPID.i, AutoConstants.xPID.d);
     this.yPID = new PIDController(AutoConstants.yPID.p, AutoConstants.yPID.i, AutoConstants.yPID.d);
-    this.rPID = new PIDController(AutoConstants.rPID.p, AutoConstants.rPID.i, AutoConstants.rPID.d);
+    this.rPID = new ProfiledPIDController(AutoConstants.rPID.p, AutoConstants.rPID.i, AutoConstants.rPID.d, //));
+      new TrapezoidProfile.Constraints(1, 0));
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivebase);
@@ -55,10 +58,14 @@ public class TriPIDDrive extends Command {
     SmartDashboard.putNumber("X PID Output", xPID.calculate(xPose.getAsDouble(), xTarget));
     SmartDashboard.putNumber("Y PID Output", yPID.calculate(yPose.getAsDouble(), yTarget));
     SmartDashboard.putNumber("Angle PID Output", rPID.calculate(angle.getAsDouble(), rTarget));
+    rPID.setGoal(rTarget);
     drivebase.fieldOrientedDrive(
-      xPID.calculate(xPose.getAsDouble(), xTarget),
-      yPID.calculate(yPose.getAsDouble(), yTarget),
-      -rPID.calculate(angle.getAsDouble(), rTarget)*0.5,
+      // xPID.calculate(xPose.getAsDouble(), xTarget),
+      // yPID.calculate(yPose.getAsDouble(), yTarget),
+      // 0,
+      0,
+      0,
+      -rPID.calculate(angle.getAsDouble())*0.75,
       -gyro.getYaw());
   }
 

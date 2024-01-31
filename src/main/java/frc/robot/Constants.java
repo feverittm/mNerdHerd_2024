@@ -60,9 +60,9 @@ public final class Constants {
     }
 
     public static final class rPID {
-      public static final double p = 0.003;//0.01
+      public static final double p = 0.0011;
       public static final double i = 0;
-      public static final double d = 0.004;
+      public static final double d = 0.01;
     }
     
     public static final int medianFilter = 5;
