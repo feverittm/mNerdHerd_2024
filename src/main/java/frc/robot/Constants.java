@@ -48,21 +48,21 @@ public final class Constants {
 
   public static final class AutoConstants {
     public static final class xPID {
-      public static final double p = 0;
+      public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
 
     public static final class yPID {
-      public static final double p = 0;
+      public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
 
     public static final class rPID {
-      public static final double p = 0.003;//0.01
+      public static final double p = 0.0015;
       public static final double i = 0;
-      public static final double d = 0.004;
+      public static final double d = 0.0002;
     }
     
     public static final int medianFilter = 5;
