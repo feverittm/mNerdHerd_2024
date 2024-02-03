@@ -6,11 +6,16 @@ package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
+import frc.robot.commands.armCommands.MoveArm;
 import frc.robot.commands.autoCommands.TestTriPID;
 import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ProfPIDArm;
 
 import java.util.function.DoubleSupplier;
 
@@ -39,6 +44,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivebase drivebase = new Drivebase();
   private final Arm arm = new Arm();
+  private final Intake intake = new Intake();
+  private final Climber climber = new Climber();
+  // private final ProfPIDArm pidArm = new ProfPIDArm();
 
   private final AHRS gyro = new AHRS();
 
@@ -48,7 +56,7 @@ public class RobotContainer {
   private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
   private final DoubleSupplier filteredXPose = 
     () -> xFilter.calculate(
-      Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0])); //TODO make sure abs doesn't screw things up
+      limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
 
     private final DoubleSupplier filteredYPose = 
     () -> yFilter.calculate(
@@ -78,9 +86,14 @@ public class RobotContainer {
         new Drive(
             drivebase,
             gyro,
-            () -> scaleTranslationAxis(driveStick.getLeftY()*0.8),
-            () -> scaleTranslationAxis(driveStick.getLeftX()*0.8),
-            () -> scaleRotationAxis(driveStick.getRightX())*0.8));
+            () -> scaleTranslationAxis(driveStick.getLeftY()),
+            () -> scaleTranslationAxis(driveStick.getLeftX()),
+            () -> scaleRotationAxis(driveStick.getRightX())));
+
+    climber.setDefaultCommand(
+      new Climb(
+          climber, 
+          () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()));
 
     configureBindings();
   }
@@ -103,11 +116,11 @@ public class RobotContainer {
   }
 
   private double scaleTranslationAxis(double input) {
-    return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
+    return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity() * 0.8;
   }
 
   private double scaleRotationAxis(double input) {
-    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity();
+    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * 0.8;
   }
 
   public void resetGyro() {
@@ -138,6 +151,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driveStick.pov(0).onTrue(new InstantCommand(gyro::reset));
+    driveStick.a().onTrue(new MoveArm(arm, -0.2)); //move arm to collapsed position
+    driveStick.b().onTrue(new MoveArm(arm, 0.2)); //move arm to amp scoring position
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   }
 
