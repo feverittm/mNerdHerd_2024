@@ -4,21 +4,21 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 
 public class Climb extends Command {
   /** Creates a new Climb. */
   public Climber climber;
-  public double climbMotor;
-  public double motorSpeed;
+  public DoubleSupplier motorSpeed;
 
 
 
-  public Climb(Climber climb, double climbMotor, double motorSpeed) {
+  public Climb(Climber climber, DoubleSupplier motorSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.climber = climber;
-    this.climbMotor = climbMotor;
     this.motorSpeed = motorSpeed;
 
     addRequirements(this.climber);
@@ -31,7 +31,7 @@ public class Climb extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.runClimber(motorSpeed);
+    climber.runClimber(motorSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

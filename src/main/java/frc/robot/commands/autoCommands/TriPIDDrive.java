@@ -40,9 +40,9 @@ public class TriPIDDrive extends Command {
     this.xPose = xPose;
     this.yPose = yPose;
     this.angle = angle;
-    this.xPID = new PIDController(AutoConstants.xPID.p, AutoConstants.xPID.i, AutoConstants.xPID.d);
-    this.yPID = new PIDController(AutoConstants.yPID.p, AutoConstants.yPID.i, AutoConstants.yPID.d);
-    this.rPID = new PIDController(AutoConstants.rPID.p, AutoConstants.rPID.i, AutoConstants.rPID.d);
+    this.xPID = new PIDController(AutoConstants.XPID.p, AutoConstants.XPID.i, AutoConstants.XPID.d);
+    this.yPID = new PIDController(AutoConstants.YPID.p, AutoConstants.YPID.i, AutoConstants.YPID.d);
+    this.rPID = new PIDController(AutoConstants.RPID.p, AutoConstants.RPID.i, AutoConstants.RPID.d);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivebase);

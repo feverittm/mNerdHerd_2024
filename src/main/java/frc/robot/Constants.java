@@ -65,31 +65,30 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final class xPID {
+    public static final class XPID {
       public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
     
-    public static final class yPID {
+    public static final class YPID {
       public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
     
-    public static final class rPID {
+    public static final class RPID {
       public static final double p = 0.0015;
       public static final double i = 0;
       public static final double d = 0.0002;
     }
 
-    
     public static final int medianFilter = 5;
   }
   
   public static final class IntakeConstants {
-    public static final int intakeMotor = 378647189;
-    public static final int kickupMotor = 497029485;
+    public static final int intakeMotorID = 378647189;
+    public static final int kickupMotorID = 497029485;
   }
 
   public static final class ClimberConstants {
@@ -98,6 +97,5 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-  }
-  
+  }  
 }
