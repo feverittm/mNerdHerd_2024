@@ -46,19 +46,37 @@ public final class Constants {
     }
   }
 
+  public static final class ArmConstants {
+    public static final int leftArmMotorID = 5;
+    public static final int rightArmMotorID = 6;
+    public static final int encoderID = 1;
+
+    public static final class PIDValues {
+      public static final double p = 0;
+      public static final double i = 0;
+      public static final double d = 0;
+    }
+
+    public static final class FeedForwardValues {
+      public static final double kS = 0;
+      public static final double kG = 0;
+      public static final double kV = 0;
+    }
+  }
+
   public static final class AutoConstants {
     public static final class xPID {
       public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
-
+    
     public static final class yPID {
       public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
-
+    
     public static final class rPID {
       public static final double p = 0.0015;
       public static final double i = 0;

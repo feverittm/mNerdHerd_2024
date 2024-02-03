@@ -9,6 +9,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.autoCommands.TestTriPID;
 import frc.robot.commands.autoCommands.TimeDrive;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivebase;
 
 import java.util.function.DoubleSupplier;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivebase drivebase = new Drivebase();
+  private final Arm arm = new Arm();
 
   private final AHRS gyro = new AHRS();
 
