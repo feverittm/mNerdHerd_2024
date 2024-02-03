@@ -40,10 +40,10 @@ public class RobotContainer {
 
   private final AHRS gyro = new AHRS();
 
+  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
   private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
   private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
-  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   private final DoubleSupplier filteredXPose = 
     () -> xFilter.calculate(
       Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0])); //TODO make sure abs doesn't screw things up
@@ -110,6 +110,10 @@ public class RobotContainer {
 
   public void resetGyro() {
     gyro.reset();
+  }
+
+  public double getGyroYaw() {
+    return gyro.getYaw();
   }
 
   public Double[] getBotposeDoubles() {

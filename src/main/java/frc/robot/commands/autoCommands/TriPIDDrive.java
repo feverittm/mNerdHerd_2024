@@ -26,6 +26,9 @@ public class TriPIDDrive extends Command {
   double xTarget;
   double yTarget;
   double rTarget;
+  double xOutput;
+  double yOutput;
+  double rOutput;
 
   /** Creates a new TriPIDDrive. */
   public TriPIDDrive(Drivebase drivebase, AHRS gyro, double xTarget, double yTarget, double rTarget, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
@@ -52,14 +55,21 @@ public class TriPIDDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("X PID Output", xPID.calculate(xPose.getAsDouble(), xTarget));
-    SmartDashboard.putNumber("Y PID Output", yPID.calculate(yPose.getAsDouble(), yTarget));
-    SmartDashboard.putNumber("Angle PID Output", rPID.calculate(angle.getAsDouble(), rTarget));
+    xOutput = xPID.calculate(xPose.getAsDouble(), xTarget);
+    yOutput = yPID.calculate(yPose.getAsDouble(), yTarget);
+    rOutput = rPID.calculate(angle.getAsDouble(), rTarget);
+
+    SmartDashboard.putNumber("X PID Output", xOutput);
+    SmartDashboard.putNumber("Y PID Output", yOutput);
+    SmartDashboard.putNumber("Angle PID Output", rOutput);
+
     drivebase.fieldOrientedDrive(
-      xPID.calculate(xPose.getAsDouble(), xTarget),
-      yPID.calculate(yPose.getAsDouble(), yTarget),
-      -rPID.calculate(angle.getAsDouble(), rTarget)*0.5,
-      -gyro.getYaw());
+      xOutput,
+      yOutput,
+      // Math.copySign(Math.min(Math.abs(xOutput), 0.3), xOutput),
+      // Math.copySign(Math.min(Math.abs(yOutput), 1), yOutput),
+      -Math.copySign(Math.min(Math.abs(rOutput), 0.04), rOutput),
+      -angle.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
@@ -71,6 +81,6 @@ public class TriPIDDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return xPID.atSetpoint() && yPID.atSetpoint() && rPID.atSetpoint();
   }
 }

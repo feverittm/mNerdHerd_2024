@@ -8,7 +8,6 @@ import java.util.function.DoubleSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivebase;
 
@@ -43,8 +42,6 @@ public class Drive extends Command {
     var x = speedX.getAsDouble();
     var y = speedY.getAsDouble();
     var r = rot.getAsDouble();
-
-    SmartDashboard.putNumber("Yaw", -gyro.getYaw());
 
     // drivebase.robotOrientedDrive(x, y, r);
     drivebase.fieldOrientedDrive(x, y, r, -gyro.getYaw());

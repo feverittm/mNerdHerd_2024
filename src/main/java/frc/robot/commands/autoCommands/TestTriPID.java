@@ -21,7 +21,7 @@ public class TestTriPID extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new TriPIDDrive(drivebase, gyro, 5, 1.3, 0, xPose, yPose, angle)
+      new TriPIDDrive(drivebase, gyro, 5.5, 1.5, -40, xPose, yPose, angle)
     );
   }
 }
