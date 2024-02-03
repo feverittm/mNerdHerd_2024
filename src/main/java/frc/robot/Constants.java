@@ -82,11 +82,22 @@ public final class Constants {
       public static final double i = 0;
       public static final double d = 0.0002;
     }
+
     
     public static final int medianFilter = 5;
+  }
+  
+  public static final class IntakeConstants {
+    public static final int intakeMotor = 378647189;
+    public static final int kickupMotor = 497029485;
+  }
+
+  public static final class ClimberConstants {
+    public static final int climberMotorID = 382567809;
   }
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  
 }
