@@ -4,29 +4,25 @@
 
 package frc.robot.commands.autoCommands;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivebase;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
-public class TimeDrive extends Command {
-  private final Drivebase drivebase;
-  private final AHRS gyro;
-  private final double speed;
-  private final double rotation;
-  private final double delay;
+public class AutoShoot extends Command {
+  private final Shooter shooter;
+  private final Intake intake;
   private double startTime;
+  private double delay = 0.5;
 
-  /** Creates a new TimeDrive. */
-  public TimeDrive(Drivebase drivebase, AHRS gyro, double speed, double rotation, double delay) {
-    this.drivebase = drivebase;
-    this.gyro = gyro;
-    this.speed = speed;
-    this.rotation = rotation;
-    this.delay = delay;
+  /** Creates a new AutoShoot. */
+  public AutoShoot(Shooter shooter, Intake intake) {
+    this.shooter = shooter;
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.drivebase);
+    addRequirements(this.shooter, this.intake);
   }
 
   // Called when the command is initially scheduled.
@@ -38,13 +34,15 @@ public class TimeDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.fieldOrientedDrive(speed, 0, rotation, -gyro.getYaw());
+    intake.runIntake(0, IntakeConstants.kickupSpeed);
+    shooter.spinShooter(ShooterConstants.shooterSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivebase.robotOrientedDrive(0, 0, 0);
+    intake.stopIntake();
+    shooter.stopShooter();
   }
 
   // Returns true when the command should end.
