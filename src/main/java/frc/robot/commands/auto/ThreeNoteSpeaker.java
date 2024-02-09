@@ -25,7 +25,8 @@ public class ThreeNoteSpeaker extends SequentialCommandGroup {
   private double speakerX;
   private double speakerAngle;
   /** Creates a new ThreeNoteSpeaker. */
-  public ThreeNoteSpeaker(Drivebase drivebase, AHRS gyro, Intake intake, Shooter shooter, boolean onBlueAlliance, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
+  public ThreeNoteSpeaker(Drivebase drivebase, AHRS gyro, Intake intake, Shooter shooter, boolean onBlueAlliance, 
+    DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
     if(onBlueAlliance) {
       noteThreeX = 0;
       noteThreeAngle = 0; //this one will depend on which note we're going for

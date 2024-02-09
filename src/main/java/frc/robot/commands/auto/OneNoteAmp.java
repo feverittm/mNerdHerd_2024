@@ -28,7 +28,8 @@ public class OneNoteAmp extends SequentialCommandGroup {
   private double rotation;
 
   /** Creates a new OneNoteAmp. */
-  public OneNoteAmp(Drivebase drivebase, AHRS gyro, Intake intake, Shooter shooter, Arm arm, boolean onBlueAlliance, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
+  public OneNoteAmp(Drivebase drivebase, AHRS gyro, Intake intake, Shooter shooter, Arm arm, 
+    boolean onBlueAlliance, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
     if(onBlueAlliance) {
       xTarget = Units.inchesToMeters(72.5); //x target if on blue alliance
       rotation = 0.05; //spin at the beginning swaps direction based on alliance

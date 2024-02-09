@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
+    SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
     try{
       SmartDashboard.putNumber("X Pose", m_robotContainer.getBotposeDoubles()[0]);
       SmartDashboard.putNumber("Y Pose", m_robotContainer.getBotposeDoubles()[1]);

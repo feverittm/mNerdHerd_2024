@@ -48,7 +48,7 @@ public class TriPIDDrive extends Command {
     this.rPID = new PIDController(AutoConstants.RPID.p, AutoConstants.RPID.i, AutoConstants.RPID.d);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.drivebase);
+    addRequirements(this.drivebase, this.intake);
   }
 
   // Called when the command is initially scheduled.

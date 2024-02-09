@@ -92,12 +92,12 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
-        new Drive(
-            drivebase,
-            gyro,
-            () -> scaleTranslationAxis(driveStick.getLeftY()),
-            () -> scaleTranslationAxis(driveStick.getLeftX()),
-            () -> scaleRotationAxis(driveStick.getRightX())));
+      new Drive(
+          drivebase,
+          gyro,
+          () -> scaleTranslationAxis(driveStick.getLeftY()),
+          () -> scaleTranslationAxis(driveStick.getLeftX()),
+          () -> scaleRotationAxis(driveStick.getRightX())));
 
     climber.setDefaultCommand(
       new Climb(

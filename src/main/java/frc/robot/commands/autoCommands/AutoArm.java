@@ -11,9 +11,9 @@ import frc.robot.subsystems.Arm;
 
 public class AutoArm extends Command {
   private final MoveArm moveArm;
-  private double speed;
   private double startTime;
   private double delay;
+  // private double speed;
 
   /** Creates a new AutoArm. */
   public AutoArm(Arm arm, double speed, double delay) {
