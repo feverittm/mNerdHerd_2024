@@ -168,8 +168,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driveStick.pov(0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    driveStick.a().onTrue(new MoveArm(arm, ArmConstants.lowerArmSpeed)); //move arm to collapsed position
-    driveStick.b().onTrue(new MoveArm(arm, ArmConstants.raiseArmSpeed)); //move arm to amp scoring position
+    // driveStick.a().onTrue(new MoveArm(arm, ArmConstants.lowerArmSpeed)); //move arm to collapsed position
+    // driveStick.b().onTrue(new MoveArm(arm, ArmConstants.raiseArmSpeed)); //move arm to amp scoring position
+    driveStick.a().whileTrue(new MoveArm(arm, ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
+    driveStick.b().whileTrue(new MoveArm(arm, ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
+    driveStick.x().onTrue(new MoveArm(arm, 0)); //stop the arm
     driveStick.y().toggleOnTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //toggles shooter on/off
     driveStick.y().toggleOnTrue(new RunIntake(intake, 0, IntakeConstants.kickupSpeed)); //spin kickup motor when shooting
     driveStick.rightBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
