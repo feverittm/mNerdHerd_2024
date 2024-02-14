@@ -56,6 +56,10 @@ public class ProfPIDArm extends ProfiledPIDSubsystem {
     return getEncoder()*2*Math.PI;
   }
 
+  public void disablePID() {
+    disable();
+  }
+  
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here

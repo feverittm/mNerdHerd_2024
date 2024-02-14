@@ -50,6 +50,9 @@ public final class Constants {
     public static final int leftArmMotorID = 5;
     public static final int rightArmMotorID = 6;
     public static final int encoderID = 1;
+    public static final double podiumAngle = 0;
+    public static final double raiseArmSpeed = 0;
+    public static final double lowerArmSpeed = 0;
 
     public static final class PIDValues {
       public static final double p = 0;
@@ -62,6 +65,23 @@ public final class Constants {
       public static final double kG = 0;
       public static final double kV = 0;
     }
+  }
+
+  public static final class IntakeConstants {
+    public static final int intakeMotorID = 378647189;
+    public static final int kickupMotorID = 497029485;
+    public static final double intakeSpeed = 0;
+    public static final double kickupSpeed = 0;
+  }
+
+  public static final class ClimberConstants {
+    public static final int climberMotorID = 382567809;
+  }
+
+  public static final class ShooterConstants {
+    public static final int topShootMotorID = 7;
+    public static final int bottomShootMotorID = 8;
+    public static final double shooterSpeed = 0;
   }
 
   public static final class AutoConstants {
@@ -86,14 +106,6 @@ public final class Constants {
     public static final int medianFilter = 5;
   }
   
-  public static final class IntakeConstants {
-    public static final int intakeMotorID = 378647189;
-    public static final int kickupMotorID = 497029485;
-  }
-
-  public static final class ClimberConstants {
-    public static final int climberMotorID = 382567809;
-  }
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

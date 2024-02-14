@@ -6,17 +6,18 @@ package frc.robot.commands.autoCommands;
 
 import java.util.function.DoubleSupplier;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Drivebase;
+import frc.robot.subsystems.Intake;
 
 public class TriPIDDrive extends Command {
   private Drivebase drivebase;
-  private AHRS gyro;
+  private Intake intake;
+  private boolean runIntake;
   private PIDController xPID;
   private PIDController yPID;
   private PIDController rPID;
@@ -31,9 +32,11 @@ public class TriPIDDrive extends Command {
   double rOutput;
 
   /** Creates a new TriPIDDrive. */
-  public TriPIDDrive(Drivebase drivebase, AHRS gyro, double xTarget, double yTarget, double rTarget, DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
+  public TriPIDDrive(Drivebase drivebase, Intake intake, boolean runIntake, double xTarget, double yTarget, double rTarget, 
+  DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
     this.drivebase = drivebase;
-    this.gyro = gyro;
+    this.intake = intake;
+    this.runIntake = runIntake;
     this.xTarget = xTarget;
     this.yTarget = yTarget;
     this.rTarget = rTarget;
@@ -45,12 +48,14 @@ public class TriPIDDrive extends Command {
     this.rPID = new PIDController(AutoConstants.RPID.p, AutoConstants.RPID.i, AutoConstants.RPID.d);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.drivebase);
+    addRequirements(this.drivebase, this.intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    rPID.setTolerance(0.5);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -70,12 +75,17 @@ public class TriPIDDrive extends Command {
       // Math.copySign(Math.min(Math.abs(yOutput), 1), yOutput),
       -Math.copySign(Math.min(Math.abs(rOutput), 0.04), rOutput),
       -angle.getAsDouble());
+
+    if(runIntake) {
+      intake.runIntake(IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivebase.fieldOrientedDrive(0, 0, 0, -gyro.getYaw());
+    drivebase.robotOrientedDrive(0, 0, 0);
+    intake.stopIntake();
   }
 
   // Returns true when the command should end.

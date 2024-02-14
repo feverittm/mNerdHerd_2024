@@ -4,29 +4,22 @@
 
 package frc.robot.commands.autoCommands;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivebase;
+import frc.robot.commands.armCommands.MoveArm;
+import frc.robot.subsystems.Arm;
 
-public class TimeDrive extends Command {
-  private final Drivebase drivebase;
-  private final AHRS gyro;
-  private final double speed;
-  private final double rotation;
-  private final double delay;
+public class AutoArm extends Command {
+  private final MoveArm moveArm;
   private double startTime;
+  private double delay;
+  // private double speed;
 
-  /** Creates a new TimeDrive. */
-  public TimeDrive(Drivebase drivebase, AHRS gyro, double speed, double rotation, double delay) {
-    this.drivebase = drivebase;
-    this.gyro = gyro;
-    this.speed = speed;
-    this.rotation = rotation;
+  /** Creates a new AutoArm. */
+  public AutoArm(Arm arm, double speed, double delay) {
+    this.moveArm = new MoveArm(arm, speed);
     this.delay = delay;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.drivebase);
   }
 
   // Called when the command is initially scheduled.
@@ -38,14 +31,12 @@ public class TimeDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivebase.fieldOrientedDrive(speed, 0, rotation, -gyro.getYaw());
+    moveArm.execute();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    drivebase.robotOrientedDrive(0, 0, 0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
