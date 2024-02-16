@@ -17,7 +17,7 @@ public class AutoArm extends Command {
 
   /** Creates a new AutoArm. */
   public AutoArm(Arm arm, double speed, double delay) {
-    this.moveArm = new MoveArm(arm, speed);
+    this.moveArm = new MoveArm(arm, () -> speed); //TODO this is weird but also it's unimportant for scrimmage but is important afterwards
     this.delay = delay;
     // Use addRequirements() here to declare subsystem dependencies.
   }

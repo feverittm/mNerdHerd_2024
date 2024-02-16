@@ -4,15 +4,19 @@
 
 package frc.robot.commands.armCommands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 public class MoveArm extends Command {
   private final Arm arm;
-  private double speed;
+  private DoubleSupplier speed;
+  // private double speed;
 
   /** Creates a new MoveArm. */
-  public MoveArm(Arm arm, double speed) {
+  public MoveArm(Arm arm, DoubleSupplier speed) {
     this.arm = arm;
     this.speed = speed;
     
@@ -27,7 +31,14 @@ public class MoveArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.setArmSpeed(speed);
+    arm.setArmSpeed(speed.getAsDouble());
+    //uncomment this to controll max up/down speed of arm
+    // if(speed.getAsDouble() > 0) {
+    //   arm.setArmSpeed(Math.min(speed.getAsDouble(), ArmConstants.raiseArmSpeed));
+    // }
+    // else {
+    //   arm.setArmSpeed(Math.max(speed.getAsDouble(), ArmConstants.lowerArmSpeed));
+    // }
   }
 
   // Called once the command ends or is interrupted.
