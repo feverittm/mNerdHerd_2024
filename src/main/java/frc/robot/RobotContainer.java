@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -53,30 +54,30 @@ public class RobotContainer {
   private final Drivebase drivebase = new Drivebase();
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
-  private final Climber climber = new Climber();
+  // private final Climber climber = new Climber();
   private final Shooter shooter = new Shooter();
   // private final ProfPIDArm pidArm = new ProfPIDArm();
 
   private final AHRS gyro = new AHRS();
 
-  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
   private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
   private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
-  private final DoubleSupplier filteredXPose = 
-    () -> xFilter.calculate(
-      limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
+  // private final DoubleSupplier filteredXPose = 
+  //   () -> xFilter.calculate(
+  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
 
-    private final DoubleSupplier filteredYPose = 
-    () -> yFilter.calculate(
-      limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO, make sure these are the right values for TY and RZ
+  //   private final DoubleSupplier filteredYPose = 
+  //   () -> yFilter.calculate(
+  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO, make sure these are the right values for TY and RZ
 
-    private final DoubleSupplier filteredAnlge = 
-    () -> angleFilter.calculate(
-      limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
+  //   private final DoubleSupplier filteredAnlge = 
+  //   () -> angleFilter.calculate(
+  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
 
   private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.2, 0, 5);
-  private final TestTriPID testAuto = new TestTriPID(drivebase, intake, filteredXPose, filteredYPose, filteredAnlge);
+  // private final TestTriPID testAuto = new TestTriPID(drivebase, intake, filteredXPose, filteredYPose, filteredAnlge);
 
   private static CommandXboxController driveStick = new CommandXboxController(0);
 
@@ -87,7 +88,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     commandChooser.addOption("Timed drive", timeDrive);
-    commandChooser.addOption("AprilTag Auto Test", testAuto);
+    // commandChooser.addOption("AprilTag Auto Test", testAuto);
     SmartDashboard.putData(commandChooser);
 
     // Configure the trigger bindings
@@ -99,10 +100,18 @@ public class RobotContainer {
           () -> scaleTranslationAxis(driveStick.getLeftX()),
           () -> scaleRotationAxis(driveStick.getRightX())));
 
-    climber.setDefaultCommand(
-      new Climb(
-          climber, 
-          () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()));
+    arm.setDefaultCommand(
+      new MoveArm(
+        arm, 
+        () -> clamp(
+          driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis(), 
+          ArmConstants.lowerArmSpeed, 
+          ArmConstants.raiseArmSpeed)));
+
+    // climber.setDefaultCommand(
+    //   new Climb(
+    //       climber, 
+    //       () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()));
 
     configureBindings();
   }
@@ -120,6 +129,16 @@ public class RobotContainer {
     }
   }
 
+  private double clamp(double input, double min, double max) {
+    if(input < min) {
+      return min;
+    }
+    else if(input > max) {
+      return max;
+    }
+    return input;
+  }
+
   private double squared(double input) {
     return Math.copySign(input * input, input);
   }
@@ -129,7 +148,7 @@ public class RobotContainer {
   }
 
   private double scaleRotationAxis(double input) {
-    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * 0.8;
+    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * -0.8;
   }
 
   public void resetGyro() {
@@ -140,9 +159,9 @@ public class RobotContainer {
     return gyro.getYaw();
   }
 
-  public Double[] getBotposeDoubles() {
-    return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
-  }
+  // public Double[] getBotposeDoubles() {
+  //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
+  // }
 
   public boolean onBlueAlliance() {
     var alliance = DriverStation.getAlliance();
@@ -168,17 +187,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driveStick.pov(0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    // driveStick.a().onTrue(new MoveArm(arm, ArmConstants.lowerArmSpeed)); //move arm to collapsed position
-    // driveStick.b().onTrue(new MoveArm(arm, ArmConstants.raiseArmSpeed)); //move arm to amp scoring position
-    driveStick.a().whileTrue(new MoveArm(arm, ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
-    driveStick.b().whileTrue(new MoveArm(arm, ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
-    driveStick.x().onTrue(new MoveArm(arm, 0)); //stop the arm
-    driveStick.y().toggleOnTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //toggles shooter on/off
-    driveStick.y().toggleOnTrue(new RunIntake(intake, 0, IntakeConstants.kickupSpeed)); //spin kickup motor when shooting
+    driveStick.y().toggleOnTrue(new ParallelCommandGroup( //turn shooter on/off
+      new Shoot(shooter, ShooterConstants.shooterSpeed),
+      new RunIntake(intake, 0, IntakeConstants.kickupSpeed)
+    ));
     driveStick.rightBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
-    driveStick.start().whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //spit notes out while the button is held
-
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    driveStick.a().whileTrue(new MoveArm(arm, () -> ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
+    driveStick.b().whileTrue(new MoveArm(arm, () -> ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
   }
 
   /**

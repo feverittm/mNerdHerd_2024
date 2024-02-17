@@ -6,6 +6,7 @@ package frc.robot;
 
 import cowlib.SwerveModuleConfig;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -31,28 +32,28 @@ public final class Constants {
     }
 
     public static final class SwerveModules {
-      public static final SwerveModuleConfig frontLeft = new SwerveModuleConfig(1, 11, 21, true);
-      public static final SwerveModuleConfig frontRight = new SwerveModuleConfig(2, 12, 22, true);
-      public static final SwerveModuleConfig backRight = new SwerveModuleConfig(3, 13, 23, false);
-      public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(4, 14, 24, true);
+      public static final SwerveModuleConfig frontRight = new SwerveModuleConfig(1, 11, 21, true);
+      public static final SwerveModuleConfig frontLeft = new SwerveModuleConfig(2, 12, 22, false);
+      public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(3, 13, 23, true);
+      public static final SwerveModuleConfig backRight = new SwerveModuleConfig(4, 14, 24, false);
     }
 
     public static final class ModuleLocations {
-      public static final double dist = 10.325;
-      public static final Translation2d frontLeft = new Translation2d(-dist, dist);
-      public static final Translation2d frontRight = new Translation2d(dist, dist);
-      public static final Translation2d backLeft = new Translation2d(-dist, -dist);
-      public static final Translation2d backRight = new Translation2d(dist, -dist);
+      public static final double dist = Units.inchesToMeters(9.25);
+      public static final Translation2d frontLeft = new Translation2d(dist, dist);
+      public static final Translation2d frontRight = new Translation2d(dist, -dist);
+      public static final Translation2d backLeft = new Translation2d(-dist, dist);
+      public static final Translation2d backRight = new Translation2d(-dist, -dist);
     }
   }
 
   public static final class ArmConstants {
     public static final int leftArmMotorID = 5;
-    public static final int rightArmMotorID = 6;
-    public static final int encoderID = 1;
+    public static final int rightArmMotorID = 15;
+    public static final int encoderID = 25;
     public static final double podiumAngle = 0;
-    public static final double raiseArmSpeed = 0;
-    public static final double lowerArmSpeed = 0;
+    public static final double raiseArmSpeed = 0.3;
+    public static final double lowerArmSpeed = -0.1;
 
     public static final class PIDValues {
       public static final double p = 0;
@@ -68,20 +69,20 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int intakeMotorID = 378647189;
-    public static final int kickupMotorID = 497029485;
-    public static final double intakeSpeed = 0;
-    public static final double kickupSpeed = 0;
+    public static final int intakeMotorID = 7;
+    public static final int kickupMotorID = 17;
+    public static final double intakeSpeed = 0.35;
+    public static final double kickupSpeed = 0.25;
   }
 
   public static final class ClimberConstants {
-    public static final int climberMotorID = 382567809;
+    public static final int climberMotorID = 50;
   }
 
   public static final class ShooterConstants {
-    public static final int topShootMotorID = 7;
-    public static final int bottomShootMotorID = 8;
-    public static final double shooterSpeed = 0;
+    public static final int topShootMotorID = 16;
+    public static final int bottomShootMotorID = 6;
+    public static final double shooterSpeed = -1;
   }
 
   public static final class AutoConstants {
@@ -106,7 +107,6 @@ public final class Constants {
     public static final int medianFilter = 5;
   }
   
-
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }  

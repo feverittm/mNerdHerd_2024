@@ -26,7 +26,8 @@ public class Arm extends SubsystemBase {
     leftArmMotor.setIdleMode(IdleMode.kBrake);
     rightArmMotor.setIdleMode(IdleMode.kBrake);
 
-    rightArmMotor.follow(leftArmMotor);
+    leftArmMotor.setInverted(true);
+    rightArmMotor.follow(leftArmMotor, true);
   }
 
   public void setArmSpeed(double speed) {
