@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
     kickupMotor.restoreFactoryDefaults();
     
     intakeMotor.setIdleMode(IdleMode.kCoast);
-    kickupMotor.setIdleMode(IdleMode.kCoast);
+    kickupMotor.setIdleMode(IdleMode.kBrake);
   }
 
   public void runIntake(double intakeMotorSpeed, double kickupMotorSpeed) {

@@ -60,9 +60,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
     SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
     try{
-      SmartDashboard.putNumber("X Pose", m_robotContainer.getBotposeDoubles()[0]);
-      SmartDashboard.putNumber("Y Pose", m_robotContainer.getBotposeDoubles()[1]);
-      SmartDashboard.putNumber("Angle", m_robotContainer.getBotposeDoubles()[2]);
+      // SmartDashboard.putNumber("X Pose", m_robotContainer.getBotposeDoubles()[0]);
+      // SmartDashboard.putNumber("Y Pose", m_robotContainer.getBotposeDoubles()[1]);
+      // SmartDashboard.putNumber("Angle", m_robotContainer.getBotposeDoubles()[2]);
       SmartDashboard.putBoolean("Limelight Connected", true);
     }
     catch(Exception e){
