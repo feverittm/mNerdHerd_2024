@@ -60,6 +60,7 @@ public class Arm extends SubsystemBase {
     }
     SmartDashboard.putNumber("modified arm speed", modifiedSpeed);
     SmartDashboard.putNumber("arm speed", speed);
+    SmartDashboard.putNumber("pos", pos);
     rightArmMotor.set(speed); // TODO: Begin using modified speed
   }
 
