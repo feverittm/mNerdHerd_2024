@@ -53,7 +53,7 @@ public final class Constants {
     public static final int encoderID = 25;
     public static final double podiumAngle = 0;
     public static final double raiseArmSpeed = -0.3;
-    public static final double lowerArmSpeed = 0.1;
+    public static final double lowerArmSpeed = 0.2;
 
     public static final class PIDValues {
       public static final double p = 0;
@@ -69,7 +69,7 @@ public final class Constants {
 
     public static final class ArmPositions {
       public static final double lower = 0;
-      public static final double upper = 0.25;
+      public static final double upper = -0.25;
     }
   }
 

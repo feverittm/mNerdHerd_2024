@@ -110,12 +110,7 @@ public class RobotContainer {
     arm.setDefaultCommand(
       new MoveArm(
         arm, 
-        () -> Util.mapDouble(
-          driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis(),
-          -1,
-          1,
-          ArmConstants.raiseArmSpeed, 
-          ArmConstants.lowerArmSpeed)));
+        () -> getArmControl()));
 
     // climber.setDefaultCommand(
     //   new Climb(
@@ -136,6 +131,23 @@ public class RobotContainer {
     } else {
       return input;
     }
+  }
+
+  private double getArmControl() {
+    var trigger = driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis();
+    double mapped;
+    if (trigger > 0) {
+      mapped = trigger * ArmConstants.lowerArmSpeed;
+    } else if (trigger < 0) {
+      mapped = -trigger * ArmConstants.raiseArmSpeed;
+    } else {
+      mapped = 0;
+    }
+
+    SmartDashboard.putNumber("trigger", trigger);
+    SmartDashboard.putNumber("mapped", mapped);
+
+    return mapped;
   }
 
   private double clamp(double input, double min, double max) {
