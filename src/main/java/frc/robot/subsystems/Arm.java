@@ -52,7 +52,12 @@ public class Arm extends SubsystemBase {
       1, // 100% input power
       0.3 // 30% input power
     );
-    double modifiedSpeed = speed * outputCoefficient;
+    double modifiedSpeed;
+    if (speed < 0) {
+      modifiedSpeed = speed * outputCoefficient;
+    } else {
+      modifiedSpeed = speed;
+    }
     SmartDashboard.putNumber("modified arm speed", modifiedSpeed);
     SmartDashboard.putNumber("arm speed", speed);
     rightArmMotor.set(speed); // TODO: Begin using modified speed
