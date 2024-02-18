@@ -6,25 +6,33 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
-
 public class Arm extends SubsystemBase {
   private CANSparkMax leftArmMotor = new CANSparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
   private CANSparkMax rightArmMotor = new CANSparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
+
+  private SparkLimitSwitch rightReverseLimitSwitch;
+
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
 
   /** Creates a new Arm. */
   public Arm() {
     leftArmMotor.setIdleMode(IdleMode.kBrake);
     rightArmMotor.setIdleMode(IdleMode.kBrake);
-    
+
     rightArmMotor.setInverted(true);
     leftArmMotor.follow(rightArmMotor, true);
+
+    rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+
+    leftArmMotor.setInverted(true);
+    rightArmMotor.follow(leftArmMotor, true);
   }
 
   public void setArmSpeed(double speed) {
@@ -40,7 +48,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getEncoderRadians() {
-    return getEncoder()*2*Math.PI;
+    return getEncoder() * 2 * Math.PI;
   }
 
   @Override
