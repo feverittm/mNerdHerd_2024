@@ -5,13 +5,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 
+import cowlib.Util;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmConstants.ArmPositions;
 
 public class Arm extends SubsystemBase {
   private CANSparkMax leftArmMotor = new CANSparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
@@ -36,8 +39,23 @@ public class Arm extends SubsystemBase {
     rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
   }
 
-  public void setArmSpeed(double speed) {
+  public void setRawArmSpeed(double speed) {
     rightArmMotor.set(speed);
+  }
+
+  public void setArmSpeed(double speed) {
+    double pos = encoder.getAbsolutePosition().getValue();
+    double outputCoefficient = Util.mapDouble(
+      pos, // Position of the arm
+      ArmPositions.lower,
+      ArmPositions.upper,
+      1, // 100% input power
+      0.3 // 30% input power
+    );
+    double modifiedSpeed = speed * outputCoefficient;
+    SmartDashboard.putNumber("modified arm speed", modifiedSpeed);
+    SmartDashboard.putNumber("arm speed", speed);
+    rightArmMotor.set(speed); // TODO: Begin using modified speed
   }
 
   public void setArmVoltage(double voltage) {

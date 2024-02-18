@@ -47,7 +47,7 @@ public class MoveArm extends Command {
     /*we don't want to stop the motor at the end of the command because we want to be constantly running the motor in the desired
     direction. The limit sitches will stop the arm at either end*/
     //this line is for when the limit switches aren't attached
-    arm.setArmSpeed(0);
+    arm.setRawArmSpeed(0);
   } 
 
   // Returns true when the command should end.

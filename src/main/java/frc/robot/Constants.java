@@ -66,6 +66,11 @@ public final class Constants {
       public static final double kG = 0;
       public static final double kV = 0;
     }
+
+    public static final class ArmPositions {
+      public static final double lower = 0;
+      public static final double upper = 0.25;
+    }
   }
 
   public static final class IntakeConstants {
