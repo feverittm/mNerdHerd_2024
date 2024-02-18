@@ -15,7 +15,7 @@ public class AutoShoot extends Command {
   private final Shooter shooter;
   private final Intake intake;
   private double startTime;
-  private double delay = 0.5;
+  private double delay = 1;
 
   /** Creates a new AutoShoot. */
   public AutoShoot(Shooter shooter, Intake intake) {
@@ -28,14 +28,16 @@ public class AutoShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.spinShooter(ShooterConstants.shooterSpeed);
     startTime = Timer.getFPGATimestamp();
   }
-
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.runIntake(0, IntakeConstants.kickupSpeed);
-    shooter.spinShooter(ShooterConstants.shooterSpeed);
+    if(Timer.getFPGATimestamp() - startTime > 0.5) {
+      intake.runIntake(0.3, IntakeConstants.kickupSpeed);
+    }
   }
 
   // Called once the command ends or is interrupted.

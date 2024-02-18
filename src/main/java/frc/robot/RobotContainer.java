@@ -14,6 +14,7 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
+import frc.robot.commands.auto.SimpleTwoNoteSpeaker;
 import frc.robot.commands.auto.TestTriPID;
 import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Arm;
@@ -57,8 +58,8 @@ public class RobotContainer {
   private final Drivebase drivebase = new Drivebase();
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
-  // private final Climber climber = new Climber();
   private final Shooter shooter = new Shooter();
+  // private final Climber climber = new Climber();
   // private final ProfPIDArm pidArm = new ProfPIDArm();
 
   private final AHRS gyro = new AHRS();
@@ -79,7 +80,8 @@ public class RobotContainer {
   //   () -> angleFilter.calculate(
   //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
 
-  private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.2, 0, 5);
+  private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.75, 0, 2);
+  private final SimpleTwoNoteSpeaker twoNoteSpeaker = new SimpleTwoNoteSpeaker(drivebase, gyro, intake, shooter);
   // private final TestTriPID testAuto = new TestTriPID(drivebase, intake, filteredXPose, filteredYPose, filteredAnlge);
 
   private static CommandXboxController driveStick = new CommandXboxController(0);
@@ -91,6 +93,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     commandChooser.addOption("Timed drive", timeDrive);
+    commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
     // commandChooser.addOption("AprilTag Auto Test", testAuto);
     SmartDashboard.putData(commandChooser);
 
@@ -151,7 +154,7 @@ public class RobotContainer {
   }
 
   private double scaleRotationAxis(double input) {
-    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * -0.8;
+    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * -0.6;
   }
 
   public void resetGyro() {
@@ -193,16 +196,12 @@ public class RobotContainer {
     driveStick.leftBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
     driveStick.a().whileTrue(new MoveArm(arm, () -> ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
     driveStick.b().whileTrue(new MoveArm(arm, () -> ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
-    // driveStick.y().toggleOnTrue(new ParallelCommandGroup( //turn shooter on/offV
-    //   Commands.sequence(new WaitCommand(0.75), new RunIntake(intake, 0, IntakeConstants.kickupSpeed)),
-    //   new Shoot(shooter, ShooterConstants.shooterSpeed)
-    // ));
     driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed));
     driveStick.rightBumper().onFalse(
       Commands.race(
         Commands.parallel(
           new Shoot(shooter, ShooterConstants.shooterSpeed), 
-          new RunIntake(intake, 0, IntakeConstants.kickupSpeed)),
+          new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
         new WaitCommand(0.5)
       )
     );

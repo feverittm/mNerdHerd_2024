@@ -7,6 +7,7 @@ package frc.robot.commands.auto;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.autoCommands.AutoShoot;
 import frc.robot.commands.autoCommands.IntakeAndDrive;
 import frc.robot.commands.autoCommands.TimeDrive;
@@ -24,8 +25,9 @@ public class SimpleTwoNoteSpeaker extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoShoot(shooter, intake), //shoot preloaded note
-      new IntakeAndDrive(drivebase, intake, 0.5, 3), //drive forward with the intake on
-      new TimeDrive(drivebase, gyro, -0.5, 0, 3), //drive back after hopefully picking up field note
+      new IntakeAndDrive(drivebase, intake, 0.75, 2.5), //drive forward with the intake on
+      new WaitCommand(0.75),
+      new TimeDrive(drivebase, gyro, -0.75, 0, 2.75), //drive back after hopefully picking up field note
       new AutoShoot(shooter, intake) //shoot note
     );
   }
