@@ -35,8 +35,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -103,8 +106,9 @@ public class RobotContainer {
     arm.setDefaultCommand(
       new MoveArm(
         arm, 
+        // () -> driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis()));
         () -> clamp(
-          driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis(), 
+          driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis(), 
           ArmConstants.lowerArmSpeed, 
           ArmConstants.raiseArmSpeed)));
 
@@ -186,14 +190,23 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driveStick.pov(0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    driveStick.y().toggleOnTrue(new ParallelCommandGroup( //turn shooter on/off
-      new Shoot(shooter, ShooterConstants.shooterSpeed),
-      new RunIntake(intake, 0, IntakeConstants.kickupSpeed)
-    ));
-    driveStick.rightBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
+    driveStick.povUp().onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
+    driveStick.leftBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
     driveStick.a().whileTrue(new MoveArm(arm, () -> ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
     driveStick.b().whileTrue(new MoveArm(arm, () -> ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
+    // driveStick.y().toggleOnTrue(new ParallelCommandGroup( //turn shooter on/offV
+    //   Commands.sequence(new WaitCommand(0.75), new RunIntake(intake, 0, IntakeConstants.kickupSpeed)),
+    //   new Shoot(shooter, ShooterConstants.shooterSpeed)
+    // ));
+    driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed));
+    driveStick.rightBumper().onFalse(
+      Commands.race(
+        Commands.parallel(
+          new Shoot(shooter, ShooterConstants.shooterSpeed), 
+          new RunIntake(intake, 0, IntakeConstants.kickupSpeed)),
+        new WaitCommand(0.5)
+      )
+    );
   }
 
   /**

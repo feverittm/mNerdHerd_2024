@@ -52,8 +52,8 @@ public final class Constants {
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
     public static final double podiumAngle = 0;
-    public static final double raiseArmSpeed = 0.3;
-    public static final double lowerArmSpeed = -0.1;
+    public static final double raiseArmSpeed = -0.4;
+    public static final double lowerArmSpeed = 0.1;
 
     public static final class PIDValues {
       public static final double p = 0;
@@ -71,8 +71,8 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int intakeMotorID = 7;
     public static final int kickupMotorID = 17;
-    public static final double intakeSpeed = 0.35;
-    public static final double kickupSpeed = 0.25;
+    public static final double intakeSpeed = 0.5;
+    public static final double kickupSpeed = 0.5;
   }
 
   public static final class ClimberConstants {
@@ -82,7 +82,7 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int topShootMotorID = 16;
     public static final int bottomShootMotorID = 6;
-    public static final double shooterSpeed = -1;
+    public static final double shooterSpeed = -0.95;
   }
 
   public static final class AutoConstants {

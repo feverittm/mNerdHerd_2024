@@ -20,22 +20,19 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new Arm. */
   public Arm() {
-    leftArmMotor.restoreFactoryDefaults();
-    rightArmMotor.restoreFactoryDefaults();
-
     leftArmMotor.setIdleMode(IdleMode.kBrake);
     rightArmMotor.setIdleMode(IdleMode.kBrake);
-
-    leftArmMotor.setInverted(true);
-    rightArmMotor.follow(leftArmMotor, true);
+    
+    rightArmMotor.setInverted(true);
+    leftArmMotor.follow(rightArmMotor, true);
   }
 
   public void setArmSpeed(double speed) {
-    leftArmMotor.set(speed);
+    rightArmMotor.set(speed);
   }
 
   public void setArmVoltage(double voltage) {
-    leftArmMotor.setVoltage(voltage);
+    rightArmMotor.setVoltage(voltage);
   }
 
   public double getEncoder() {
