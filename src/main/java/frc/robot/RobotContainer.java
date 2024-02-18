@@ -106,11 +106,10 @@ public class RobotContainer {
     arm.setDefaultCommand(
       new MoveArm(
         arm, 
-        // () -> driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis()));
         () -> clamp(
           driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis(), 
-          ArmConstants.lowerArmSpeed, 
-          ArmConstants.raiseArmSpeed)));
+          ArmConstants.raiseArmSpeed, 
+          ArmConstants.lowerArmSpeed)));
 
     // climber.setDefaultCommand(
     //   new Climb(

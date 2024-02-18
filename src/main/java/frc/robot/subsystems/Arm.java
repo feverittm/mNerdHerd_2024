@@ -23,6 +23,9 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new Arm. */
   public Arm() {
+    leftArmMotor.restoreFactoryDefaults();
+    rightArmMotor.restoreFactoryDefaults();
+
     leftArmMotor.setIdleMode(IdleMode.kBrake);
     rightArmMotor.setIdleMode(IdleMode.kBrake);
 
@@ -30,9 +33,6 @@ public class Arm extends SubsystemBase {
     leftArmMotor.follow(rightArmMotor, true);
 
     rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-
-    leftArmMotor.setInverted(true);
-    rightArmMotor.follow(leftArmMotor, true);
   }
 
   public void setArmSpeed(double speed) {
