@@ -28,6 +28,7 @@ import java.util.function.DoubleSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import cowlib.Util;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -109,8 +110,10 @@ public class RobotContainer {
     arm.setDefaultCommand(
       new MoveArm(
         arm, 
-        () -> clamp(
-          driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis(), 
+        () -> Util.mapDouble(
+          driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis(),
+          -1,
+          1,
           ArmConstants.raiseArmSpeed, 
           ArmConstants.lowerArmSpeed)));
 
