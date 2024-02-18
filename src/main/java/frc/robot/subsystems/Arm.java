@@ -17,6 +17,7 @@ public class Arm extends SubsystemBase {
   private CANSparkMax leftArmMotor = new CANSparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
   private CANSparkMax rightArmMotor = new CANSparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
 
+  @SuppressWarnings("unused")
   private SparkLimitSwitch rightReverseLimitSwitch;
 
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
