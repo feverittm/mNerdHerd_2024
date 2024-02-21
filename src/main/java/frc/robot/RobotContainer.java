@@ -9,7 +9,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
@@ -18,13 +17,9 @@ import frc.robot.commands.auto.SimpleTwoNoteSpeaker;
 import frc.robot.commands.auto.TestTriPID;
 import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.ProfPIDArm;
 import frc.robot.subsystems.Shooter;
-
-import java.util.function.DoubleSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -39,8 +34,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -60,8 +53,6 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  // private final Climber climber = new Climber();
-  // private final ProfPIDArm pidArm = new ProfPIDArm();
 
   private final AHRS gyro = new AHRS();
 
@@ -112,11 +103,6 @@ public class RobotContainer {
         arm, 
         () -> getArmControl()));
 
-    // climber.setDefaultCommand(
-    //   new Climb(
-    //       climber, 
-    //       () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()));
-
     configureBindings();
   }
 
@@ -148,16 +134,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("mapped", mapped);
 
     return mapped;
-  }
-
-  private double clamp(double input, double min, double max) {
-    if(input < min) {
-      return min;
-    }
-    else if(input > max) {
-      return max;
-    }
-    return input;
   }
 
   private double squared(double input) {
@@ -209,14 +185,12 @@ public class RobotContainer {
   private void configureBindings() {
     driveStick.povUp().onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
     driveStick.leftBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
-    driveStick.a().whileTrue(new MoveArm(arm, () -> ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
-    driveStick.b().whileTrue(new MoveArm(arm, () -> ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
-    driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed));
-    driveStick.rightBumper().onFalse(
-      Commands.race(
-        Commands.parallel(
-          new Shoot(shooter, ShooterConstants.shooterSpeed), 
-          new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+    driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
+    driveStick.rightBumper().onFalse( //shoot note when button is released
+    Commands.race(
+      Commands.parallel(
+        new Shoot(shooter, ShooterConstants.shooterSpeed), 
+        new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
         new WaitCommand(0.5)
       )
     );
