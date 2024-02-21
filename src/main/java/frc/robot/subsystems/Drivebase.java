@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import cowlib.SwerveModule;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.ModuleLocations;
 import frc.robot.Constants.DriveConstants.SwerveModules;
 
@@ -36,6 +38,9 @@ public class Drivebase extends SubsystemBase {
       ModuleLocations.backLeft,
       ModuleLocations.backRight);
 
+  private SlewRateLimiter slewRateX = new SlewRateLimiter(DriveConstants.slewRate);
+  private SlewRateLimiter slewRateY = new SlewRateLimiter(DriveConstants.slewRate);
+
   /** Creates a new Drivebase. */
   public Drivebase() {
   }
@@ -47,6 +52,11 @@ public class Drivebase extends SubsystemBase {
 
   public void robotOrientedDrive(double speedX, double speedY, double rot) {
     ChassisSpeeds speeds = new ChassisSpeeds(speedX, speedY, rot);
+    this.drive(speeds);
+  }
+
+  public void fieldOrientedSlewDrive(double speedX, double speedY, double rot, double angle) {
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(slewRateX.calculate(speedX), slewRateY.calculate(speedY), rot, Rotation2d.fromDegrees(angle));
     this.drive(speeds);
   }
 

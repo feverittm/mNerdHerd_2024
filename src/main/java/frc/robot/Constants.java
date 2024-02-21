@@ -24,6 +24,7 @@ public final class Constants {
   public static final class DriveConstants {
     public static final double deadband = 0.08;
     public static final int currentLimit = 30;
+    public static final double slewRate = 0; //lower number for higher center of mass
 
     public static final class SwervePID {
       public static final double p = 0.11;
