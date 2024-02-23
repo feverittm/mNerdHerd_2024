@@ -39,8 +39,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -63,9 +63,9 @@ public class RobotContainer {
   private final AHRS gyro = new AHRS();
 
   // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-  private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
-  private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
-  private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
+  // private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
+  // private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
+  // private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
   // private final DoubleSupplier filteredXPose = 
   //   () -> xFilter.calculate(
   //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
@@ -80,9 +80,7 @@ public class RobotContainer {
 
   private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.75, 0, 2);
   private final SimpleTwoNoteSpeaker twoNoteSpeaker = new SimpleTwoNoteSpeaker(drivebase, gyro, intake, shooter);
-  // private final TestTriPID testAuto = new TestTriPID(drivebase, intake, filteredXPose, filteredYPose, filteredAnlge);
 
-  // private static CommandXboxController driveStick = new CommandXboxController(0);
   private static XboxController driveStick = new XboxController(0);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
@@ -93,7 +91,6 @@ public class RobotContainer {
   public RobotContainer() {
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
-    // commandChooser.addOption("AprilTag Auto Test", testAuto);
     SmartDashboard.putData(commandChooser);
 
     // Configure the trigger bindings
@@ -175,18 +172,13 @@ public class RobotContainer {
     return !beamBreak.get();
   }
 
-  public void leftRumble() {
-    driveStick.setRumble(RumbleType.kLeftRumble, 1);
+  public void rumbleOn() {
+    driveStick.setRumble(RumbleType.kBothRumble, 1);
   }
 
-  public void rightRumble() {
-    driveStick.setRumble(RumbleType.kRightRumble, 1);
-  }
-
-  public void offRumble() {
+  public void rumbleOff() {
     driveStick.setRumble(RumbleType.kBothRumble, 0);
   }
-
 
   // public Double[] getBotposeDoubles() {
   //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
@@ -207,21 +199,24 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // driveStick.povUp().onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    // driveStick.leftBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
-    // driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
-    // driveStick.rightBumper().onFalse( //shoot note when button is released
-    // Commands.race(
-    //   Commands.parallel(
-    //     new Shoot(shooter, ShooterConstants.shooterSpeed), 
-    //     new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
-    //   new WaitCommand(0.5)
-    //   )
-    // );
+    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
+    new JoystickButton(driveStick, Button.kStart.value).whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //reverse intake
+    new JoystickButton(driveStick, Button.kLeftBumper.value).toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
+    new JoystickButton(driveStick, Button.kRightBumper.value).whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
+    new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( //shoot note when button is released
+      Commands.race(
+        Commands.parallel(
+          new Shoot(shooter, ShooterConstants.shooterSpeed), 
+          new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+        new WaitCommand(0.5)
+      )
+    );
 
-    new JoystickButton(driveStick, Button.kA.value).onTrue(new InstantCommand(this::offRumble));
-    new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(this::leftRumble));
-    new JoystickButton(driveStick, Button.kB.value).onTrue(new InstantCommand(this::rightRumble));
+    //experimental joystick rumble testing
+    new JoystickButton(driveStick, Button.kA.value).whileFalse(Commands.either( 
+      new InstantCommand(this::rumbleOn), 
+      new InstantCommand(this::rumbleOff), 
+      () -> getBeamBreak()));
   }
 
   /**
