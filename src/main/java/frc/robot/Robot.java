@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
     SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
+    SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
     try{
       // SmartDashboard.putNumber("X Pose", m_robotContainer.getBotposeDoubles()[0]);
       // SmartDashboard.putNumber("Y Pose", m_robotContainer.getBotposeDoubles()[1]);

@@ -15,6 +15,7 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.intakeMotorID, MotorType.kBrushless);
   private CANSparkMax kickupMotor = new CANSparkMax(IntakeConstants.kickupMotorID, MotorType.kBrushless);
+  
 
   public Intake() {
     intakeMotor.restoreFactoryDefaults();

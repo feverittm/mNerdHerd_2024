@@ -56,8 +56,14 @@ public class Arm extends SubsystemBase {
     if (speed < 0) {
       modifiedSpeed = speed * outputCoefficient;
     } else {
-      modifiedSpeed = 0.3 - (speed * outputCoefficient);
+      modifiedSpeed = speed;
     }
+    // else if (speed > 0 && pos < -13) {
+    //   modifiedSpeed = speed;
+    // }
+    // else {
+    //   modifiedSpeed = 0;
+    // }
     SmartDashboard.putNumber("modified arm speed", modifiedSpeed);
     SmartDashboard.putNumber("arm speed", speed);
     SmartDashboard.putNumber("pos", pos);

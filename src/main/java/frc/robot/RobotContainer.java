@@ -27,8 +27,12 @@ import cowlib.Util;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -54,6 +59,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
 
+  private final DigitalInput beamBreak = new DigitalInput(0);
   private final AHRS gyro = new AHRS();
 
   // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -76,7 +82,8 @@ public class RobotContainer {
   private final SimpleTwoNoteSpeaker twoNoteSpeaker = new SimpleTwoNoteSpeaker(drivebase, gyro, intake, shooter);
   // private final TestTriPID testAuto = new TestTriPID(drivebase, intake, filteredXPose, filteredYPose, filteredAnlge);
 
-  private static CommandXboxController driveStick = new CommandXboxController(0);
+  // private static CommandXboxController driveStick = new CommandXboxController(0);
+  private static XboxController driveStick = new XboxController(0);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -156,10 +163,6 @@ public class RobotContainer {
     return gyro.getYaw();
   }
 
-  // public Double[] getBotposeDoubles() {
-  //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
-  // }
-
   public boolean onBlueAlliance() {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
@@ -167,6 +170,27 @@ public class RobotContainer {
     }
     return false;
   }
+
+  public boolean getBeamBreak() {
+    return !beamBreak.get();
+  }
+
+  public void leftRumble() {
+    driveStick.setRumble(RumbleType.kLeftRumble, 1);
+  }
+
+  public void rightRumble() {
+    driveStick.setRumble(RumbleType.kRightRumble, 1);
+  }
+
+  public void offRumble() {
+    driveStick.setRumble(RumbleType.kBothRumble, 0);
+  }
+
+
+  // public Double[] getBotposeDoubles() {
+  //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
+  // }
   
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
@@ -183,17 +207,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driveStick.povUp().onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    driveStick.leftBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
-    driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
-    driveStick.rightBumper().onFalse( //shoot note when button is released
-    Commands.race(
-      Commands.parallel(
-        new Shoot(shooter, ShooterConstants.shooterSpeed), 
-        new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
-        new WaitCommand(0.5)
-      )
-    );
+    // driveStick.povUp().onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
+    // driveStick.leftBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
+    // driveStick.rightBumper().whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
+    // driveStick.rightBumper().onFalse( //shoot note when button is released
+    // Commands.race(
+    //   Commands.parallel(
+    //     new Shoot(shooter, ShooterConstants.shooterSpeed), 
+    //     new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+    //   new WaitCommand(0.5)
+    //   )
+    // );
+
+    new JoystickButton(driveStick, Button.kA.value).onTrue(new InstantCommand(this::offRumble));
+    new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(this::leftRumble));
+    new JoystickButton(driveStick, Button.kB.value).onTrue(new InstantCommand(this::rightRumble));
   }
 
   /**
