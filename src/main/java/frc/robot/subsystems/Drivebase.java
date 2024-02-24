@@ -113,13 +113,6 @@ public class Drivebase extends SubsystemBase {
     this.drive(speeds);
   }
 
-  public void discretizeDrive(ChassisSpeeds robotRelativeSpeeds) {
-    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-    // SwerveModuleState[] targetStates =
-    // kinematics.toSwerveModuleStates(targetSpeeds);
-    drive(targetSpeeds);
-  }
-
   private void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds,
         new Translation2d(Units.inchesToMeters(4), 0));
@@ -174,6 +167,7 @@ public class Drivebase extends SubsystemBase {
   public void periodic() {
     odometry.update(gyro.getRotation2d(), getPositions());
     field.setRobotPose(getPose());
+    
     // TODO: Sendables?
     //
     // This method will be called once per scheduler run

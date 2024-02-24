@@ -66,21 +66,24 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
 
-  // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  // NetworkTable limelightTable =
+  // NetworkTableInstance.getDefault().getTable("limelight");
   // private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
   // private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
-  // private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
-  // private final DoubleSupplier filteredXPose = 
-  //   () -> xFilter.calculate(
-  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
+  // private MedianFilter angleFilter = new
+  // MedianFilter(AutoConstants.medianFilter);
+  // private final DoubleSupplier filteredXPose =
+  // () -> xFilter.calculate(
+  // limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
 
-  //   private final DoubleSupplier filteredYPose = 
-  //   () -> yFilter.calculate(
-  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO, make sure these are the right values for TY and RZ
+  // private final DoubleSupplier filteredYPose =
+  // () -> yFilter.calculate(
+  // limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO,
+  // make sure these are the right values for TY and RZ
 
-  //   private final DoubleSupplier filteredAnlge = 
-  //   () -> angleFilter.calculate(
-  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
+  // private final DoubleSupplier filteredAnlge =
+  // () -> angleFilter.calculate(
+  // limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
 
   private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.75, 0, 2);
   private final SimpleTwoNoteSpeaker twoNoteSpeaker = new SimpleTwoNoteSpeaker(drivebase, gyro, intake, shooter);
@@ -90,12 +93,12 @@ public class RobotContainer {
   SendableChooser<Command> commandChooser = new SendableChooser<>();
   private final SendableChooser<Command> autoChooser;
 
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    NamedCommands.registerCommand("Intake", new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+    NamedCommands.registerCommand("Intake",
+        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
 
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
@@ -106,17 +109,17 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
-      new Drive(
-          drivebase,
-          gyro,
-          () -> scaleTranslationAxis(driveStick.getLeftY()),
-          () -> scaleTranslationAxis(driveStick.getLeftX()),
-          () -> scaleRotationAxis(driveStick.getRightX())));
+        new Drive(
+            drivebase,
+            gyro,
+            () -> scaleTranslationAxis(driveStick.getLeftY()),
+            () -> scaleTranslationAxis(driveStick.getLeftX()),
+            () -> scaleRotationAxis(driveStick.getRightX())));
 
     arm.setDefaultCommand(
-      new MoveArm(
-        arm, 
-        () -> getArmControl()));
+        new MoveArm(
+            arm,
+            () -> getArmControl()));
 
     configureBindings();
   }
@@ -183,9 +186,10 @@ public class RobotContainer {
   }
 
   // public Double[] getBotposeDoubles() {
-  //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
+  // return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(),
+  // filteredAnlge.getAsDouble()};
   // }
-  
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -201,20 +205,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    new JoystickButton(driveStick, Button.kStart.value).whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //reverse intake
+    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); // resets the gyro for field oriented controll
+    new JoystickButton(driveStick, Button.kStart.value)
+        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
     new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
-      new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), //toggle intake on/off
-      new Rumble(driveStick, beamBreak))); //rumble controller if note is visible
-    new JoystickButton(driveStick, Button.kRightBumper.value).whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
-    new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( //shoot note when button is released
-      Commands.race(
-        Commands.parallel(
-          new Shoot(shooter, ShooterConstants.shooterSpeed), 
-          new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
-        new WaitCommand(0.5)
-      )
-    );
+        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
+        new Rumble(driveStick, beamBreak))); // rumble controller if note is visible
+    new JoystickButton(driveStick, Button.kRightBumper.value)
+        .whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); // spin up flywheels while button is held
+    new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
+        Commands.race(
+            Commands.parallel(
+                new Shoot(shooter, ShooterConstants.shooterSpeed),
+                new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+            new WaitCommand(0.5)));
   }
 
   /**
