@@ -40,6 +40,8 @@ public class SwerveModule {
 
     this.pidController.enableContinuousInput(-180, 180);
 
+    this.speedMotor.setInverted(this.inverted);
+
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
     double driveReduction = 1.0 / 6.75;
@@ -64,7 +66,7 @@ public class SwerveModule {
 
   private void drive(double speedMetersPerSecond, double angle) {
     double voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
-    speedMotor.setVoltage(voltage * (this.inverted ? -1 : 1));
+    speedMotor.setVoltage(voltage);
     angleMotor.setVoltage(-pidController.calculate(this.getEncoder(), angle));
   }
 
