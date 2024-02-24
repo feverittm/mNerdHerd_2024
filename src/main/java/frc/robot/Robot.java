@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,8 +21,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private WaitCommand waitCommand;
 
   private RobotContainer m_robotContainer;
+
+  private boolean firstCheck = true;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -114,10 +118,21 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if(m_robotContainer.getBeamBreak()) {
-      m_robotContainer.setRumble(0.5);
-    } else {
+      m_robotContainer.setRumble(0.3);
+    } else { 
       m_robotContainer.setRumble(0);
     }
+
+    // waitCommand = new WaitCommand(1);
+
+    // if(m_robotContainer.getBeamBreak() && firstCheck) {
+    //   firstCheck = false;
+    //   m_robotContainer.setRumble(1);
+    //   waitCommand.schedule();
+    //   m_robotContainer.setRumble(0);
+    // } else if(!m_robotContainer.getBeamBreak() && !firstCheck) {
+    //   firstCheck = true;
+    // }
   }
 
   @Override

@@ -23,7 +23,6 @@ import frc.robot.subsystems.Shooter;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import cowlib.Util;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -134,7 +133,6 @@ public class RobotContainer {
       mapped = 0;
     }
 
-    SmartDashboard.putNumber("trigger", trigger);
     SmartDashboard.putNumber("mapped", mapped);
 
     return mapped;
@@ -172,12 +170,8 @@ public class RobotContainer {
     return !beamBreak.get();
   }
 
-  public void rumbleOn() {
-    driveStick.setRumble(RumbleType.kBothRumble, 1);
-  }
-
-  public void rumbleOff() {
-    driveStick.setRumble(RumbleType.kBothRumble, 0);
+  public void setRumble(double value) {
+    driveStick.setRumble(RumbleType.kBothRumble, value);
   }
 
   // public Double[] getBotposeDoubles() {
@@ -211,12 +205,6 @@ public class RobotContainer {
         new WaitCommand(0.5)
       )
     );
-
-    //experimental joystick rumble testing
-    new JoystickButton(driveStick, Button.kA.value).whileFalse(Commands.either( 
-      new InstantCommand(this::rumbleOn), 
-      new InstantCommand(this::rumbleOff), 
-      () -> getBeamBreak()));
   }
 
   /**

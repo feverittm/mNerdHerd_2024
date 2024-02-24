@@ -61,8 +61,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   private void drive(ChassisSpeeds speeds) {
-    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-    // SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(Units.inchesToMeters(4), 0));
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(Units.inchesToMeters(4), 0));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY);
 

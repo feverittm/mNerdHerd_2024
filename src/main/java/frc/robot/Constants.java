@@ -24,19 +24,19 @@ public final class Constants {
   public static final class DriveConstants {
     public static final double deadband = 0.08;
     public static final int currentLimit = 30;
-    public static final double slewRate = 0; //lower number for higher center of mass
+    public static final double slewRate = 20; //lower number for higher center of mass
 
     public static final class SwervePID {
-      public static final double p = 0.11;
+      public static final double p = 0.12;
       public static final double i = 0;
       public static final double d = 0.0015;
     }
 
     public static final class SwerveModules {
-      public static final SwerveModuleConfig frontRight = new SwerveModuleConfig(1, 11, 21, true);
-      public static final SwerveModuleConfig frontLeft = new SwerveModuleConfig(2, 12, 22, false);
-      public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(3, 13, 23, true);
-      public static final SwerveModuleConfig backRight = new SwerveModuleConfig(4, 14, 24, false);
+      public static final SwerveModuleConfig frontRight = new SwerveModuleConfig(1, 11, 21, false);
+      public static final SwerveModuleConfig frontLeft = new SwerveModuleConfig(2, 12, 22, true);
+      public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(3, 13, 23, false);
+      public static final SwerveModuleConfig backRight = new SwerveModuleConfig(4, 14, 24, true);
     }
 
     public static final class ModuleLocations {
