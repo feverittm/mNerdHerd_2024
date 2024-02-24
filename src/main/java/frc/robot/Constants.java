@@ -41,6 +41,7 @@ public final class Constants {
 
     public static final class ModuleLocations {
       public static final double dist = Units.inchesToMeters(9.25);
+      public static final double robotRaduius = Math.sqrt(2*Math.pow(dist, 2));
       public static final Translation2d frontLeft = new Translation2d(dist, dist);
       public static final Translation2d frontRight = new Translation2d(dist, -dist);
       public static final Translation2d backLeft = new Translation2d(-dist, dist);
@@ -111,6 +112,20 @@ public final class Constants {
     }
 
     public static final int medianFilter = 5;
+  }
+
+  public static final class PathPlannerConstants {
+    public static final class TranslationPID {
+      public static final double p = 0;
+      public static final double i = 0;
+      public static final double d = 0;
+    }
+
+    public static final class RotationPID {
+      public static final double p = 0;
+      public static final double i = 0;
+      public static final double d = 0;
+    }
   }
   
   public static class OperatorConstants {

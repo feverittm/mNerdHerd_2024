@@ -23,6 +23,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTable;
@@ -39,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -54,13 +58,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivebase drivebase = new Drivebase();
+  private final AHRS gyro = new AHRS();
+  private final DigitalInput beamBreak = new DigitalInput(0);
+
+  private final Drivebase drivebase = new Drivebase(gyro);
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-
-  private final DigitalInput beamBreak = new DigitalInput(0);
-  private final AHRS gyro = new AHRS();
 
   // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   // private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
@@ -84,14 +88,21 @@ public class RobotContainer {
   private static XboxController driveStick = new XboxController(0);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autoChooser;
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    NamedCommands.registerCommand("Intake", new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
     SmartDashboard.putData(commandChooser);
+
+    autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
+    SmartDashboard.putData("Auto Mode", autoChooser);
 
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
@@ -213,6 +224,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return commandChooser.getSelected();
+    return autoChooser.getSelected();
+    // return commandChooser.getSelected();
   }
 }

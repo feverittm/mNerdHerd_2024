@@ -4,19 +4,33 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import cowlib.SwerveModule;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.ModuleLocations;
 import frc.robot.Constants.DriveConstants.SwerveModules;
+import frc.robot.Constants.PathPlannerConstants.RotationPID;
+import frc.robot.Constants.PathPlannerConstants.TranslationPID;
 
 public class Drivebase extends SubsystemBase {
   private final double DRIVE_REDUCTION = 1.0 / 6.75;
@@ -27,10 +41,14 @@ public class Drivebase extends SubsystemBase {
 
   private final double MAX_VOLTAGE = 12;
 
+  private AHRS gyro;
+
   private SwerveModule frontLeft = new SwerveModule(SwerveModules.frontLeft, MAX_VELOCITY, MAX_VOLTAGE);
   private SwerveModule frontRight = new SwerveModule(SwerveModules.frontRight, MAX_VELOCITY, MAX_VOLTAGE);
   private SwerveModule backLeft = new SwerveModule(SwerveModules.backLeft, MAX_VELOCITY, MAX_VOLTAGE);
   private SwerveModule backRight = new SwerveModule(SwerveModules.backRight, MAX_VELOCITY, MAX_VOLTAGE);
+
+  private SwerveModule[] modules = new SwerveModule[] { frontLeft, frontRight, backLeft, backRight };
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
       ModuleLocations.frontLeft,
@@ -38,11 +56,45 @@ public class Drivebase extends SubsystemBase {
       ModuleLocations.backLeft,
       ModuleLocations.backRight);
 
+  private SwerveDriveOdometry odometry;
+
+  private Field2d field = new Field2d();
+
   private SlewRateLimiter slewRateX = new SlewRateLimiter(DriveConstants.slewRate);
   private SlewRateLimiter slewRateY = new SlewRateLimiter(DriveConstants.slewRate);
 
   /** Creates a new Drivebase. */
-  public Drivebase() {
+  public Drivebase(AHRS gyro) {
+    this.gyro = gyro;
+    odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
+
+    AutoBuilder.configureHolonomic(
+        this::getPose, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(TranslationPID.p, TranslationPID.i, TranslationPID.d), // Translation PID constants
+            new PIDConstants(RotationPID.p, RotationPID.i, RotationPID.d), // Rotation PID constants
+            MAX_VELOCITY, // Max module speed, in m/s
+            ModuleLocations.robotRaduius, // Drive base radius in meters. Distance from robot center to furthest module.
+            new ReplanningConfig()), // Default path replanning config. See the API for the options here
+
+        // Boolean supplier that controls when the path will be mirrored for the red
+        // alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        () -> {
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this); // Reference to this subsystem to set requirements
+
+    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
+    SmartDashboard.putData("Field", field);
   }
 
   public void fieldOrientedDrive(double speedX, double speedY, double rot, double angle) {
@@ -56,12 +108,21 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void fieldOrientedSlewDrive(double speedX, double speedY, double rot, double angle) {
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(slewRateX.calculate(speedX), slewRateY.calculate(speedY), rot, Rotation2d.fromDegrees(angle));
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(slewRateX.calculate(speedX),
+        slewRateY.calculate(speedY), rot, Rotation2d.fromDegrees(angle));
     this.drive(speeds);
   }
 
+  public void discretizeDrive(ChassisSpeeds robotRelativeSpeeds) {
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+    // SwerveModuleState[] targetStates =
+    // kinematics.toSwerveModuleStates(targetSpeeds);
+    drive(targetSpeeds);
+  }
+
   private void drive(ChassisSpeeds speeds) {
-    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(Units.inchesToMeters(4), 0));
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds,
+        new Translation2d(Units.inchesToMeters(4), 0));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY);
 
@@ -81,8 +142,46 @@ public class Drivebase extends SubsystemBase {
     return MAX_ANGULAR_VELOCITY;
   }
 
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+  public void resetPose(Pose2d pose2d) {
+    odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose2d);
+  }
+
+  public ChassisSpeeds getCurrentSpeeds() {
+    return kinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      states[i] = modules[i].getState();
+    }
+    return states;
+  }
+
+  public SwerveModulePosition[] getPositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      positions[i] = modules[i].getPosition();
+    }
+    return positions;
+  }
+
+  public void setStates(SwerveModuleState[] targetStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, MAX_VELOCITY);
+
+    for (int i = 0; i < modules.length; i++) {
+      modules[i].setTargetState(targetStates[i]);
+    }
+  }
+
   @Override
   public void periodic() {
+    odometry.update(gyro.getRotation2d(), getPositions());
+    field.setRobotPose(getPose());
     // TODO: Sendables?
     //
     // This method will be called once per scheduler run

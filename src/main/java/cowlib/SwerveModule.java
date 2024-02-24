@@ -27,6 +27,8 @@ public class SwerveModule {
   private boolean inverted;
   private double maxVelocity;
   private double maxVoltage;
+  private SwerveModulePosition currentPosition;
+  private SwerveModuleState currentState;
 
   public SwerveModule(int angleMotorId, int speedMotorId, int encoderId, boolean driveInverted,
       double maxVelocity, double maxVoltage) {
@@ -37,6 +39,8 @@ public class SwerveModule {
     this.inverted = driveInverted;
     this.maxVelocity = maxVelocity;
     this.maxVoltage = maxVoltage;
+    currentPosition = new SwerveModulePosition();
+    currentState = new SwerveModuleState();
 
     this.pidController.enableContinuousInput(-180, 180);
 
