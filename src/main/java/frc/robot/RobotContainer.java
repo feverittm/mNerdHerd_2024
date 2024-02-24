@@ -99,8 +99,12 @@ public class RobotContainer {
   public RobotContainer() {
     NamedCommands.registerCommand("Intake",
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
-    NamedCommands.registerCommand("Stop Intake", 
+    NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
+    var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
+        Commands.sequence(Commands.waitSeconds(1),
+            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.5))));
+    NamedCommands.registerCommand("Shoot", shootComp);
 
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
@@ -219,6 +223,11 @@ public class RobotContainer {
                 new Shoot(shooter, ShooterConstants.shooterSpeed),
                 new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
             new WaitCommand(0.5)));
+
+    var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
+        Commands.sequence(Commands.waitSeconds(1),
+            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.5))));
+    new JoystickButton(driveStick, Button.kY.value).onTrue(shootComp);
   }
 
   /**
