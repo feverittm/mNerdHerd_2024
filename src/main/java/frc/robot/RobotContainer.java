@@ -10,6 +10,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Drive;
+import frc.robot.commands.Rumble;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
@@ -166,14 +167,6 @@ public class RobotContainer {
     return false;
   }
 
-  public boolean getBeamBreak() {
-    return !beamBreak.get();
-  }
-
-  public void setRumble(double value) {
-    driveStick.setRumble(RumbleType.kBothRumble, value);
-  }
-
   // public Double[] getBotposeDoubles() {
   //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
   // }
@@ -195,7 +188,9 @@ public class RobotContainer {
   private void configureBindings() {
     new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
     new JoystickButton(driveStick, Button.kStart.value).whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //reverse intake
-    new JoystickButton(driveStick, Button.kLeftBumper.value).toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
+    new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
+      new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), //toggle intake on/off
+      new Rumble(driveStick, beamBreak))); //rumble controller if note is visible
     new JoystickButton(driveStick, Button.kRightBumper.value).whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); //spin up flywheels while button is held
     new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( //shoot note when button is released
       Commands.race(

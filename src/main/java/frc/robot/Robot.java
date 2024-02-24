@@ -21,12 +21,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private WaitCommand waitCommand;
 
   private RobotContainer m_robotContainer;
-
-  private boolean firstCheck = true;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -63,7 +59,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
     SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
-    SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
     try{
       // SmartDashboard.putNumber("X Pose", m_robotContainer.getBotposeDoubles()[0]);
       // SmartDashboard.putNumber("Y Pose", m_robotContainer.getBotposeDoubles()[1]);
@@ -117,22 +112,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(m_robotContainer.getBeamBreak()) {
-      m_robotContainer.setRumble(0.3);
-    } else { 
-      m_robotContainer.setRumble(0);
-    }
 
-    // waitCommand = new WaitCommand(1);
-
-    // if(m_robotContainer.getBeamBreak() && firstCheck) {
-    //   firstCheck = false;
-    //   m_robotContainer.setRumble(1);
-    //   waitCommand.schedule();
-    //   m_robotContainer.setRumble(0);
-    // } else if(!m_robotContainer.getBeamBreak() && !firstCheck) {
-    //   firstCheck = true;
-    // }
   }
 
   @Override
