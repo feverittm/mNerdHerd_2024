@@ -46,8 +46,8 @@ public class SwerveModule {
     double WHEEL_DIAMETER = 0.1016;
     double rotationsToDistance = driveReduction * WHEEL_DIAMETER * Math.PI;
 
-    this.speedEncoder.setPositionConversionFactor(rotationsToDistance);
-    this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60);
+    this.speedEncoder.setPositionConversionFactor(rotationsToDistance * (this.inverted ? -1 : 1));
+    this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60 * (this.inverted ? -1 : 1));
   }
 
   public SwerveModule(SwerveModuleConfig config, double maxVelocity, double maxVoltage) {
