@@ -148,8 +148,6 @@ public class RobotContainer {
       mapped = 0;
     }
 
-    SmartDashboard.putNumber("mapped", mapped);
-
     return mapped;
   }
 
