@@ -24,7 +24,6 @@ public class SwerveModule {
   private RelativeEncoder speedEncoder;
   private PIDController pidController;
   private CANcoder encoder;
-  private boolean inverted;
   private double maxVelocity;
   private double maxVoltage;
 
@@ -34,13 +33,12 @@ public class SwerveModule {
     this.speedMotor = new CANSparkMax(speedMotorId, MotorType.kBrushless);
     this.pidController = new PIDController(SwervePID.p, SwervePID.i, SwervePID.d);
     this.encoder = new CANcoder(encoderId);
-    this.inverted = driveInverted;
     this.maxVelocity = maxVelocity;
     this.maxVoltage = maxVoltage;
 
     this.pidController.enableContinuousInput(-180, 180);
 
-    this.speedMotor.setInverted(this.inverted);
+    this.speedMotor.setInverted(driveInverted);
 
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
@@ -48,8 +46,8 @@ public class SwerveModule {
     double WHEEL_DIAMETER = 0.1016;
     double rotationsToDistance = driveReduction * WHEEL_DIAMETER * Math.PI;
 
-    this.speedEncoder.setPositionConversionFactor(rotationsToDistance * (this.inverted ? -1 : 1));
-    this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60 * (this.inverted ? -1 : 1));
+    this.speedEncoder.setPositionConversionFactor(rotationsToDistance);
+    this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60);
   }
 
   public SwerveModule(SwerveModuleConfig config, double maxVelocity, double maxVoltage) {
