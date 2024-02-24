@@ -143,8 +143,12 @@ public class RobotContainer {
     return Math.copySign(input * input, input);
   }
 
+  private double cube(double input) {
+    return Math.copySign(input * input * input, input);
+  }
+
   private double scaleTranslationAxis(double input) {
-    return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity() * 0.8;
+    return deadband(-cube(input), DriveConstants.deadband) * drivebase.getMaxVelocity() * 0.8;
   }
 
   private double scaleRotationAxis(double input) {

@@ -49,8 +49,8 @@ public class Arm extends SubsystemBase {
       pos, // Position of the arm
       ArmPositions.lower,
       ArmPositions.upper,
-      1, // 100% input power
-      0.3 // 30% input power
+      1, // 100% input powerP
+      0 // 0% input power
     );
     double modifiedSpeed;
     if (speed < 0) {
