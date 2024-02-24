@@ -166,9 +166,6 @@ public class Drivebase extends SubsystemBase {
   @Override
   public void periodic() {
     var positions = getPositions();
-    for (int i = 0; i < positions.length; i++) {
-      SmartDashboard.putNumber("dModule " + i, positions[i].distanceMeters);
-    }
 
     odometry.update(gyro.getRotation2d(), positions);
     var pose = getPose();

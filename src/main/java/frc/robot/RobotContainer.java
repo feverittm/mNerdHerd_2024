@@ -91,7 +91,7 @@ public class RobotContainer {
   private static XboxController driveStick = new XboxController(0);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
-  private final SendableChooser<Command> autoChooser;
+  private SendableChooser<Command> autoChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -99,6 +99,8 @@ public class RobotContainer {
   public RobotContainer() {
     NamedCommands.registerCommand("Intake",
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+    NamedCommands.registerCommand("Stop Intake", 
+        new RunIntake(intake, 0, 0));
 
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
