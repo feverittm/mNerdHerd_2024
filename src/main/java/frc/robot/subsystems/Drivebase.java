@@ -170,14 +170,6 @@ public class Drivebase extends SubsystemBase {
     return positions;
   }
 
-  public void setStates(SwerveModuleState[] targetStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, MAX_VELOCITY);
-
-    for (int i = 0; i < modules.length; i++) {
-      modules[i].setTargetState(targetStates[i]);
-    }
-  }
-
   @Override
   public void periodic() {
     odometry.update(gyro.getRotation2d(), getPositions());
