@@ -166,8 +166,17 @@ public class Drivebase extends SubsystemBase {
   @Override
   public void periodic() {
     odometry.update(gyro.getRotation2d(), getPositions());
+    var pose = getPose();
+
+    var translation = pose.getTranslation();
+    var x = translation.getX();
+    var y = translation.getY();
+    var rotation = pose.getRotation().getDegrees();
+    SmartDashboard.putNumber("x", x);
+    SmartDashboard.putNumber("y", y);
+    SmartDashboard.putNumber("rot", rotation);
     field.setRobotPose(getPose());
-    
+
     // TODO: Sendables?
     //
     // This method will be called once per scheduler run
