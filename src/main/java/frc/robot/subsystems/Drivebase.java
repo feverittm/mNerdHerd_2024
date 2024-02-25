@@ -22,6 +22,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.BooleanEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -63,8 +65,14 @@ public class Drivebase extends SubsystemBase {
   private SlewRateLimiter slewRateX = new SlewRateLimiter(DriveConstants.slewRate);
   private SlewRateLimiter slewRateY = new SlewRateLimiter(DriveConstants.slewRate);
 
+  private BooleanEntry fieldOrientedEntry;
+
   /** Creates a new Drivebase. */
   public Drivebase(AHRS gyro) {
+    var inst = NetworkTableInstance.getDefault();
+    var table = inst.getTable("SmartDashboard");
+    this.fieldOrientedEntry = table.getBooleanTopic("Field Oriented").getEntry(true);
+
     this.gyro = gyro;
     odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
 
@@ -97,8 +105,13 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putData("Field", field);
   }
 
-  public void fieldOrientedDrive(double speedX, double speedY, double rot, double angle) {
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rot, Rotation2d.fromDegrees(angle));
+  public double getFieldAngle() {
+    return -gyro.getYaw();
+  }
+
+  public void fieldOrientedDrive(double speedX, double speedY, double rot) {
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rot,
+        Rotation2d.fromDegrees(getFieldAngle()));
     this.drive(speeds);
   }
 
@@ -107,10 +120,21 @@ public class Drivebase extends SubsystemBase {
     this.drive(speeds);
   }
 
-  public void fieldOrientedSlewDrive(double speedX, double speedY, double rot, double angle) {
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(slewRateX.calculate(speedX),
-        slewRateY.calculate(speedY), rot, Rotation2d.fromDegrees(angle));
-    this.drive(speeds);
+  public void defaultDrive(double speedX, double speedY, double rot) {
+    defaultDrive(speedX, speedY, rot, true);
+  }
+
+  public void defaultDrive(double speedX, double speedY, double rot, boolean slew) {
+    if (slew) {
+      speedX = slewRateX.calculate(speedX);
+      speedY = slewRateY.calculate(speedY);
+    }
+
+    if (this.fieldOrientedEntry.get(true)) {
+      fieldOrientedDrive(speedX, speedY, rot);
+    } else {
+      robotOrientedDrive(speedX, speedY, rot);
+    }
   }
 
   private void drive(ChassisSpeeds speeds) {

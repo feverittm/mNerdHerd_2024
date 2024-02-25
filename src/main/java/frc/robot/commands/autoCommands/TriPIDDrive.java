@@ -32,8 +32,9 @@ public class TriPIDDrive extends Command {
   double rOutput;
 
   /** Creates a new TriPIDDrive. */
-  public TriPIDDrive(Drivebase drivebase, Intake intake, boolean runIntake, double xTarget, double yTarget, double rTarget, 
-  DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
+  public TriPIDDrive(Drivebase drivebase, Intake intake, boolean runIntake, double xTarget, double yTarget,
+      double rTarget,
+      DoubleSupplier xPose, DoubleSupplier yPose, DoubleSupplier angle) {
     this.drivebase = drivebase;
     this.intake = intake;
     this.runIntake = runIntake;
@@ -69,14 +70,13 @@ public class TriPIDDrive extends Command {
     SmartDashboard.putNumber("Angle PID Output", rOutput);
 
     drivebase.fieldOrientedDrive(
-      xOutput,
-      yOutput,
-      // Math.copySign(Math.min(Math.abs(xOutput), 0.3), xOutput),
-      // Math.copySign(Math.min(Math.abs(yOutput), 1), yOutput),
-      -Math.copySign(Math.min(Math.abs(rOutput), 0.04), rOutput),
-      -angle.getAsDouble());
+        xOutput,
+        yOutput,
+        // Math.copySign(Math.min(Math.abs(xOutput), 0.3), xOutput),
+        // Math.copySign(Math.min(Math.abs(yOutput), 1), yOutput),
+        -Math.copySign(Math.min(Math.abs(rOutput), 0.04), rOutput));
 
-    if(runIntake) {
+    if (runIntake) {
       intake.runIntake(IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed);
     }
   }

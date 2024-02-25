@@ -43,9 +43,7 @@ public class Drive extends Command {
     var y = speedY.getAsDouble();
     var r = rot.getAsDouble();
 
-    // drivebase.robotOrientedDrive(x, y, r);
-    // drivebase.fieldOrientedDrive(x, y, r, -gyro.getYaw());
-    drivebase.fieldOrientedSlewDrive(x, y, r, -gyro.getYaw());
+    drivebase.defaultDrive(x, y, r);
   }
 
   // Called once the command ends or is interrupted.
