@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -59,14 +60,18 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
     SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
+    SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
     // try{
-    //   // SmartDashboard.putNumber("X Pose", m_robotContainer.getBotposeDoubles()[0]);
-    //   // SmartDashboard.putNumber("Y Pose", m_robotContainer.getBotposeDoubles()[1]);
-    //   // SmartDashboard.putNumber("Angle", m_robotContainer.getBotposeDoubles()[2]);
-    //   SmartDashboard.putBoolean("Limelight Connected", true);
+    // // SmartDashboard.putNumber("X Pose",
+    // m_robotContainer.getBotposeDoubles()[0]);
+    // // SmartDashboard.putNumber("Y Pose",
+    // m_robotContainer.getBotposeDoubles()[1]);
+    // // SmartDashboard.putNumber("Angle",
+    // m_robotContainer.getBotposeDoubles()[2]);
+    // SmartDashboard.putBoolean("Limelight Connected", true);
     // }
     // catch(Exception e){
-    //   SmartDashboard.putBoolean("Limelight Connected", false);
+    // SmartDashboard.putBoolean("Limelight Connected", false);
     // }
   }
 
@@ -112,7 +117,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
   }
 
   @Override

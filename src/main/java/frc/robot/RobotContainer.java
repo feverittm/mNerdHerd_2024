@@ -190,6 +190,10 @@ public class RobotContainer {
     return false;
   }
 
+  public boolean getBeamBreak() {
+    return !beamBreak.get();
+  }
+
   // public Double[] getBotposeDoubles() {
   // return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(),
   // filteredAnlge.getAsDouble()};
