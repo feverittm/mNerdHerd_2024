@@ -6,8 +6,6 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivebase;
 
@@ -17,15 +15,13 @@ public class Drive extends Command {
   private final DoubleSupplier speedX;
   private final DoubleSupplier speedY;
   private final DoubleSupplier rot;
-  private final AHRS gyro;
 
   /** Creates a new Drive. */
-  public Drive(Drivebase drivebase, AHRS gyro, DoubleSupplier speedX, DoubleSupplier speedY, DoubleSupplier rot) {
+  public Drive(Drivebase drivebase, DoubleSupplier speedX, DoubleSupplier speedY, DoubleSupplier rot) {
     this.drivebase = drivebase;
     this.speedX = speedX;
     this.speedY = speedY;
     this.rot = rot;
-    this.gyro = gyro;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivebase);
@@ -43,7 +39,7 @@ public class Drive extends Command {
     var y = speedY.getAsDouble();
     var r = rot.getAsDouble();
 
-    drivebase.defaultDrive(x, y, r);
+    drivebase.defaultDrive(x, y, r, true);
   }
 
   // Called once the command ends or is interrupted.

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -14,9 +13,6 @@ import frc.robot.commands.Rumble;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
-import frc.robot.commands.auto.SimpleTwoNoteSpeaker;
-import frc.robot.commands.auto.TestTriPID;
-import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
@@ -25,16 +21,11 @@ import frc.robot.subsystems.Shooter;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -66,31 +57,8 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
 
-  // NetworkTable limelightTable =
-  // NetworkTableInstance.getDefault().getTable("limelight");
-  // private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
-  // private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
-  // private MedianFilter angleFilter = new
-  // MedianFilter(AutoConstants.medianFilter);
-  // private final DoubleSupplier filteredXPose =
-  // () -> xFilter.calculate(
-  // limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
-
-  // private final DoubleSupplier filteredYPose =
-  // () -> yFilter.calculate(
-  // limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO,
-  // make sure these are the right values for TY and RZ
-
-  // private final DoubleSupplier filteredAnlge =
-  // () -> angleFilter.calculate(
-  // limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
-
-  private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.75, 0, 2);
-  private final SimpleTwoNoteSpeaker twoNoteSpeaker = new SimpleTwoNoteSpeaker(drivebase, gyro, intake, shooter);
-
   private static XboxController driveStick = new XboxController(0);
 
-  SendableChooser<Command> commandChooser = new SendableChooser<>();
   private SendableChooser<Command> autoChooser;
 
   /**
@@ -122,10 +90,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", shootComp);
     NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
 
-    commandChooser.addOption("Timed drive", timeDrive);
-    commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);
-    SmartDashboard.putData(commandChooser);
-
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
 
@@ -133,7 +97,6 @@ public class RobotContainer {
     drivebase.setDefaultCommand(
         new Drive(
             drivebase,
-            gyro,
             () -> scaleTranslationAxis(driveStick.getLeftY()),
             () -> scaleTranslationAxis(driveStick.getLeftX()),
             () -> scaleRotationAxis(driveStick.getRightX())));
@@ -209,11 +172,6 @@ public class RobotContainer {
     return !beamBreak.get();
   }
 
-  // public Double[] getBotposeDoubles() {
-  // return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(),
-  // filteredAnlge.getAsDouble()};
-  // }
-
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -253,6 +211,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return autoChooser.getSelected();
-    // return commandChooser.getSelected();
   }
 }

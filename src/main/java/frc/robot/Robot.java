@@ -60,18 +60,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
     SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
     SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
-    // try{
-    // // SmartDashboard.putNumber("X Pose",
-    // m_robotContainer.getBotposeDoubles()[0]);
-    // // SmartDashboard.putNumber("Y Pose",
-    // m_robotContainer.getBotposeDoubles()[1]);
-    // // SmartDashboard.putNumber("Angle",
-    // m_robotContainer.getBotposeDoubles()[2]);
-    // SmartDashboard.putBoolean("Limelight Connected", true);
-    // }
-    // catch(Exception e){
-    // SmartDashboard.putBoolean("Limelight Connected", false);
-    // }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
