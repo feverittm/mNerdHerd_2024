@@ -3,53 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.41,
-        "y": 5.56
+        "x": 1.8256663591711995,
+        "y": 7.595061650930903
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4099999999999993,
-        "y": 5.56
+        "x": 2.0499107981588898,
+        "y": 7.487814310545486
       },
       "isLocked": false,
-      "linkedName": "Subwoofer"
+      "linkedName": "Amp"
     },
     {
       "anchor": {
-        "x": 2.8981397630253705,
-        "y": 5.567111941824834
+        "x": 2.683645082254536,
+        "y": 7.12707325652181
       },
       "prevControl": {
-        "x": 2.5981397630253706,
-        "y": 5.567111941824834
+        "x": 2.483792507151958,
+        "y": 7.235564654434638
       },
       "nextControl": {
-        "x": 3.1963172237373456,
-        "y": 5.567111941824834
+        "x": 3.0248866198444997,
+        "y": 6.941827850401545
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.41,
-        "y": 5.5600000000000005
+        "x": 1.8256663591711995,
+        "y": 7.595061650930903
       },
       "prevControl": {
-        "x": 1.359332628131514,
-        "y": 5.5600000000000005
+        "x": 2.0304112817251774,
+        "y": 7.487814310545486
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Subwoofer"
+      "linkedName": "Amp"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -32.12499844038756,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake on",
-      "waypointRelativePos": 0.25,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -65,7 +71,7 @@
       }
     },
     {
-      "name": "intake off",
+      "name": "New Event Marker",
       "waypointRelativePos": 1.7,
       "command": {
         "type": "parallel",
@@ -90,13 +96,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.3802519747870992,
+    "rotation": -89.15747573925964,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Speaker",
+  "folder": "Amp",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -90.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

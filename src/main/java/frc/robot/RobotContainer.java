@@ -98,14 +98,29 @@ public class RobotContainer {
    */
   public RobotContainer() {
     var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
-        Commands.sequence(Commands.waitSeconds(1),
-            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.5))));
-   
+        Commands.sequence(Commands.waitSeconds(0.5),
+            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
+
+    var armUp = Commands.race(
+        new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
+        Commands.waitSeconds(1));
+
+    var armDown = Commands.race(
+        new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
+        Commands.waitSeconds(0.25));
+
+    var ampShoot = Commands.race(
+        Commands.parallel(
+            new Shoot(shooter, ShooterConstants.shooterSpeed),
+            new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+        Commands.waitSeconds(0.4));
+
     NamedCommands.registerCommand("Intake",
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
+    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
 
     commandChooser.addOption("Timed drive", timeDrive);
     commandChooser.addOption("Two Note Speaker", twoNoteSpeaker);

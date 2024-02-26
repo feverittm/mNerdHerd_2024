@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4642586550130365,
-        "y": 5.578111669043852
+        "x": 1.41,
+        "y": 5.5600000000000005
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1564914884098196,
-        "y": 6.0363503052360885
+        "x": 2.1022328333967835,
+        "y": 6.018238636192237
       },
       "isLocked": false,
       "linkedName": "Subwoofer"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 1.4642586550130365,
-        "y": 5.578111669043852
+        "x": 1.41,
+        "y": 5.5600000000000005
       },
       "prevControl": {
-        "x": 2.3891045201441967,
-        "y": 6.053412382115587
+        "x": 2.334845865131161,
+        "y": 6.035300713071735
       },
       "nextControl": null,
       "isLocked": false,
@@ -100,7 +100,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Speaker",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

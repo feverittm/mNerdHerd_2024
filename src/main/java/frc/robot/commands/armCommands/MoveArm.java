@@ -7,7 +7,6 @@ package frc.robot.commands.armCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 public class MoveArm extends Command {
@@ -32,13 +31,6 @@ public class MoveArm extends Command {
   @Override
   public void execute() {
     arm.setArmSpeed(speed.getAsDouble());
-    //uncomment this to controll max up/down speed of arm
-    // if(speed.getAsDouble() > 0) {
-    //   arm.setArmSpeed(Math.min(speed.getAsDouble(), ArmConstants.raiseArmSpeed));
-    // }
-    // else {
-    //   arm.setArmSpeed(Math.max(speed.getAsDouble(), ArmConstants.lowerArmSpeed));
-    // }
   }
 
   // Called once the command ends or is interrupted.

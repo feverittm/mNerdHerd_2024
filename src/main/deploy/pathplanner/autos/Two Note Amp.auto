@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3674277229789629,
-      "y": 5.537862667174266
+      "x": 0.5581977909799064,
+      "y": 6.9515776086184005
     },
     "rotation": 0
   },
@@ -12,21 +12,27 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Amp Note 1"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Amp Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Note"
+            "pathName": "Amp Note 2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Amp Score"
           }
         }
       ]
