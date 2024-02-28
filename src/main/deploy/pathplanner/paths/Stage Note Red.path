@@ -8,40 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5526731290992286,
-        "y": 4.913878141295476
+        "x": 1.4975869951739904,
+        "y": 6.56743713487427
       },
       "isLocked": false,
       "linkedName": "Subwoofer"
     },
     {
       "anchor": {
-        "x": 1.6404209530509337,
-        "y": 4.3678916811515345
+        "x": 2.7572893766477184,
+        "y": 7.0062098744887145
       },
       "prevControl": {
-        "x": 1.423648192011818,
-        "y": 4.555104520230771
+        "x": 1.6996392172905914,
+        "y": 7.0981794535632465
       },
       "nextControl": {
-        "x": 1.8549156338217678,
-        "y": 4.182646275031268
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.4983996761342704,
-        "y": 4.07539893464585
-      },
-      "prevControl": {
-        "x": 1.9329136995566167,
-        "y": 4.114397967513274
-      },
-      "nextControl": {
-        "x": 2.7537127769341794,
-        "y": 4.057791134590684
+        "x": 3.0828304415229515,
+        "y": 6.977901955803912
       },
       "isLocked": false,
       "linkedName": null
@@ -52,26 +36,20 @@
         "y": 5.5600000000000005
       },
       "prevControl": {
-        "x": 1.9719127324240409,
-        "y": 5.537862667174266
+        "x": 1.8231280600492237,
+        "y": 5.420966428139753
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Subwoofer"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": -0.7742201649280352,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.3,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -88,7 +66,7 @@
     },
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 2.65,
+      "waypointRelativePos": 1.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -106,7 +84,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.75,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -118,7 +96,7 @@
   "reversed": false,
   "folder": "Speaker",
   "previewStartingState": {
-    "rotation": -0.14970122574716507,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

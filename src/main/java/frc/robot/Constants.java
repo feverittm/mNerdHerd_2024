@@ -116,13 +116,13 @@ public final class Constants {
 
   public static final class PathPlannerConstants {
     public static final class TranslationPID {
-      public static final double p = 0;
+      public static final double p = 5;
       public static final double i = 0;
       public static final double d = 0;
     }
 
     public static final class RotationPID {
-      public static final double p = 0;
+      public static final double p = 6;
       public static final double i = 0;
       public static final double d = 0;
     }

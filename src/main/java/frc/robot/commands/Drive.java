@@ -39,7 +39,7 @@ public class Drive extends Command {
     var y = speedY.getAsDouble();
     var r = rot.getAsDouble();
 
-    drivebase.defaultDrive(x, y, r, true);
+    drivebase.defaultDrive(x, y, r);
   }
 
   // Called once the command ends or is interrupted.

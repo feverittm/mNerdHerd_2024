@@ -75,7 +75,7 @@ public class RobotContainer {
 
     var armDown = Commands.race(
         new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-        Commands.waitSeconds(0.25));
+        Commands.waitSeconds(1.5));
 
     var ampShoot = Commands.race(
         Commands.parallel(

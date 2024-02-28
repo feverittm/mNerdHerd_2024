@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1022328333967835,
-        "y": 6.018238636192237
+        "x": 1.5526731290992286,
+        "y": 4.913878141295476
       },
       "isLocked": false,
       "linkedName": "Subwoofer"
     },
     {
       "anchor": {
-        "x": 2.743135417305317,
-        "y": 6.808054443695094
+        "x": 1.689169744135214,
+        "y": 4.484888779753807
       },
       "prevControl": {
-        "x": 2.3220042859506744,
-        "y": 6.176357746663135
+        "x": 1.4723969830960983,
+        "y": 4.672101618833044
       },
       "nextControl": {
-        "x": 2.856367092044529,
-        "y": 6.977901955803911
+        "x": 1.9036644249060481,
+        "y": 4.299643373633541
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6582116612509092,
+        "y": 4.118802168638821
+      },
+      "prevControl": {
+        "x": 2.209722783275528,
+        "y": 4.167550959723101
+      },
+      "nextControl": {
+        "x": 2.9126326609718682,
+        "y": 4.0911477121474125
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +52,8 @@
         "y": 5.5600000000000005
       },
       "prevControl": {
-        "x": 2.334845865131161,
-        "y": 6.035300713071735
+        "x": 1.9719127324240409,
+        "y": 5.537862667174266
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,16 +62,16 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 55.619655276155115,
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake on",
-      "waypointRelativePos": 0.45,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.3,
       "command": {
         "type": "parallel",
         "data": {
@@ -71,8 +87,8 @@
       }
     },
     {
-      "name": "intake off",
-      "waypointRelativePos": 1.9,
+      "name": "New Event Marker",
+      "waypointRelativePos": 2.65,
       "command": {
         "type": "parallel",
         "data": {
@@ -102,7 +118,7 @@
   "reversed": false,
   "folder": "Speaker",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -0.14970122574716507,
     "velocity": 0
   },
   "useDefaultConstraints": true
