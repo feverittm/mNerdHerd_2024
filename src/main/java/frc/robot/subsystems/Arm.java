@@ -46,22 +46,22 @@ public class Arm extends SubsystemBase {
   public void setArmSpeed(double speed) {
     double pos = encoder.getAbsolutePosition().getValue();
     double outputCoefficient = Util.mapDouble(
-      pos, // Position of the arm
-      ArmPositions.lower,
-      ArmPositions.upper,
-      1, // 100% input powerP
-      0 // 0% input power
+        pos, // Position of the arm
+        ArmPositions.lower,
+        ArmPositions.upper,
+        1, // 100% input powerP
+        0 // 0% input power
     );
     double modifiedSpeed;
     if (speed < 0) {
       modifiedSpeed = speed * outputCoefficient;
-    } else if(speed > 0 && pos < -0.13) {
+    } else if (speed > 0 && pos < -0.13) {
       modifiedSpeed = speed;
     } else {
       modifiedSpeed = 0;
     }
     SmartDashboard.putNumber("pos", pos);
-    rightArmMotor.set(modifiedSpeed); // TODO: Begin using modified speed
+    rightArmMotor.set(modifiedSpeed);
   }
 
   public void setArmVoltage(double voltage) {
