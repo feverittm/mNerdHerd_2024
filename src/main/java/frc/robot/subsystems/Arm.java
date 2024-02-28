@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -19,7 +20,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.*;
 
 public class Arm extends ProfiledPIDSubsystem {
-
   private CANSparkMax leftArmMotor = new CANSparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
   private CANSparkMax rightArmMotor = new CANSparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
@@ -54,8 +54,18 @@ public class Arm extends ProfiledPIDSubsystem {
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
-    double ffOutput = feedforward.calculate(setpoint.position, setpoint.velocity);
-    leftArmMotor.setVoltage(output + ffOutput);
+    // double ffOutput = feedforward.calculate(setpoint.position,
+    // setpoint.velocity);
+    // leftArmMotor.setVoltage(output + ffOutput);
+  }
+
+  public void setTarget(double target) {
+    // ArmPositions.upper is lower than ArmPositions.lower
+    this.setGoal(MathUtil.clamp(target, ArmPositions.upper, ArmPositions.lower));
+  }
+
+  public void adjustTarget(double delta) {
+    setTarget(this.getController().getGoal().position + delta);
   }
 
   public double getEncoder() {
@@ -70,5 +80,12 @@ public class Arm extends ProfiledPIDSubsystem {
   public double getMeasurement() {
     // Return the process variable measurement here
     return getEncoderRadians();
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    SmartDashboard.putNumber("ArmGoal", this.getController().getGoal().position);
   }
 }

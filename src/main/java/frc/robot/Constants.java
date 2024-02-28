@@ -24,7 +24,7 @@ public final class Constants {
   public static final class DriveConstants {
     public static final double deadband = 0.08;
     public static final int currentLimit = 30;
-    public static final double slewRate = 20; //lower number for higher center of mass
+    public static final double slewRate = 20; // lower number for higher center of mass
 
     public static final class SwervePID {
       public static final double p = 0.12;
@@ -41,7 +41,7 @@ public final class Constants {
 
     public static final class ModuleLocations {
       public static final double dist = Units.inchesToMeters(9.25);
-      public static final double robotRaduius = Math.sqrt(2*Math.pow(dist, 2));
+      public static final double robotRaduius = Math.sqrt(2 * Math.pow(dist, 2));
       public static final Translation2d frontLeft = new Translation2d(dist, dist);
       public static final Translation2d frontRight = new Translation2d(dist, -dist);
       public static final Translation2d backLeft = new Translation2d(-dist, dist);
@@ -54,8 +54,8 @@ public final class Constants {
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
     public static final double podiumAngle = 0;
-    public static final double raiseArmSpeed = -0.7;
-    public static final double lowerArmSpeed = 0.2;
+    public static final double raiseArmSpeed = -0.005;
+    public static final double lowerArmSpeed = 0.005;
 
     public static final class PIDValues {
       public static final double p = 0;
@@ -98,13 +98,13 @@ public final class Constants {
       public static final double i = 0;
       public static final double d = 0;
     }
-    
+
     public static final class YPID {
       public static final double p = 1.5;
       public static final double i = 0;
       public static final double d = 0;
     }
-    
+
     public static final class RPID {
       public static final double p = 0.0015;
       public static final double i = 0;
@@ -127,8 +127,8 @@ public final class Constants {
       public static final double d = 0;
     }
   }
-  
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-  }  
+  }
 }
