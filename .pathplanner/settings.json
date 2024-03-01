@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp",
+    "Leave",
     "Speaker"
   ],
   "autoFolders": [

@@ -2,36 +2,42 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.406426755846387,
-      "y": 5.557362183607978
+      "x": 15.9725655318294,
+      "y": 6.932078092184688
     },
-    "rotation": 0
+    "rotation": 179.4594898128693
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Amp Note 1 Red"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Amp Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Non-Stage Note"
+            "pathName": "Amp Note 2 Red"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Amp Score"
           }
         }
       ]
     }
   },
-  "folder": "Speaker",
+  "folder": null,
   "choreoAuto": false
 }
