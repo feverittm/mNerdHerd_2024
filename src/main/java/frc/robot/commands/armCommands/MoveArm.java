@@ -7,7 +7,6 @@ package frc.robot.commands.armCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 public class MoveArm extends Command {
@@ -32,13 +31,6 @@ public class MoveArm extends Command {
   @Override
   public void execute() {
     arm.setArmSpeed(speed.getAsDouble());
-    //uncomment this to controll max up/down speed of arm
-    // if(speed.getAsDouble() > 0) {
-    //   arm.setArmSpeed(Math.min(speed.getAsDouble(), ArmConstants.raiseArmSpeed));
-    // }
-    // else {
-    //   arm.setArmSpeed(Math.max(speed.getAsDouble(), ArmConstants.lowerArmSpeed));
-    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -47,7 +39,7 @@ public class MoveArm extends Command {
     /*we don't want to stop the motor at the end of the command because we want to be constantly running the motor in the desired
     direction. The limit sitches will stop the arm at either end*/
     //this line is for when the limit switches aren't attached
-    arm.setArmSpeed(0);
+    arm.setRawArmSpeed(0);
   } 
 
   // Returns true when the command should end.

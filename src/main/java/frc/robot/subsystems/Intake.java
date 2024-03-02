@@ -15,6 +15,7 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.intakeMotorID, MotorType.kBrushless);
   private CANSparkMax kickupMotor = new CANSparkMax(IntakeConstants.kickupMotorID, MotorType.kBrushless);
+  
 
   public Intake() {
     intakeMotor.restoreFactoryDefaults();
@@ -33,6 +34,10 @@ public class Intake extends SubsystemBase {
     intakeMotor.stopMotor();
     kickupMotor.stopMotor();
   }
+
+  // public boolean getIntakeOn() {
+  //   return intakeMotor.get
+  // }
 
   @Override
   public void periodic() {

@@ -5,39 +5,38 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
+import frc.robot.commands.Rumble;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
-import frc.robot.commands.auto.TestTriPID;
-import frc.robot.commands.autoCommands.TimeDrive;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.ProfPIDArm;
 import frc.robot.subsystems.Shooter;
 
-import java.util.function.DoubleSupplier;
-
+import com.ctre.phoenix6.SignalLogger;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -51,67 +50,64 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivebase drivebase = new Drivebase();
+  private final AHRS gyro = new AHRS();
+  private final DigitalInput beamBreak = new DigitalInput(0);
+
+  private final Drivebase drivebase = new Drivebase(gyro);
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
-  // private final Climber climber = new Climber();
   private final Shooter shooter = new Shooter();
-  // private final ProfPIDArm pidArm = new ProfPIDArm();
 
-  private final AHRS gyro = new AHRS();
+  private static XboxController driveStick = new XboxController(0);
 
-  // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-  private MedianFilter xFilter = new MedianFilter(AutoConstants.medianFilter);
-  private MedianFilter yFilter = new MedianFilter(AutoConstants.medianFilter);
-  private MedianFilter angleFilter = new MedianFilter(AutoConstants.medianFilter);
-  // private final DoubleSupplier filteredXPose = 
-  //   () -> xFilter.calculate(
-  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
-
-  //   private final DoubleSupplier filteredYPose = 
-  //   () -> yFilter.calculate(
-  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[1]); //TODO, make sure these are the right values for TY and RZ
-
-  //   private final DoubleSupplier filteredAnlge = 
-  //   () -> angleFilter.calculate(
-  //     limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[5]);
-
-  private final TimeDrive timeDrive = new TimeDrive(drivebase, gyro, 0.2, 0, 5);
-  // private final TestTriPID testAuto = new TestTriPID(drivebase, intake, filteredXPose, filteredYPose, filteredAnlge);
-
-  private static CommandXboxController driveStick = new CommandXboxController(0);
-
-  SendableChooser<Command> commandChooser = new SendableChooser<>();
+  private SendableChooser<Command> autoChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    commandChooser.addOption("Timed drive", timeDrive);
-    // commandChooser.addOption("AprilTag Auto Test", testAuto);
-    SmartDashboard.putData(commandChooser);
+    SignalLogger.enableAutoLogging(false);
+
+    var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
+        Commands.sequence(Commands.waitSeconds(0.5),
+            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
+
+    var armUp = Commands.race(
+        new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
+        Commands.waitSeconds(1));
+
+    var armDown = Commands.race(
+        new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
+        Commands.waitSeconds(1.5));
+
+    var ampShoot = Commands.race(
+        Commands.parallel(
+            new Shoot(shooter, ShooterConstants.shooterSpeed),
+            new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+        Commands.waitSeconds(0.4));
+
+    NamedCommands.registerCommand("Intake",
+        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+    NamedCommands.registerCommand("Stop Intake",
+        new RunIntake(intake, 0, 0));
+    NamedCommands.registerCommand("Shoot", shootComp);
+    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
+
+    autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
+    SmartDashboard.putData("Auto Mode", autoChooser);
 
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
-      new Drive(
-          drivebase,
-          gyro,
-          () -> scaleTranslationAxis(driveStick.getLeftY()),
-          () -> scaleTranslationAxis(driveStick.getLeftX()),
-          () -> scaleRotationAxis(driveStick.getRightX())));
+        new Drive(
+            drivebase,
+            () -> scaleTranslationAxis(driveStick.getLeftY()),
+            () -> scaleTranslationAxis(driveStick.getLeftX()),
+            () -> scaleRotationAxis(driveStick.getRightX())));
 
     arm.setDefaultCommand(
-      new MoveArm(
-        arm, 
-        () -> clamp(
-          driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis(), 
-          ArmConstants.lowerArmSpeed, 
-          ArmConstants.raiseArmSpeed)));
-
-    // climber.setDefaultCommand(
-    //   new Climb(
-    //       climber, 
-    //       () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()));
+        new MoveArm(
+            arm,
+            () -> getArmControl()));
 
     configureBindings();
   }
@@ -129,26 +125,34 @@ public class RobotContainer {
     }
   }
 
-  private double clamp(double input, double min, double max) {
-    if(input < min) {
-      return min;
+  private double getArmControl() {
+    var trigger = driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis();
+    double mapped;
+    if (trigger > 0) {
+      mapped = trigger * ArmConstants.lowerArmSpeed;
+    } else if (trigger < 0) {
+      mapped = -trigger * ArmConstants.raiseArmSpeed;
+    } else {
+      mapped = 0;
     }
-    else if(input > max) {
-      return max;
-    }
-    return input;
+
+    return mapped;
   }
 
   private double squared(double input) {
     return Math.copySign(input * input, input);
   }
 
+  private double cube(double input) {
+    return Math.copySign(input * input * input, input);
+  }
+
   private double scaleTranslationAxis(double input) {
-    return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity() * 0.8;
+    return deadband(-cube(input), DriveConstants.deadband) * drivebase.getMaxVelocity() * 0.8;
   }
 
   private double scaleRotationAxis(double input) {
-    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * -0.8;
+    return deadband(squared(input), DriveConstants.deadband) * drivebase.getMaxAngleVelocity() * -0.6;
   }
 
   public void resetGyro() {
@@ -159,10 +163,6 @@ public class RobotContainer {
     return gyro.getYaw();
   }
 
-  // public Double[] getBotposeDoubles() {
-  //   return new Double[]{filteredXPose.getAsDouble(), filteredYPose.getAsDouble(), filteredAnlge.getAsDouble()};
-  // }
-
   public boolean onBlueAlliance() {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
@@ -170,7 +170,11 @@ public class RobotContainer {
     }
     return false;
   }
-  
+
+  public boolean getBeamBreak() {
+    return !beamBreak.get();
+  }
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -186,14 +190,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driveStick.pov(0).onTrue(new InstantCommand(gyro::reset)); //resets the gyro for field oriented controll
-    driveStick.y().toggleOnTrue(new ParallelCommandGroup( //turn shooter on/off
-      new Shoot(shooter, ShooterConstants.shooterSpeed),
-      new RunIntake(intake, 0, IntakeConstants.kickupSpeed)
-    ));
-    driveStick.rightBumper().toggleOnTrue(new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); //toggle intake on/off
-    driveStick.a().whileTrue(new MoveArm(arm, () -> ArmConstants.lowerArmSpeed)); //move arm to collapsed position only while button is pressed
-    driveStick.b().whileTrue(new MoveArm(arm, () -> ArmConstants.raiseArmSpeed)); //move arm to amp scoring position only while button is pressed
+    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); // resets the gyro for field oriented controll
+    new JoystickButton(driveStick, Button.kStart.value)
+        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
+    new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
+        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
+        new Rumble(driveStick, beamBreak))); // rumble controller if note is visible
+    new JoystickButton(driveStick, Button.kRightBumper.value)
+        .whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); // spin up flywheels while button is held
+    new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
+        Commands.race(
+            Commands.parallel(
+                new Shoot(shooter, ShooterConstants.shooterSpeed),
+                new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+            new WaitCommand(0.5)));
   }
 
   /**
@@ -203,6 +213,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return commandChooser.getSelected();
+    return autoChooser.getSelected();
   }
 }

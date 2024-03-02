@@ -1,0 +1,103 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.41,
+        "y": 5.5600000000000005
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.4975869951739904,
+        "y": 6.56743713487427
+      },
+      "isLocked": false,
+      "linkedName": "Subwoofer"
+    },
+    {
+      "anchor": {
+        "x": 2.7572893766477184,
+        "y": 7.0062098744887145
+      },
+      "prevControl": {
+        "x": 1.6996392172905914,
+        "y": 7.0981794535632465
+      },
+      "nextControl": {
+        "x": 3.0828304415229515,
+        "y": 6.977901955803912
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.41,
+        "y": 5.5600000000000005
+      },
+      "prevControl": {
+        "x": 1.8231280600492237,
+        "y": 5.420966428139753
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Subwoofer"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Stop Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.75,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
