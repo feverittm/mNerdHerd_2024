@@ -26,6 +26,8 @@ public class Arm extends ProfiledPIDSubsystem {
   private ArmFeedforward feedforward = new ArmFeedforward(FeedForwardValues.kS, FeedForwardValues.kG,
       FeedForwardValues.kV);
 
+  private double ffOutput;
+
   @SuppressWarnings("unused")
   private SparkLimitSwitch rightReverseLimitSwitch;
 
@@ -38,7 +40,7 @@ public class Arm extends ProfiledPIDSubsystem {
             PIDValues.i,
             PIDValues.d,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(0, 0)));
+            new TrapezoidProfile.Constraints(0.5, 0.5)));
 
     leftArmMotor.restoreFactoryDefaults();
     rightArmMotor.restoreFactoryDefaults();
@@ -50,18 +52,25 @@ public class Arm extends ProfiledPIDSubsystem {
     leftArmMotor.follow(rightArmMotor, true);
 
     rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+
+    setGoal(getEncoderRadians());
+    enable();
   }
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
-    // double ffOutput = feedforward.calculate(setpoint.position,
-    // setpoint.velocity);
-    // leftArmMotor.setVoltage(output + ffOutput);
+    ffOutput = -feedforward.calculate(setpoint.position, setpoint.velocity);
+    rightArmMotor.setVoltage(ffOutput);
+    SmartDashboard.putNumber("Fead Firword", ffOutput);
   }
 
   public void setTarget(double target) {
     // ArmPositions.upper is lower than ArmPositions.lower
-    this.setGoal(MathUtil.clamp(target, ArmPositions.upper, ArmPositions.lower));
+    this.setGoal(MathUtil.clamp(target, ArmPositions.lowerRad, ArmPositions.upperRad));
+  }
+
+  public void setTargetRotations(double target) {
+    setTarget(target * 2 * Math.PI);
   }
 
   public void adjustTarget(double delta) {
@@ -87,5 +96,7 @@ public class Arm extends ProfiledPIDSubsystem {
     super.periodic();
 
     SmartDashboard.putNumber("ArmGoal", this.getController().getGoal().position);
+    SmartDashboard.putNumber("pos", getMeasurement());
+    // SmartDashboard.putNumber("encoder", getEncoder());
   }
 }

@@ -61,6 +61,8 @@ public class RobotContainer {
 
   private SendableChooser<Command> autoChooser;
 
+  private double mapped = 0;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -69,13 +71,13 @@ public class RobotContainer {
         Commands.sequence(Commands.waitSeconds(0.5),
             Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
 
-    var armUp = Commands.race(
-        new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
-        Commands.waitSeconds(1));
+    // var armUp = Commands.race(
+    //     new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
+    //     Commands.waitSeconds(1));
 
-    var armDown = Commands.race(
-        new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-        Commands.waitSeconds(1.5));
+    // var armDown = Commands.race(
+    //     new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
+    //     Commands.waitSeconds(1.5));
 
     var ampShoot = Commands.race(
         Commands.parallel(
@@ -88,7 +90,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
-    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
+    // NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -104,7 +106,7 @@ public class RobotContainer {
     arm.setDefaultCommand(
         new MoveArm(
             arm,
-            () -> getArmControl()));
+            () -> getArmControl(driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis())));
 
     configureBindings();
   }
@@ -122,13 +124,11 @@ public class RobotContainer {
     }
   }
 
-  private double getArmControl() {
-    var trigger = driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis();
-    double mapped;
+  private double getArmControl(double trigger) {
     if (trigger > 0) {
-      mapped = trigger * ArmConstants.lowerArmSpeed;
+      mapped = trigger * ArmConstants.raiseArmSpeed;
     } else if (trigger < 0) {
-      mapped = -trigger * ArmConstants.raiseArmSpeed;
+      mapped = -trigger * ArmConstants.lowerArmSpeed;
     } else {
       mapped = 0;
     }
