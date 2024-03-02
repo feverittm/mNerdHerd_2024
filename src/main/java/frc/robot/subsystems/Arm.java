@@ -55,7 +55,7 @@ public class Arm extends SubsystemBase {
     double modifiedSpeed;
     if (speed < 0) {
       modifiedSpeed = speed * outputCoefficient;
-    } else if(speed > 0 && pos < -0.13) {
+    } else if(speed > 0 && pos > 0.13) {
       modifiedSpeed = speed;
     } else {
       modifiedSpeed = 0;

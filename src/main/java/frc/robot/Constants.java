@@ -71,7 +71,7 @@ public final class Constants {
 
     public static final class ArmPositions {
       public static final double lower = 0;
-      public static final double upper = -0.28;
+      public static final double upper = 0.28;
     }
   }
 
