@@ -131,4 +131,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }  
+
+  public static final class CANdleConstants {
+    public static final int id = 15;
+    public static final int ledCount = 50;
+  }
 }
