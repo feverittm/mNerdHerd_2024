@@ -14,6 +14,7 @@ import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.CANdleSystem;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -57,6 +58,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
+  private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
 

@@ -33,7 +33,7 @@ public class CANdleSystem extends SubsystemBase {
     config.disableWhenLOS = true;
     config.stripType = LEDStripType.GRB;
     config.brightnessScalar = 0.1;
-    config.vBatOutputMode = VBatOutputMode.Off;
+    config.vBatOutputMode = VBatOutputMode.On;
 
     changeAnimation(AnimationType.ColorFlow);
 
