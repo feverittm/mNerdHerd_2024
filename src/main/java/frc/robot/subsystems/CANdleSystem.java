@@ -18,33 +18,32 @@ import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 public class CANdleSystem extends SubsystemBase {
   private final CANdle candle = new CANdle(CANdleConstants.id, "rio");
 
-  public enum AnimationType {
+  public enum AnimationTypes {
     ColorFlow,
   }
 
-  private AnimationType currentAnimation;
+  private AnimationTypes currentAnimation;
   private Animation toAnimate;
 
   /** Creates a new CANdle. */
   public CANdleSystem() {
     CANdleConfiguration config = new CANdleConfiguration();
-
     config.statusLedOffWhenActive = true;
     config.disableWhenLOS = true;
     config.stripType = LEDStripType.GRB;
     config.brightnessScalar = 0.1;
     config.vBatOutputMode = VBatOutputMode.Off;
 
-    changeAnimation(AnimationType.ColorFlow);
+    changeAnimation(AnimationTypes.ColorFlow);
 
     candle.configAllSettings(config);
   }
 
-  public AnimationType getCurrentAnimation() {
+  public AnimationTypes getCurrentAnimation() {
     return currentAnimation;
   }
 
-  public void changeAnimation(AnimationType toChange) {
+  public void changeAnimation(AnimationTypes toChange) {
     currentAnimation = toChange;
 
     switch (toChange) {
