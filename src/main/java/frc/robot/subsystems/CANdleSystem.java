@@ -28,6 +28,7 @@ public class CANdleSystem extends SubsystemBase {
   /** Creates a new CANdle. */
   public CANdleSystem() {
     CANdleConfiguration config = new CANdleConfiguration();
+
     config.statusLedOffWhenActive = true;
     config.disableWhenLOS = true;
     config.stripType = LEDStripType.GRB;
