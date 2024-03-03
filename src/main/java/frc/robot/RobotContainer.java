@@ -197,15 +197,20 @@ public class RobotContainer {
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
     new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
-        new Rumble(driveStick, beamBreak))); // rumble controller if note is visible
+        new Rumble(driveStick, beamBreak, candle))); // rumble controller if note is visible
     new JoystickButton(driveStick, Button.kRightBumper.value)
         .whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); // spin up flywheels while button is held
     new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
         Commands.race(
             Commands.parallel(
                 new Shoot(shooter, ShooterConstants.shooterSpeed),
-                new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+                new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
+                new Rumble(driveStick, beamBreak, candle)),
             new WaitCommand(0.5)));
+  }
+
+  public void ledsOff() {
+    candle.ledsOff();
   }
 
   /**
