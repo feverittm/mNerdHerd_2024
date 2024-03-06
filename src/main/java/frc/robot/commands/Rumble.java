@@ -32,7 +32,7 @@ public class Rumble extends Command {
   @Override
   public void execute() {
     if (!beamBreak.get()) {
-      driveStick.setRumble(RumbleType.kBothRumble, 0.3);
+      driveStick.setRumble(RumbleType.kBothRumble, 1);
       candle.setOrange();
     } else {
       driveStick.setRumble(RumbleType.kBothRumble, 0);

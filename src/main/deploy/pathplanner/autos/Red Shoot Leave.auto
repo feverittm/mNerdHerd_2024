@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5874470656304748,
-      "y": 2.417940037780313
+      "x": 15.865318191443983,
+      "y": 4.319142890067254
     },
-    "rotation": 0
+    "rotation": -119.26799521489274
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Leave"
+            "pathName": "Shoot and Leave Red"
           }
         }
       ]
