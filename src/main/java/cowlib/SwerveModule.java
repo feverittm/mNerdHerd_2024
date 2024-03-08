@@ -77,6 +77,10 @@ public class SwerveModule {
     return encoder.getAbsolutePosition().getValueAsDouble() * 360.0;
   }
 
+  public double getDriveOutput() {
+    return speedMotor.getAppliedOutput();
+  }
+
   private Rotation2d getRotation() {
     return Rotation2d.fromDegrees(getEncoder());
   }

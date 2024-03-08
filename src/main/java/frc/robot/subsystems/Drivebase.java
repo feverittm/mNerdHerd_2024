@@ -95,7 +95,7 @@ public class Drivebase extends SubsystemBase {
         () -> {
           // var alliance = DriverStation.getAlliance();
           // if (alliance.isPresent()) {
-          //   return alliance.get() == DriverStation.Alliance.Red;
+          // return alliance.get() == DriverStation.Alliance.Red;
           // }
           return false;
         },
@@ -202,6 +202,8 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("y", y);
     SmartDashboard.putNumber("rot", rotation);
     field.setRobotPose(getPose());
+
+    SmartDashboard.putNumber("module output", modules[0].getDriveOutput());
 
     // TODO: Sendables?
     //
