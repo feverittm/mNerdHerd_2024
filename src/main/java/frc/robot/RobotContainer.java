@@ -150,7 +150,7 @@ public class RobotContainer {
   }
 
   private double scaleTranslationAxis(double input) {
-    return deadband(-cube(input), DriveConstants.deadband) * drivebase.getMaxVelocity() * 0.8;
+    return deadband(-cube(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
   }
 
   private double scaleRotationAxis(double input) {
@@ -199,7 +199,9 @@ public class RobotContainer {
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
         new Rumble(driveStick, beamBreak, candle))); // rumble controller if note is visible
     new JoystickButton(driveStick, Button.kRightBumper.value)
-        .whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); // spin up flywheels while button is held
+        .whileTrue(Commands.parallel(
+            new Shoot(shooter, ShooterConstants.shooterSpeed),
+            new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
     new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
         Commands.race(
             Commands.parallel(
