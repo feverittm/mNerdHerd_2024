@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivebase;
@@ -12,15 +13,13 @@ import frc.robot.subsystems.Drivebase;
 public class Drive extends Command {
 
   private final Drivebase drivebase;
-  private final DoubleSupplier speedX;
-  private final DoubleSupplier speedY;
+  private final Supplier<double[]> speedXY;
   private final DoubleSupplier rot;
 
   /** Creates a new Drive. */
-  public Drive(Drivebase drivebase, DoubleSupplier speedX, DoubleSupplier speedY, DoubleSupplier rot) {
+  public Drive(Drivebase drivebase, Supplier<double[]> speedXY, DoubleSupplier rot) {
     this.drivebase = drivebase;
-    this.speedX = speedX;
-    this.speedY = speedY;
+    this.speedXY = speedXY;
     this.rot = rot;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,11 +34,10 @@ public class Drive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var x = speedX.getAsDouble();
-    var y = speedY.getAsDouble();
+    var xy = speedXY.get();
     var r = rot.getAsDouble();
 
-    drivebase.defaultDrive(x, y, r);
+    drivebase.defaultDrive(xy[0], xy[1], r);
   }
 
   // Called once the command ends or is interrupted.

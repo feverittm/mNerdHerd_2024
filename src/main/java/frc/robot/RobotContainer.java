@@ -102,8 +102,7 @@ public class RobotContainer {
     drivebase.setDefaultCommand(
         new Drive(
             drivebase,
-            () -> scaleTranslationAxis(driveStick.getLeftY()),
-            () -> scaleTranslationAxis(driveStick.getLeftX()),
+            () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
     arm.setDefaultCommand(
@@ -139,6 +138,30 @@ public class RobotContainer {
     }
 
     return mapped;
+  }
+
+  private double[] getXY() {
+    double[] xy = new double[2];
+    xy[0] = deadband(driveStick.getLeftX(), DriveConstants.deadband);
+    xy[1] = deadband(driveStick.getLeftY(), DriveConstants.deadband);
+    return xy;
+  }
+
+  private double[] getScaledXY() {
+    double[] xy = getXY();
+
+    // Convert to Polar coordinates
+    double r = Math.sqrt(xy[0] * xy[0] + xy[1] * xy[1]);
+    double theta = Math.atan2(xy[1], xy[0]);
+
+    // Square radius and scale by max velocity
+    r = r * r * drivebase.getMaxVelocity();
+
+    // Convert to Cartesian coordinates
+    xy[0] = r * Math.cos(theta);
+    xy[1] = r * Math.sin(theta);
+
+    return xy;
   }
 
   private double squared(double input) {
