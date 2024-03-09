@@ -33,11 +33,11 @@ public class Drive extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() {`
     var xy = speedXY.get();
     var r = rot.getAsDouble();
 
-    drivebase.defaultDrive(-xy[1], xy[0], r);
+    drivebase.defaultDrive(-xy[1], -xy[0], r);
   }
 
   // Called once the command ends or is interrupted.
