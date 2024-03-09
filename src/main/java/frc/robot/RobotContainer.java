@@ -150,7 +150,7 @@ public class RobotContainer {
   }
 
   private double scaleTranslationAxis(double input) {
-    return deadband(-cube(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
+    return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
   }
 
   private double scaleRotationAxis(double input) {
