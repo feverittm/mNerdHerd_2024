@@ -33,7 +33,7 @@ public class Drive extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {`
+  public void execute() {
     var xy = speedXY.get();
     var r = rot.getAsDouble();
 
