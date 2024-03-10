@@ -5,11 +5,13 @@
   "pathFolders": [
     "Amp",
     "Leave",
+    "Defence",
     "Speaker"
   ],
   "autoFolders": [
     "Amp",
     "Leave",
+    "Defence",
     "Speaker"
   ],
   "defaultMaxVel": 3.0,
