@@ -88,12 +88,23 @@ public class RobotContainer {
             new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
         Commands.waitSeconds(0.4));
 
+    var defenceShoot = Commands.parallel(
+        new Shoot(shooter, -0.15),
+        new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed));
+
+    var stopDefence = Commands.parallel(
+        new Shoot(shooter, 0),
+        new RunIntake(intake, 0, 0));
+
     NamedCommands.registerCommand("Intake",
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
     NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
+    NamedCommands.registerCommand("Defence Shoot", defenceShoot);
+    NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
+    
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -102,8 +113,7 @@ public class RobotContainer {
     drivebase.setDefaultCommand(
         new Drive(
             drivebase,
-            () -> scaleTranslationAxis(driveStick.getLeftY()),
-            () -> scaleTranslationAxis(driveStick.getLeftX()),
+            () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
     arm.setDefaultCommand(
@@ -139,6 +149,30 @@ public class RobotContainer {
     }
 
     return mapped;
+  }
+
+  private double[] getXY() {
+    double[] xy = new double[2];
+    xy[0] = deadband(driveStick.getLeftX(), DriveConstants.deadband);
+    xy[1] = deadband(driveStick.getLeftY(), DriveConstants.deadband);
+    return xy;
+  }
+
+  private double[] getScaledXY() {
+    double[] xy = getXY();
+
+    // Convert to Polar coordinates
+    double r = Math.sqrt(xy[0] * xy[0] + xy[1] * xy[1]);
+    double theta = Math.atan2(xy[1], xy[0]);
+
+    // Square radius and scale by max velocity
+    r = r * r * drivebase.getMaxVelocity();
+
+    // Convert to Cartesian coordinates
+    xy[0] = r * Math.cos(theta);
+    xy[1] = r * Math.sin(theta);
+
+    return xy;
   }
 
   private double squared(double input) {
