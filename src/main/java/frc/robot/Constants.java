@@ -66,7 +66,7 @@ public final class Constants {
     public static final class FeedForwardValues {
       public static final double kS = 0;
       public static final double kG = 1.41;
-      public static final double kV = 2;
+      public static final double kV = 2.6;
     }
 
     public static final class ArmPositions {
