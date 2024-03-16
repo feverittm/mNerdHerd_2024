@@ -11,8 +11,9 @@
   ],
   "autoFolders": [
     "Amp",
-    "Leave",
     "Defence",
+    "Leave",
+    "Center Field",
     "Speaker"
   ],
   "defaultMaxVel": 3.0,

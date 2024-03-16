@@ -8,6 +8,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
 import frc.robot.commands.Rumble;
 import frc.robot.commands.RunIntake;
@@ -15,6 +16,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CANdleSystem;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -58,6 +60,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
+  private final Climber climber = new Climber();
   private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
@@ -74,8 +77,8 @@ public class RobotContainer {
     SignalLogger.enableAutoLogging(false);
 
     var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
-        Commands.sequence(Commands.waitSeconds(0.5),
-            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
+        Commands.sequence(Commands.waitSeconds(0.45),
+            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
 
     var armUp = Commands.sequence(
         Commands.runOnce(arm::armUp, arm),
@@ -260,6 +263,8 @@ public class RobotContainer {
     new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null, true));
     new JoystickButton(driveStick, Button.kStart.value)
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+    new JoystickButton(driveStick, Button.kX.value).whileTrue(new Climb(climber, 0.1)); //climber up
+    new JoystickButton(driveStick, Button.kB.value).whileTrue(new Climb(climber, -0.1)); //climber down
   }
 
   public void ledsOff() {
