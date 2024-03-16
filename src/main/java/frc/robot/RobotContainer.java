@@ -61,6 +61,7 @@ public class RobotContainer {
   private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
+  private static CommandXboxController c_driveStick = new CommandXboxController(0);
 
   private SendableChooser<Command> autoChooser;
 
@@ -230,7 +231,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); // resets the gyro for field oriented controll
+    c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
+    // new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //
+    // resets the gyro for field oriented controll
     new JoystickButton(driveStick, Button.kStart.value)
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
     new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
