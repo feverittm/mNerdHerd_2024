@@ -76,15 +76,14 @@ public class RobotContainer {
         Commands.sequence(Commands.waitSeconds(0.5),
             Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
 
-    // var armUp = Commands.race(
-    // new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
-    // Commands.waitSeconds(1));
+    var armUp = Commands.sequence(
+        Commands.runOnce(arm::armUp, arm),
+        Commands.waitSeconds(0.75));
 
     // var armDown = Commands.race(
     // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
     // Commands.waitSeconds(1.5));
 
-    var armUp = Commands.runOnce(arm::armUp, arm);
     var armDown = Commands.runOnce(arm::armDown, arm);
 
     var ampShoot = Commands.race(
@@ -121,10 +120,12 @@ public class RobotContainer {
             () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
-    // arm.setDefaultCommand(
-    //     new MoveArm(
-    //         arm,
-    //         () -> getArmControl(driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis())));
+    arm.setDefaultCommand(
+        new MoveArm(
+            arm,
+            () -> getArmControl(driveStick.getRightTriggerAxis() -
+                driveStick.getLeftTriggerAxis()),
+            false));
 
     configureBindings();
   }
@@ -247,8 +248,9 @@ public class RobotContainer {
                 new Rumble(driveStick, beamBreak, candle)),
             new WaitCommand(0.5)));
 
-    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null));
-    new JoystickButton(driveStick, Button.kStart.value).whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null, true));
+    new JoystickButton(driveStick, Button.kStart.value)
+        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
   }
 
   public void ledsOff() {

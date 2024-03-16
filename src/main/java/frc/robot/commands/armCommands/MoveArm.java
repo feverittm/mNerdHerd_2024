@@ -13,12 +13,13 @@ import frc.robot.subsystems.Arm;
 public class MoveArm extends Command {
   private final Arm arm;
   private DoubleSupplier speed;
-  // private double speed;
+  private boolean podium;
 
   /** Creates a new MoveArm. */
-  public MoveArm(Arm arm, DoubleSupplier speed) {
+  public MoveArm(Arm arm, DoubleSupplier speed, boolean podium) {
     this.arm = arm;
     this.speed = speed;
+    this.podium = podium;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.arm);
@@ -32,8 +33,11 @@ public class MoveArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // arm.adjustTarget(speed.getAsDouble());
-    arm.setGoal(ArmConstants.podiumAngle);
+    if (podium) {
+      arm.setGoal(ArmConstants.podiumAngle);
+    } else {
+      arm.adjustTarget(speed.getAsDouble());
+    }
   }
 
   // Called once the command ends or is interrupted.
