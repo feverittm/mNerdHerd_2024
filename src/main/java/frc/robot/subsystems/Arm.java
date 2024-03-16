@@ -80,6 +80,14 @@ public class Arm extends ProfiledPIDSubsystem {
     setTarget(this.getController().getGoal().position + delta);
   }
 
+  public void armUp() {
+    setTarget(ArmPositions.upperRad);
+  }
+
+  public void armDown() {
+    setTarget(ArmPositions.lowerRad);
+  }
+
   public double getEncoder() {
     return encoder.getAbsolutePosition().getValueAsDouble();
   }

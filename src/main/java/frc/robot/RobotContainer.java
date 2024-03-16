@@ -77,12 +77,15 @@ public class RobotContainer {
             Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
 
     // var armUp = Commands.race(
-    //     new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
-    //     Commands.waitSeconds(1));
+    // new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
+    // Commands.waitSeconds(1));
 
     // var armDown = Commands.race(
-    //     new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-    //     Commands.waitSeconds(1.5));
+    // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
+    // Commands.waitSeconds(1.5));
+
+    var armUp = Commands.runOnce(arm::armUp, arm);
+    var armDown = Commands.runOnce(arm::armDown, arm);
 
     var ampShoot = Commands.race(
         Commands.parallel(
@@ -103,10 +106,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
-    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
+    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
+        armDown));
     NamedCommands.registerCommand("Defence Shoot", defenceShoot);
     NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
-    
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
