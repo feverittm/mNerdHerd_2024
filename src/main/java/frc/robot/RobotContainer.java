@@ -248,6 +248,7 @@ public class RobotContainer {
             new WaitCommand(0.5)));
 
     new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null));
+    new JoystickButton(driveStick, Button.kStart.value).whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
   }
 
   public void ledsOff() {
