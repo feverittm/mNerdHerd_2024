@@ -244,12 +244,18 @@ public class RobotContainer {
             new Shoot(shooter, ShooterConstants.shooterSpeed),
             new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
     new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
-        Commands.race(
-            Commands.parallel(
-                new Shoot(shooter, ShooterConstants.shooterSpeed),
-                new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
-                new Rumble(driveStick, beamBreak, candle)),
-            new WaitCommand(0.5)));
+        Commands.sequence(
+            Commands.race(
+                Commands.parallel(
+                    new Shoot(shooter, ShooterConstants.shooterSpeed),
+                    new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
+                    new Rumble(driveStick, beamBreak, candle)),
+                new WaitCommand(0.5)),
+            Commands.runOnce(() -> {
+              if (!getBeamBreak()) {
+                arm.armDown();
+              }
+            }, arm)));
 
     new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null, true));
     new JoystickButton(driveStick, Button.kStart.value)
