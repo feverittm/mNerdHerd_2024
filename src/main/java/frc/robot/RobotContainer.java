@@ -72,12 +72,12 @@ public class RobotContainer {
             Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
 
     // var armUp = Commands.race(
-    //     new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
-    //     Commands.waitSeconds(1));
+    // new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
+    // Commands.waitSeconds(1));
 
     // var armDown = Commands.race(
-    //     new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-    //     Commands.waitSeconds(1.5));
+    // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
+    // Commands.waitSeconds(1.5));
 
     var ampShoot = Commands.race(
         Commands.parallel(
@@ -90,7 +90,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
-    // NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
+    // NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
+    // armDown));
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -103,10 +104,10 @@ public class RobotContainer {
             () -> scaleTranslationAxis(driveStick.getLeftX()),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
-    arm.setDefaultCommand(
-        new MoveArm(
-            arm,
-            () -> getArmControl(driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis())));
+    // arm.setDefaultCommand(
+    //     new MoveArm(
+    //         arm,
+    //         () -> getArmControl(driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis())));
 
     configureBindings();
   }
@@ -194,13 +195,17 @@ public class RobotContainer {
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
         new Rumble(driveStick, beamBreak))); // rumble controller if note is visible
     new JoystickButton(driveStick, Button.kRightBumper.value)
-        .whileTrue(new Shoot(shooter, ShooterConstants.shooterSpeed)); // spin up flywheels while button is held
+        .whileTrue(Commands.parallel(
+            new Shoot(shooter, ShooterConstants.shooterSpeed),
+            new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
     new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
         Commands.race(
             Commands.parallel(
                 new Shoot(shooter, ShooterConstants.shooterSpeed),
                 new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
             new WaitCommand(0.5)));
+
+    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null));
   }
 
   /**

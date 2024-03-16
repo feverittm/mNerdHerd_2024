@@ -53,13 +53,13 @@ public final class Constants {
     public static final int leftArmMotorID = 5;
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
-    public static final double podiumAngle = 0;
-    public static final double raiseArmSpeed = 0.03;
-    public static final double lowerArmSpeed = -0.03;
+    public static final double podiumAngle = 0.25;
+    public static final double raiseArmSpeed = 0.01;
+    public static final double lowerArmSpeed = -0.01;
 
     public static final class PIDValues {
-      public static final double p = 16.5;
-      public static final double i = 0.75;
+      public static final double p = 17.5;
+      public static final double i = 0;
       public static final double d = 1.5;
     }
 
@@ -91,7 +91,7 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int topShootMotorID = 16;
     public static final int bottomShootMotorID = 6;
-    public static final double shooterSpeed = -0.95;
+    public static final double shooterSpeed = -1;
   }
 
   public static final class AutoConstants {
