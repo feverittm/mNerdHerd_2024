@@ -40,7 +40,7 @@ public class Arm extends ProfiledPIDSubsystem {
             PIDValues.i,
             PIDValues.d,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(0.5, 0.5)));
+            new TrapezoidProfile.Constraints(3, 3)));
 
     leftArmMotor.restoreFactoryDefaults();
     rightArmMotor.restoreFactoryDefaults();
@@ -60,8 +60,11 @@ public class Arm extends ProfiledPIDSubsystem {
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     ffOutput = -feedforward.calculate(setpoint.position, setpoint.velocity);
-    rightArmMotor.setVoltage(ffOutput);
+    output = -output;
+    rightArmMotor.setVoltage(ffOutput + output);
     SmartDashboard.putNumber("Fead Firword", ffOutput);
+    SmartDashboard.putNumber("Arm PID output", output);
+    SmartDashboard.putNumber("PID + FF", ffOutput + output);
   }
 
   public void setTarget(double target) {
