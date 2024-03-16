@@ -5,28 +5,43 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.CANSparkBase.IdleMode;
 
-import cowlib.Util;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.ArmConstants.ArmPositions;
+import frc.robot.Constants.ArmConstants.*;
 
-public class Arm extends SubsystemBase {
+public class Arm extends ProfiledPIDSubsystem {
   private CANSparkMax leftArmMotor = new CANSparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
   private CANSparkMax rightArmMotor = new CANSparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
+  private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
+  private ArmFeedforward feedforward = new ArmFeedforward(FeedForwardValues.kS, FeedForwardValues.kG,
+      FeedForwardValues.kV);
+
+  private double ffOutput;
 
   @SuppressWarnings("unused")
   private SparkLimitSwitch rightReverseLimitSwitch;
 
-  private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
-
-  /** Creates a new Arm. */
+  /** Creates a new ProfPIDArm. */
   public Arm() {
+    super(
+        // The ProfiledPIDController used by the subsystem
+        new ProfiledPIDController(
+            PIDValues.p,
+            PIDValues.i,
+            PIDValues.d,
+            // The motion profile constraints
+            new TrapezoidProfile.Constraints(3, 3)));
+
     leftArmMotor.restoreFactoryDefaults();
     rightArmMotor.restoreFactoryDefaults();
 
@@ -37,35 +52,32 @@ public class Arm extends SubsystemBase {
     leftArmMotor.follow(rightArmMotor, true);
 
     rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+
+    setGoal(getEncoderRadians());
+    enable();
   }
 
-  public void setRawArmSpeed(double speed) {
-    rightArmMotor.set(speed);
+  @Override
+  public void useOutput(double output, TrapezoidProfile.State setpoint) {
+    ffOutput = -feedforward.calculate(setpoint.position, setpoint.velocity);
+    output = -output;
+    rightArmMotor.setVoltage(ffOutput + output);
+    SmartDashboard.putNumber("Fead Firword", ffOutput);
+    SmartDashboard.putNumber("Arm PID output", output);
+    SmartDashboard.putNumber("PID + FF", ffOutput + output);
   }
 
-  public void setArmSpeed(double speed) {
-    double pos = encoder.getAbsolutePosition().getValue();
-    double outputCoefficient = Util.mapDouble(
-      pos, // Position of the arm
-      ArmPositions.lower,
-      ArmPositions.upper,
-      1, // 100% input powerP
-      0 // 0% input power
-    );
-    double modifiedSpeed;
-    if (speed < 0) {
-      modifiedSpeed = speed * outputCoefficient;
-    } else if(speed > 0 && pos > 0.13) {
-      modifiedSpeed = speed;
-    } else {
-      modifiedSpeed = 0;
-    }
-    SmartDashboard.putNumber("pos", pos);
-    rightArmMotor.set(modifiedSpeed); // TODO: Begin using modified speed
+  public void setTarget(double target) {
+    // ArmPositions.upper is lower than ArmPositions.lower
+    this.setGoal(MathUtil.clamp(target, ArmPositions.lowerRad, ArmPositions.upperRad));
   }
 
-  public void setArmVoltage(double voltage) {
-    rightArmMotor.setVoltage(voltage);
+  public void setTargetRotations(double target) {
+    setTarget(target * 2 * Math.PI);
+  }
+
+  public void adjustTarget(double delta) {
+    setTarget(this.getController().getGoal().position + delta);
   }
 
   public double getEncoder() {
@@ -77,8 +89,17 @@ public class Arm extends SubsystemBase {
   }
 
   @Override
+  public double getMeasurement() {
+    // Return the process variable measurement here
+    return getEncoderRadians();
+  }
+
+  @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // SmartDashboard.putBoolean("Arm Limit Switch", rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed).isPressed());
+    super.periodic();
+
+    SmartDashboard.putNumber("ArmGoal", this.getController().getGoal().position);
+    SmartDashboard.putNumber("pos", getMeasurement());
+    // SmartDashboard.putNumber("encoder", getEncoder());
   }
 }

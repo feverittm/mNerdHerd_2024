@@ -54,24 +54,26 @@ public final class Constants {
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
     public static final double podiumAngle = 0;
-    public static final double raiseArmSpeed = -0.7;
-    public static final double lowerArmSpeed = 0.2;
+    public static final double raiseArmSpeed = 0.03;
+    public static final double lowerArmSpeed = -0.03;
 
     public static final class PIDValues {
-      public static final double p = 0;
-      public static final double i = 0;
-      public static final double d = 0;
+      public static final double p = 16.5;
+      public static final double i = 0.75;
+      public static final double d = 1.5;
     }
 
     public static final class FeedForwardValues {
       public static final double kS = 0;
-      public static final double kG = 0;
-      public static final double kV = 0;
+      public static final double kG = 1.4;
+      public static final double kV = 2;
     }
 
     public static final class ArmPositions {
-      public static final double lower = 0;
-      public static final double upper = 0.28;
+      public static final double lower = -0.1;
+      public static final double lowerRad = lower * 2 * Math.PI;
+      public static final double upper = 0.25;
+      public static final double upperRad = upper * 2 * Math.PI;
     }
   }
 
