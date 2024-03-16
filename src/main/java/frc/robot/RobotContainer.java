@@ -121,10 +121,10 @@ public class RobotContainer {
             () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
-    arm.setDefaultCommand(
-        new MoveArm(
-            arm,
-            () -> getArmControl(driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis())));
+    // arm.setDefaultCommand(
+    //     new MoveArm(
+    //         arm,
+    //         () -> getArmControl(driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis())));
 
     configureBindings();
   }
@@ -246,6 +246,8 @@ public class RobotContainer {
                 new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
                 new Rumble(driveStick, beamBreak, candle)),
             new WaitCommand(0.5)));
+
+    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null));
   }
 
   public void ledsOff() {

@@ -7,6 +7,7 @@ package frc.robot.commands.armCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 public class MoveArm extends Command {
@@ -31,12 +32,14 @@ public class MoveArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.adjustTarget(speed.getAsDouble());
+    // arm.adjustTarget(speed.getAsDouble());
+    arm.setGoal(ArmConstants.podiumAngle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    arm.setGoal(ArmConstants.ArmPositions.lower);
   }
 
   // Returns true when the command should end.
