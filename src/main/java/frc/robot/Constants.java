@@ -58,15 +58,15 @@ public final class Constants {
     public static final double lowerArmSpeed = -0.01;
 
     public static final class PIDValues {
-      public static final double p = 25;
+      public static final double p = 0; //25
       public static final double i = 0;
-      public static final double d = 2;
+      public static final double d = 0; //2
     }
 
     public static final class FeedForwardValues {
       public static final double kS = 0;
-      public static final double kG = 1.4;
-      public static final double kV = 2;
+      public static final double kG = 0; //1.4
+      public static final double kV = 0; //2
     }
 
     public static final class ArmPositions {

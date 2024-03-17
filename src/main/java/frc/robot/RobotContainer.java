@@ -64,7 +64,8 @@ public class RobotContainer {
   private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
-  private static CommandXboxController c_driveStick = new CommandXboxController(0);
+  // private static CommandXboxController c_driveStick = new
+  // CommandXboxController(0);
 
   private SendableChooser<Command> autoChooser;
 
@@ -234,8 +235,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
-    // new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //
+    // c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
+    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //
     // resets the gyro for field oriented controll
     new JoystickButton(driveStick, Button.kStart.value)
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
@@ -263,8 +264,8 @@ public class RobotContainer {
     new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null, true));
     new JoystickButton(driveStick, Button.kStart.value)
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
-    new JoystickButton(driveStick, Button.kX.value).whileTrue(new Climb(climber, 0.1)); //climber up
-    new JoystickButton(driveStick, Button.kB.value).whileTrue(new Climb(climber, -0.1)); //climber down
+    new JoystickButton(driveStick, Button.kX.value).whileTrue(new Climb(climber, 1)); // climber up
+    new JoystickButton(driveStick, Button.kB.value).whileTrue(new Climb(climber, -1)); // climber down
   }
 
   public void ledsOff() {
