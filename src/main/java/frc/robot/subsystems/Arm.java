@@ -30,8 +30,8 @@ public class Arm extends SubsystemBase {
     leftArmMotor.restoreFactoryDefaults();
     rightArmMotor.restoreFactoryDefaults();
 
-    leftArmMotor.setIdleMode(IdleMode.kBrake);
-    rightArmMotor.setIdleMode(IdleMode.kBrake);
+    leftArmMotor.setIdleMode(IdleMode.kCoast);
+    rightArmMotor.setIdleMode(IdleMode.kCoast);
 
     rightArmMotor.setInverted(true);
     leftArmMotor.follow(rightArmMotor, true);
