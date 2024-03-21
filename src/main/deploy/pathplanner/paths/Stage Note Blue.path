@@ -8,40 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5526731290992286,
-        "y": 4.913878141295476
+        "x": 1.8354161173880559,
+        "y": 4.933377657729188
       },
       "isLocked": false,
       "linkedName": "Subwoofer"
     },
     {
       "anchor": {
-        "x": 1.7866673263037751,
-        "y": 4.5043882961875195
+        "x": 1.9816624906408973,
+        "y": 4.855379591994339
       },
       "prevControl": {
-        "x": 1.5698945652646594,
-        "y": 4.691601135266756
+        "x": 1.8256663591711997,
+        "y": 5.0406249981146045
       },
       "nextControl": {
-        "x": 2.0011620070746092,
-        "y": 4.319142890067253
+        "x": 2.16421995750758,
+        "y": 4.638592600090154
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.6582116612509092,
-        "y": 4.118802168638821
+        "x": 2.6446460493871116,
+        "y": 4.172896516814411
       },
       "prevControl": {
-        "x": 2.209722783275528,
-        "y": 4.167550959723101
+        "x": 2.309338416367063,
+        "y": 4.343987963592276
       },
       "nextControl": {
-        "x": 2.9126326609718682,
-        "y": 4.0911477121474125
+        "x": 2.8726049849789734,
+        "y": 4.056579975657647
       },
       "isLocked": false,
       "linkedName": null
@@ -52,8 +52,8 @@
         "y": 5.5600000000000005
       },
       "prevControl": {
-        "x": 1.9719127324240409,
-        "y": 5.537862667174266
+        "x": 1.7184190187857824,
+        "y": 5.216120646018014
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,7 +63,12 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": 0.0,
+      "rotationDegrees": -26.15557373858126,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -42.82525588538988,
       "rotateFast": false
     }
   ],
@@ -105,7 +110,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.75,
     "maxAcceleration": 2.75,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -121,5 +126,5 @@
     "rotation": -0.14970122574716507,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

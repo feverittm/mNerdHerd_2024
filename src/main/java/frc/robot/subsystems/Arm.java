@@ -62,9 +62,9 @@ public class Arm extends ProfiledPIDSubsystem {
     ffOutput = -feedforward.calculate(setpoint.position, setpoint.velocity);
     output = -output;
     rightArmMotor.setVoltage(ffOutput + output);
-    SmartDashboard.putNumber("Fead Firword", ffOutput);
-    SmartDashboard.putNumber("Arm PID output", output);
-    SmartDashboard.putNumber("PID + FF", ffOutput + output);
+    // SmartDashboard.putNumber("Fead Firword", ffOutput);
+    // SmartDashboard.putNumber("Arm PID output", output);
+    // SmartDashboard.putNumber("PID + FF", ffOutput + output);
   }
 
   public void setTarget(double target) {
@@ -81,7 +81,11 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void armPodium() {
-    setTarget(ArmPositions.podium);
+    if (this.getController().getGoal().position == ArmPositions.podium) {
+      setTarget(ArmPositions.lowerRad);
+    } else {
+      setTarget(ArmPositions.podium);
+    }
   }
 
   public void armUp() {

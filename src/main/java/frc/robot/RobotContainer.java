@@ -79,7 +79,7 @@ public class RobotContainer {
   public RobotContainer() {
     SignalLogger.enableAutoLogging(false);
 
-    var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
+    var shootComp = Commands.race(new Shoot(shooter, -0.935),
         Commands.sequence(Commands.waitSeconds(0.45),
             Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
 

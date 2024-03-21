@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady() {
-    return topShootEncoder.getVelocity() > -ShooterConstants.targetFlywheelVelocity;
+    return -topShootEncoder.getVelocity() > ShooterConstants.targetFlywheelVelocity;
   }
 
   public void stopShooter() {
@@ -46,6 +46,6 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // TODO: Remove this
-    SmartDashboard.putNumber("Flywheel vel", topShootEncoder.getVelocity());
+    // SmartDashboard.putNumber("Flywheel vel", -topShootEncoder.getVelocity());
   }
 }
