@@ -64,9 +64,9 @@ public class RobotContainer {
   private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
-  private static CommandXboxController driveStick2 = new CommandXboxController(1);
-  // private static CommandXboxController c_driveStick = new
-  // CommandXboxController(0);
+
+  private static CommandXboxController c_driveStick2 = new CommandXboxController(1);
+  private static CommandXboxController c_driveStick = new CommandXboxController(0);
 
   private SendableChooser<Command> autoChooser;
 
@@ -236,40 +236,32 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
-    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); //
-    // resets the gyro for field oriented controll
-    new JoystickButton(driveStick, Button.kStart.value)
-        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
-    new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
+    c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
+    // resets the gyro for field oriented control
+    c_driveStick.leftBumper().whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
         new Rumble(driveStick, beamBreak, candle))); // rumble controller if note is visible
-    new JoystickButton(driveStick, Button.kRightBumper.value)
+    c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
             new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
-    new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
+    c_driveStick.rightBumper().onFalse( // shoot note when button is released
         Commands.sequence(
             Commands.race(
                 Commands.parallel(
                     new Shoot(shooter, ShooterConstants.shooterSpeed),
                     new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
                     new Rumble(driveStick, beamBreak, candle)),
-                new WaitCommand(0.5)),
-            Commands.runOnce(() -> {
-              if (!getBeamBreak()) {
-                arm.armDown();
-              }
-            }, arm)));
+                new WaitCommand(0.5))));
 
-    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new MoveArm(arm, null, true));
-    new JoystickButton(driveStick, Button.kStart.value)
+    c_driveStick.a().toggleOnTrue(new MoveArm(arm, null, true));
+    c_driveStick.start()
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
-    new JoystickButton(driveStick, Button.kX.value).whileTrue(new Climb(climber, 1)); // climber up
-    new JoystickButton(driveStick, Button.kB.value).whileTrue(new Climb(climber, -1)); // climber down
+    c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
+    c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
 
-    driveStick2.y().whileTrue(new Climb(climber, 1));
-    driveStick2.a().whileTrue(new Climb(climber, -1));
+    c_driveStick2.y().whileTrue(new Climb(climber, 1));
+    c_driveStick2.a().whileTrue(new Climb(climber, -1));
   }
 
   public void ledsOff() {
