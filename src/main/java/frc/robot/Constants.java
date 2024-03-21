@@ -71,7 +71,7 @@ public final class Constants {
 
     public static final class ArmPositions {
       public static final double lower = -0.1;
-      public static final double lowerRad = lower * 2 * Math.PI;
+      public static final double lowerRad = lower;
       public static final double upper = 0.25;
       public static final double upperRad = upper * 2 * Math.PI;
     }
