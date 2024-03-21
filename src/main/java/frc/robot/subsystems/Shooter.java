@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
@@ -30,6 +31,10 @@ public class Shooter extends SubsystemBase {
     topShootMotor.set(speed);
   }
 
+  public boolean isReady() {
+    return this.topShootMotor.getEncoder().getVelocity() > -3000;
+  }
+
   public void stopShooter() {
     topShootMotor.stopMotor();
   }
@@ -37,5 +42,6 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Flywheel vel", this.topShootMotor.getEncoder().getVelocity());
   }
 }
