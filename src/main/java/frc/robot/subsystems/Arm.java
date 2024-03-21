@@ -40,7 +40,7 @@ public class Arm extends ProfiledPIDSubsystem {
             PIDValues.i,
             PIDValues.d,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(3, 3)));
+            new TrapezoidProfile.Constraints(5, 4)));
 
     leftArmMotor.restoreFactoryDefaults();
     rightArmMotor.restoreFactoryDefaults();
