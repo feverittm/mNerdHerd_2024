@@ -236,15 +236,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // Gyro Reset
     c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
-    // resets the gyro for field oriented control
+
+    // Intake
     c_driveStick.leftBumper().whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
         new Rumble(driveStick, beamBreak, candle))); // rumble controller if note is visible
+
+    // Charge Shooter
     c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
             new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
+
+    // Release Shooter
     c_driveStick.rightBumper().onFalse( // shoot note when button is released
         Commands.sequence(
             Commands.race(
@@ -254,12 +260,18 @@ public class RobotContainer {
                     new Rumble(driveStick, beamBreak, candle)),
                 new WaitCommand(0.5))));
 
+    // Set arm to podium angle
     c_driveStick.a().toggleOnTrue(new MoveArm(arm, null, true));
+
+    // Spit out note
     c_driveStick.start()
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+
+    // Driver climb controls
     c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
     c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
 
+    // Codriver climb controls
     c_driveStick2.y().whileTrue(new Climb(climber, 1));
     c_driveStick2.a().whileTrue(new Climb(climber, -1));
   }
