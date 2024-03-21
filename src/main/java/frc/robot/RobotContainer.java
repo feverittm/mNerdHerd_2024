@@ -64,6 +64,7 @@ public class RobotContainer {
   private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
+  private static CommandXboxController driveStick2 = new CommandXboxController(1);
   // private static CommandXboxController c_driveStick = new
   // CommandXboxController(0);
 
@@ -266,6 +267,9 @@ public class RobotContainer {
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
     new JoystickButton(driveStick, Button.kX.value).whileTrue(new Climb(climber, 1)); // climber up
     new JoystickButton(driveStick, Button.kB.value).whileTrue(new Climb(climber, -1)); // climber down
+
+    driveStick2.y().whileTrue(new Climb(climber, 1));
+    driveStick2.a().whileTrue(new Climb(climber, -1));
   }
 
   public void ledsOff() {
