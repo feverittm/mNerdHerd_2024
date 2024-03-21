@@ -53,7 +53,6 @@ public final class Constants {
     public static final int leftArmMotorID = 5;
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
-    public static final double podiumAngle = 0.27;
     public static final double raiseArmSpeed = 1;
     public static final double lowerArmSpeed = -1;
 
@@ -74,6 +73,8 @@ public final class Constants {
       public static final double lowerRad = lower;
       public static final double upper = 0.25;
       public static final double upperRad = upper * 2 * Math.PI;
+
+      public static final double podium = 0.27;
     }
   }
 

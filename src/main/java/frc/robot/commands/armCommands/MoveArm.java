@@ -16,10 +16,9 @@ public class MoveArm extends Command {
   private boolean podium;
 
   /** Creates a new MoveArm. */
-  public MoveArm(Arm arm, DoubleSupplier speed, boolean podium) {
+  public MoveArm(Arm arm, DoubleSupplier speed) {
     this.arm = arm;
     this.speed = speed;
-    this.podium = podium;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.arm);
@@ -33,11 +32,7 @@ public class MoveArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (podium) {
-      arm.setGoal(ArmConstants.podiumAngle);
-    } else {
-      arm.adjustTarget(speed.getAsDouble());
-    }
+    arm.adjustTarget(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
