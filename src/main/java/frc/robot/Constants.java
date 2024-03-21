@@ -92,6 +92,9 @@ public final class Constants {
     public static final int topShootMotorID = 16;
     public static final int bottomShootMotorID = 6;
     public static final double shooterSpeed = -1;
+
+    // TODO: Find correct value of this
+    public static final double targetFlywheelVelocity = -3000;
   }
 
   public static final class AutoConstants {

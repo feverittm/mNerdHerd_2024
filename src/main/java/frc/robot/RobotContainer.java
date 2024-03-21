@@ -242,13 +242,14 @@ public class RobotContainer {
     // Intake
     c_driveStick.leftBumper().whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
-        new Rumble(driveStick, beamBreak, candle))); // rumble controller if note is visible
+        new Rumble(driveStick, beamBreak, candle, () -> false))); // rumble controller if note is visible
 
     // Charge Shooter
     c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
+            new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed),
+            new Rumble(driveStick, beamBreak, candle, shooter::isReady))); // spin up flywheels while button is held
 
     // Release Shooter
     c_driveStick.rightBumper().onFalse( // shoot note when button is released
@@ -257,7 +258,7 @@ public class RobotContainer {
                 Commands.parallel(
                     new Shoot(shooter, ShooterConstants.shooterSpeed),
                     new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
-                    new Rumble(driveStick, beamBreak, candle)),
+                    new Rumble(driveStick, beamBreak, candle, shooter::isReady)),
                 new WaitCommand(0.5))));
 
     // Set arm to podium angle

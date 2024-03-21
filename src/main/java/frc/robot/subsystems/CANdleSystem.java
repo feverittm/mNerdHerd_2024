@@ -66,6 +66,11 @@ public class CANdleSystem extends SubsystemBase {
     changeAnimation(null);
   }
 
+  public void setGreen() {
+    setColors(0, 255, 0);
+    changeAnimation(null);
+  }
+
   public void setFlashing() {
     changeAnimation(AnimationType.Flash);
   }

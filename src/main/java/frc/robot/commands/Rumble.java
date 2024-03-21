@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -13,13 +15,15 @@ import frc.robot.subsystems.CANdleSystem;
 public class Rumble extends Command {
   private final XboxController driveStick;
   private final DigitalInput beamBreak;
-  private CANdleSystem candle;
+  private final CANdleSystem candle;
+  private final BooleanSupplier shooterReady;
 
   /** Creates a new Rumble. */
-  public Rumble(XboxController driveStick, DigitalInput beamBreak, CANdleSystem candle) {
+  public Rumble(XboxController driveStick, DigitalInput beamBreak, CANdleSystem candle, BooleanSupplier shooterReady) {
     this.driveStick = driveStick;
     this.beamBreak = beamBreak;
     this.candle = candle;
+    this.shooterReady = shooterReady;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -31,7 +35,10 @@ public class Rumble extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!beamBreak.get()) {
+    if (shooterReady.getAsBoolean()) {
+      driveStick.setRumble(RumbleType.kBothRumble, 0);
+      candle.setGreen();
+    } else if (!beamBreak.get()) {
       driveStick.setRumble(RumbleType.kBothRumble, 1);
       candle.setOrange();
     } else {
