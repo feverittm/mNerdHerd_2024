@@ -12,8 +12,6 @@ public class Climb extends Command {
   public Climber climber;
   public double motorSpeed;
 
-
-
   public Climb(Climber climber, double motorSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.climber = climber;
@@ -24,7 +22,8 @@ public class Climb extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
