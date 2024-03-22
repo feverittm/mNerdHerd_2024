@@ -35,15 +35,15 @@ public class Rumble extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterReady.getAsBoolean()) {
-      driveStick.setRumble(RumbleType.kBothRumble, 0);
-      candle.setGreen();
-    } else if (!beamBreak.get()) {
-      driveStick.setRumble(RumbleType.kBothRumble, 1);
-      candle.setOrange();
-    } else {
+    if (beamBreak.get()) {
       driveStick.setRumble(RumbleType.kBothRumble, 0);
       candle.setBlue();
+    } else if (shooterReady.getAsBoolean()) {
+      driveStick.setRumble(RumbleType.kBothRumble, 0);
+      candle.setGreen();
+    } else {
+      driveStick.setRumble(RumbleType.kBothRumble, 1);
+      candle.setOrange();
     }
   }
 
