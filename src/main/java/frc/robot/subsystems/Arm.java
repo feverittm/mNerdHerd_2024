@@ -84,7 +84,11 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void adjustTarget(double delta) {
-    setTarget(this.getController().getGoal().position + delta);
+    if (Math.abs(delta) > 0.01) {
+      podium = false;
+    }
+
+    setTarget(this.getController().getGoal().position + delta, podium);
   }
 
   public void armPodium() {
