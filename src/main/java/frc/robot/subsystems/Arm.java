@@ -27,6 +27,7 @@ public class Arm extends ProfiledPIDSubsystem {
       FeedForwardValues.kV);
 
   private double ffOutput;
+  private boolean podium = false;
 
   @SuppressWarnings("unused")
   private SparkLimitSwitch rightReverseLimitSwitch;
@@ -40,7 +41,7 @@ public class Arm extends ProfiledPIDSubsystem {
             PIDValues.i,
             PIDValues.d,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(5, 4)));
+            new TrapezoidProfile.Constraints(6, 5)));
 
     leftArmMotor.restoreFactoryDefaults();
     rightArmMotor.restoreFactoryDefaults();
@@ -69,6 +70,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setTarget(double target) {
     // ArmPositions.upper is lower than ArmPositions.lower
+    podium = false;
     this.setGoal(MathUtil.clamp(target, ArmPositions.lowerRad, ArmPositions.upperRad));
   }
 
@@ -81,9 +83,11 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void armPodium() {
-    if (this.getController().getGoal().position == ArmPositions.podium) {
+    if (podium) {
+      podium = false;
       setTarget(ArmPositions.lowerRad);
     } else {
+      podium = true;
       setTarget(ArmPositions.podium);
     }
   }
