@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 15.797069883925992,
-        "y": 4.3678916811515345
+        "x": 15.82631915857656,
+        "y": 4.426390230452671
       },
       "prevControl": {
-        "x": 14.178610019927875,
-        "y": 1.8719535776363725
+        "x": 14.207859294578443,
+        "y": 1.9304521269375088
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Far Field Sub Red"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
