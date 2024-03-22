@@ -184,10 +184,12 @@ public class RobotContainer {
     return Math.copySign(input * input, input);
   }
 
+  @SuppressWarnings("unused")
   private double cube(double input) {
     return Math.copySign(input * input * input, input);
   }
 
+  @SuppressWarnings("unused")
   private double scaleTranslationAxis(double input) {
     return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
   }
