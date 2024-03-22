@@ -70,7 +70,12 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void setTarget(double target) {
     // ArmPositions.upper is lower than ArmPositions.lower
-    podium = false;
+    setTarget(target, false);
+  }
+
+  public void setTarget(double target, boolean podium) {
+    // ArmPositions.upper is lower than ArmPositions.lower
+    this.podium = podium;
     this.setGoal(MathUtil.clamp(target, ArmPositions.lowerRad, ArmPositions.upperRad));
   }
 
@@ -84,11 +89,9 @@ public class Arm extends ProfiledPIDSubsystem {
 
   public void armPodium() {
     if (podium) {
-      podium = false;
       setTarget(ArmPositions.lowerRad);
     } else {
-      podium = true;
-      setTarget(ArmPositions.podium);
+      setTarget(ArmPositions.podium, true);
     }
   }
 
