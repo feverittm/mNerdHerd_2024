@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 0.7044441642327478,
-        "y": 4.348392164717821
+        "x": 0.626446098497899,
+        "y": 4.514138054404375
       },
       "prevControl": {
-        "x": 2.2449059624960115,
-        "y": 1.5209622818295532
+        "x": 2.166907896761163,
+        "y": 1.6867081715161072
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Far Field Sub Blue"
+      "linkedName": null
     }
   ],
   "rotationTargets": [

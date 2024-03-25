@@ -24,8 +24,8 @@ public class Shooter extends SubsystemBase {
     topShootMotor.restoreFactoryDefaults();
     bottomShootMotor.restoreFactoryDefaults();
 
-    topShootMotor.setIdleMode(IdleMode.kCoast);
-    bottomShootMotor.setIdleMode(IdleMode.kCoast);
+    topShootMotor.setIdleMode(IdleMode.kBrake);
+    bottomShootMotor.setIdleMode(IdleMode.kBrake);
 
     // topShootMotor.setSmartCurrentLimit(DriveConstants.currentLimit);
     // bottomShootMotor.setSmartCurrentLimit(DriveConstants.currentLimit);

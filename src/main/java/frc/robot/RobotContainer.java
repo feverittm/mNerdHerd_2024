@@ -61,7 +61,7 @@ public class RobotContainer {
 
   private static XboxController driveStick = new XboxController(0);
 
-  private static CommandXboxController c_driveStick2 = new CommandXboxController(1);
+  // private static CommandXboxController c_driveStick2 = new CommandXboxController(1);
   private static CommandXboxController c_driveStick = new CommandXboxController(0);
 
   private SendableChooser<Command> autoChooser;
@@ -270,8 +270,8 @@ public class RobotContainer {
     c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
 
     // Codriver climb controls
-    c_driveStick2.y().whileTrue(new Climb(climber, 1));
-    c_driveStick2.a().whileTrue(new Climb(climber, -1));
+    // c_driveStick2.y().whileTrue(new Climb(climber, 1));
+    // c_driveStick2.a().whileTrue(new Climb(climber, -1));
   }
 
   public void ledsOff() {
