@@ -74,9 +74,9 @@ public class RobotContainer {
   public RobotContainer() {
     SignalLogger.enableAutoLogging(false);
 
-    var shootComp = Commands.race(new Shoot(shooter, -0.94),
-        Commands.sequence(Commands.waitSeconds(0.5),
-            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
+    var shootComp = Commands.race(new Shoot(shooter, -0.95),
+        Commands.sequence(Commands.waitSeconds(0.55),
+            Commands.race(new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
 
     var armUp = Commands.sequence(
         Commands.runOnce(arm::armUp, arm),
@@ -91,7 +91,7 @@ public class RobotContainer {
     var ampShoot = Commands.race(
         Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+            new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed)),
         Commands.waitSeconds(0.4));
 
     var defenceShoot = Commands.parallel(
@@ -245,7 +245,7 @@ public class RobotContainer {
     c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed),
+            new RunIntake(intake, 0.5, -IntakeConstants.kickupSpeed),
             new Rumble(driveStick, beamBreak, candle, shooter::isReady))); // spin up flywheels while button is held
 
     // Release Shooter
@@ -254,7 +254,7 @@ public class RobotContainer {
             Commands.race(
                 Commands.parallel(
                     new Shoot(shooter, ShooterConstants.shooterSpeed),
-                    new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
+                    new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed),
                     new Rumble(driveStick, beamBreak, candle, shooter::isReady)),
                 new WaitCommand(0.5))));
 

@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
@@ -23,6 +24,8 @@ public class Intake extends SubsystemBase {
     
     intakeMotor.setIdleMode(IdleMode.kCoast);
     kickupMotor.setIdleMode(IdleMode.kBrake);
+
+    intakeMotor.setSmartCurrentLimit(IntakeConstants.currentLimit);
   }
 
   public void runIntake(double intakeMotorSpeed, double kickupMotorSpeed) {

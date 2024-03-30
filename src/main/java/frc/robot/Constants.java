@@ -81,8 +81,10 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int intakeMotorID = 7;
     public static final int kickupMotorID = 17;
-    public static final double intakeSpeed = 0.5;
-    public static final double kickupSpeed = 0.5;
+    public static final double intakeSpeed = 0.7;
+    public static final double kickupSpeed = 0.7;
+
+    public static final int currentLimit = 40;
   }
 
   public static final class ClimberConstants {
@@ -95,6 +97,7 @@ public final class Constants {
     public static final double shooterSpeed = -1;
 
     public static final double targetFlywheelVelocity = 3700;
+    public static final int currentLimit = 50;
   }
 
   public static final class AutoConstants {
