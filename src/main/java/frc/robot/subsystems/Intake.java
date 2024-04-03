@@ -23,6 +23,8 @@ public class Intake extends SubsystemBase {
     
     intakeMotor.setIdleMode(IdleMode.kCoast);
     kickupMotor.setIdleMode(IdleMode.kBrake);
+
+    intakeMotor.setSmartCurrentLimit(IntakeConstants.currentLimit);
   }
 
   public void runIntake(double intakeMotorSpeed, double kickupMotorSpeed) {

@@ -53,43 +53,51 @@ public final class Constants {
     public static final int leftArmMotorID = 5;
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
-    public static final double podiumAngle = 0;
-    public static final double raiseArmSpeed = -0.7;
-    public static final double lowerArmSpeed = 0.2;
+    public static final double raiseArmSpeed = 1;
+    public static final double lowerArmSpeed = -1;
 
     public static final class PIDValues {
-      public static final double p = 0;
+      public static final double p = 4;
       public static final double i = 0;
-      public static final double d = 0;
+      public static final double d = 1.7;
     }
 
     public static final class FeedForwardValues {
-      public static final double kS = 0;
-      public static final double kG = 0;
-      public static final double kV = 0;
+      public static final double kS = 0.07;
+      public static final double kG = 0.4;
+      public static final double kV = 3;
     }
 
     public static final class ArmPositions {
-      public static final double lower = 0;
-      public static final double upper = 0.28;
+      public static final double lower = -0.11;
+      public static final double lowerRad = lower;
+      public static final double upper = 0.25;
+      public static final double upperRad = upper * 2 * Math.PI;
+
+      public static final double podium = 0.27;
     }
   }
 
   public static final class IntakeConstants {
     public static final int intakeMotorID = 7;
     public static final int kickupMotorID = 17;
-    public static final double intakeSpeed = 0.5;
-    public static final double kickupSpeed = 0.5;
+    public static final double intakeSpeed = 0.7;
+    public static final double kickupSpeed = 0.7;
+
+    public static final int currentLimit = 30;
   }
 
   public static final class ClimberConstants {
-    public static final int climberMotorID = 50;
+    public static final int climberMotorID = 20;
   }
 
   public static final class ShooterConstants {
     public static final int topShootMotorID = 16;
     public static final int bottomShootMotorID = 6;
-    public static final double shooterSpeed = -0.95;
+    public static final double shooterSpeed = -1;
+
+    public static final double targetFlywheelVelocity = 3700;
+    public static final int currentLimit = 50;
   }
 
   public static final class AutoConstants {

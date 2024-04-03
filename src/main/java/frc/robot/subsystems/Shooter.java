@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -15,19 +16,28 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax topShootMotor = new CANSparkMax(ShooterConstants.topShootMotorID, MotorType.kBrushless);
   private CANSparkMax bottomShootMotor = new CANSparkMax(ShooterConstants.bottomShootMotorID, MotorType.kBrushless);
 
+  private RelativeEncoder topShootEncoder = topShootMotor.getEncoder();
+
   /** Creates a new Shooter. */
   public Shooter() {
     topShootMotor.restoreFactoryDefaults();
     bottomShootMotor.restoreFactoryDefaults();
 
-    topShootMotor.setIdleMode(IdleMode.kCoast);
-    bottomShootMotor.setIdleMode(IdleMode.kCoast);
+    topShootMotor.setIdleMode(IdleMode.kBrake);
+    bottomShootMotor.setIdleMode(IdleMode.kBrake);
+
+    topShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+    bottomShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
 
     bottomShootMotor.follow(topShootMotor);
   }
 
   public void spinShooter(double speed) {
     topShootMotor.set(speed);
+  }
+
+  public boolean isReady() {
+    return -topShootEncoder.getVelocity() > ShooterConstants.targetFlywheelVelocity;
   }
 
   public void stopShooter() {
@@ -37,5 +47,6 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // SmartDashboard.putNumber("Flywheel vel", -topShootEncoder.getVelocity());
   }
 }

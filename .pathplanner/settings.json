@@ -4,14 +4,16 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp",
-    "Leave",
     "Defence",
+    "Leave",
+    "Center Field",
     "Speaker"
   ],
   "autoFolders": [
     "Amp",
-    "Leave",
     "Defence",
+    "Leave",
+    "Center Field",
     "Speaker"
   ],
   "defaultMaxVel": 3.0,

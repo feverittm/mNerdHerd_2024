@@ -8,6 +8,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
 import frc.robot.commands.Rumble;
 import frc.robot.commands.RunIntake;
@@ -15,6 +16,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CANdleSystem;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -28,16 +30,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -58,11 +56,17 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
+  private final Climber climber = new Climber();
   private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
 
+  // private static CommandXboxController c_driveStick2 = new CommandXboxController(1);
+  private static CommandXboxController c_driveStick = new CommandXboxController(0);
+
   private SendableChooser<Command> autoChooser;
+
+  private double mapped = 0;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -70,22 +74,24 @@ public class RobotContainer {
   public RobotContainer() {
     SignalLogger.enableAutoLogging(false);
 
-    var shootComp = Commands.race(new Shoot(shooter, ShooterConstants.shooterSpeed),
-        Commands.sequence(Commands.waitSeconds(0.5),
-            Commands.race(new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.4))));
+    var shootComp = Commands.race(new Shoot(shooter, -0.95),
+        Commands.sequence(Commands.waitSeconds(0.55),
+            Commands.race(new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
 
-    var armUp = Commands.race(
-        new MoveArm(arm, () -> ArmConstants.raiseArmSpeed),
-        Commands.waitSeconds(1));
+    var armUp = Commands.sequence(
+        Commands.runOnce(arm::armUp, arm),
+        Commands.waitSeconds(0.75));
 
-    var armDown = Commands.race(
-        new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-        Commands.waitSeconds(1.5));
+    // var armDown = Commands.race(
+    // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
+    // Commands.waitSeconds(1.5));
+
+    var armDown = Commands.runOnce(arm::armDown, arm);
 
     var ampShoot = Commands.race(
         Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed)),
+            new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed)),
         Commands.waitSeconds(0.4));
 
     var defenceShoot = Commands.parallel(
@@ -101,10 +107,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
-    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot, armDown));
+    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
+        armDown));
     NamedCommands.registerCommand("Defence Shoot", defenceShoot);
     NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
-    
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -119,7 +125,8 @@ public class RobotContainer {
     arm.setDefaultCommand(
         new MoveArm(
             arm,
-            () -> getArmControl()));
+            () -> getArmControl(driveStick.getRightTriggerAxis() -
+                driveStick.getLeftTriggerAxis())));
 
     configureBindings();
   }
@@ -137,13 +144,11 @@ public class RobotContainer {
     }
   }
 
-  private double getArmControl() {
-    var trigger = driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis();
-    double mapped;
+  private double getArmControl(double trigger) {
     if (trigger > 0) {
-      mapped = trigger * ArmConstants.lowerArmSpeed;
+      mapped = trigger * ArmConstants.raiseArmSpeed;
     } else if (trigger < 0) {
-      mapped = -trigger * ArmConstants.raiseArmSpeed;
+      mapped = -trigger * ArmConstants.lowerArmSpeed;
     } else {
       mapped = 0;
     }
@@ -179,10 +184,12 @@ public class RobotContainer {
     return Math.copySign(input * input, input);
   }
 
+  @SuppressWarnings("unused")
   private double cube(double input) {
     return Math.copySign(input * input * input, input);
   }
 
+  @SuppressWarnings("unused")
   private double scaleTranslationAxis(double input) {
     return deadband(-squared(input), DriveConstants.deadband) * drivebase.getMaxVelocity();
   }
@@ -226,23 +233,45 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new POVButton(driveStick, 0).onTrue(new InstantCommand(gyro::reset)); // resets the gyro for field oriented controll
-    new JoystickButton(driveStick, Button.kStart.value)
-        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed)); // reverse intake
-    new JoystickButton(driveStick, Button.kLeftBumper.value).whileTrue(Commands.parallel(
+    // Gyro Reset
+    c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
+
+    // Intake
+    c_driveStick.leftBumper().whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
-        new Rumble(driveStick, beamBreak, candle))); // rumble controller if note is visible
-    new JoystickButton(driveStick, Button.kRightBumper.value)
+        new Rumble(driveStick, beamBreak, candle, () -> false))); // rumble controller if note is visible
+
+    // Charge Shooter
+    c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.3, -IntakeConstants.kickupSpeed))); // spin up flywheels while button is held
-    new JoystickButton(driveStick, Button.kRightBumper.value).onFalse( // shoot note when button is released
-        Commands.race(
-            Commands.parallel(
-                new Shoot(shooter, ShooterConstants.shooterSpeed),
-                new RunIntake(intake, 0.3, IntakeConstants.kickupSpeed),
-                new Rumble(driveStick, beamBreak, candle)),
-            new WaitCommand(0.5)));
+            new RunIntake(intake, 0.5, -IntakeConstants.kickupSpeed),
+            new Rumble(driveStick, beamBreak, candle, shooter::isReady))); // spin up flywheels while button is held
+
+    // Release Shooter
+    c_driveStick.rightBumper().onFalse( // shoot note when button is released
+        Commands.sequence(
+            Commands.race(
+                Commands.parallel(
+                    new Shoot(shooter, ShooterConstants.shooterSpeed),
+                    new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed),
+                    new Rumble(driveStick, beamBreak, candle, shooter::isReady)),
+                new WaitCommand(0.5))));
+
+    // Set arm to podium angle
+    c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
+
+    // Spit out note
+    c_driveStick.start()
+        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+
+    // Driver climb controls
+    c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
+    c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
+
+    // Codriver climb controls
+    // c_driveStick2.y().whileTrue(new Climb(climber, 1));
+    // c_driveStick2.a().whileTrue(new Climb(climber, -1));
   }
 
   public void ledsOff() {
