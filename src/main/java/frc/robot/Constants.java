@@ -84,7 +84,7 @@ public final class Constants {
     public static final double intakeSpeed = 0.7;
     public static final double kickupSpeed = 0.7;
 
-    public static final int currentLimit = 40;
+    public static final int currentLimit = 30;
   }
 
   public static final class ClimberConstants {
