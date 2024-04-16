@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-
 import cowlib.SwerveModuleConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -37,7 +35,7 @@ public final class Constants {
     public static final class SwerveModules {
 
       // Front Left Module
-      public static final SwerveModuleConfig Front_Left_Configuration = new SwerveModuleConfig(
+      public static final SwerveModuleConfig frontLeft = new SwerveModuleConfig(
           8,
           1,
           true,
@@ -47,7 +45,7 @@ public final class Constants {
           .462);
 
       // Front Right
-      public static final SwerveModuleConfig Front_Right_Configuration = new SwerveModuleConfig(
+      public static final SwerveModuleConfig frontRight= new SwerveModuleConfig(
           6,
           7,
           true,
@@ -57,7 +55,7 @@ public final class Constants {
           0);
 
       // Back Right
-      public static final SwerveModuleConfig Back_Right_Configuration = new SwerveModuleConfig(
+      public static final SwerveModuleConfig backRight = new SwerveModuleConfig(
           4,
           5,
           true,
@@ -67,7 +65,7 @@ public final class Constants {
           .759);
 
       // Back Left
-      public static final SwerveModuleConfig Back_Left_Configuration = new SwerveModuleConfig(
+      public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(
           2,
           3,
           true,
@@ -79,7 +77,7 @@ public final class Constants {
     }
 
     public static final class ModuleLocations {
-      public static final double dist = Units.inchesToMeters(9.25);
+      public static final double dist = Units.inchesToMeters(11.0);
       public static final double robotRaduius = Math.sqrt(2 * Math.pow(dist, 2));
       public static final Translation2d frontLeft = new Translation2d(dist, dist);
       public static final Translation2d frontRight = new Translation2d(dist, -dist);
@@ -88,51 +86,26 @@ public final class Constants {
     }
   }
 
-  public static final class ArmConstants {
-    public static final int leftArmMotorID = 5;
-    public static final int rightArmMotorID = 15;
-    public static final int encoderID = 25;
-    public static final double raiseArmSpeed = 1;
-    public static final double lowerArmSpeed = -1;
-
-    public static final class PIDValues {
-      public static final double p = 4;
-      public static final double i = 0;
-      public static final double d = 1.7;
-    }
-
-    public static final class FeedForwardValues {
-      public static final double kS = 0.07;
-      public static final double kG = 0.4;
-      public static final double kV = 3;
-    }
-
-    public static final class ArmPositions {
-      public static final double lower = -0.11;
-      public static final double lowerRad = lower;
-      public static final double upper = 0.25;
-      public static final double upperRad = upper * 2 * Math.PI;
-
-      public static final double podium = 0.27;
-    }
-  }
-
   public static final class IntakeConstants {
-    public static final int intakeMotorID = 7;
-    public static final int kickupMotorID = 17;
+    public static final int intakeMotorId = 15;
+    public static final int indexMotorId = 10;
+    public static final double indexSpeed = 0.4;
     public static final double intakeSpeed = 0.7;
-    public static final double kickupSpeed = 0.7;
+    public static final int noteSensorId = 0;
 
     public static final int currentLimit = 30;
   }
 
   public static final class ClimberConstants {
-    public static final int climberMotorID = 20;
+    public static final int leftClimberMotorId = 16;
+    public static final int rightClimberMotorId = 14;
+    public static final int leftClimberSensorId = 2;
+    public static final int rightClimberSensorId = 3;
   }
 
   public static final class ShooterConstants {
-    public static final int topShootMotorID = 16;
-    public static final int bottomShootMotorID = 6;
+    public static final int leftShootMotorID = 11;
+    public static final int rightShootMotorID = 12;
     public static final double shooterSpeed = -1;
 
     public static final double targetFlywheelVelocity = 3700;

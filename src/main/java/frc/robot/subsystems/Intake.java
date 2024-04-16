@@ -13,28 +13,27 @@ import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.intakeMotorID, MotorType.kBrushless);
-  private CANSparkMax kickupMotor = new CANSparkMax(IntakeConstants.kickupMotorID, MotorType.kBrushless);
-  
+  private CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.intakeMotorId, MotorType.kBrushless);
+  private CANSparkMax indexMotor = new CANSparkMax(IntakeConstants.indexMotorId, MotorType.kBrushless);
 
   public Intake() {
     intakeMotor.restoreFactoryDefaults();
-    kickupMotor.restoreFactoryDefaults();
+    indexMotor.restoreFactoryDefaults();
     
     intakeMotor.setIdleMode(IdleMode.kCoast);
-    kickupMotor.setIdleMode(IdleMode.kBrake);
+    indexMotor.setIdleMode(IdleMode.kBrake);
 
     intakeMotor.setSmartCurrentLimit(IntakeConstants.currentLimit);
   }
 
   public void runIntake(double intakeMotorSpeed, double kickupMotorSpeed) {
     intakeMotor.set(intakeMotorSpeed);
-    kickupMotor.set(kickupMotorSpeed);
+    indexMotor.set(kickupMotorSpeed);
   }
 
   public void stopIntake() {
     intakeMotor.stopMotor();
-    kickupMotor.stopMotor();
+    indexMotor.stopMotor();
   }
 
   // public boolean getIntakeOn() {

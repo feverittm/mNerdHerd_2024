@@ -6,27 +6,60 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  private CANSparkMax climbMotor = new CANSparkMax(ClimberConstants.climberMotorID, MotorType.kBrushless);
+  private CANSparkMax leftClimberMotor = new CANSparkMax(ClimberConstants.leftClimberMotorId, MotorType.kBrushless);
+  private CANSparkMax rightClimberMotor = new CANSparkMax(ClimberConstants.rightClimberMotorId, MotorType.kBrushless);
+  private DigitalInput leftBottomLimit = new DigitalInput(ClimberConstants.leftClimberSensorId);
+  private RelativeEncoder leftClimberEncoder;
+
 
   public Climber() {
-    climbMotor.restoreFactoryDefaults();
+    leftClimberMotor.restoreFactoryDefaults();
+    rightClimberMotor.restoreFactoryDefaults();
 
-    climbMotor.setIdleMode(IdleMode.kBrake);
+    leftClimberMotor.setInverted(false);
+    rightClimberMotor.setInverted(true);
+
+    leftClimberMotor.setIdleMode(IdleMode.kBrake);
+    rightClimberMotor.setIdleMode(IdleMode.kBrake);
+
+    rightClimberMotor.follow(leftClimberMotor);
+
+    leftClimberEncoder = leftClimberMotor.getEncoder();
+  }
+
+  public double getClimberPosition() {
+    return leftClimberEncoder.getPosition();
+  }
+
+  public boolean atBottom() {
+    return(leftBottomLimit.get());
   }
 
   public void runClimber(double motorSpeed) {
-    climbMotor.set(motorSpeed);
+    leftClimberMotor.set(motorSpeed);
   }
 
   public void stopClimber() {
-    climbMotor.stopMotor();
+    leftClimberMotor.stopMotor();
+  }
+
+  public void setBrakeMode() {
+    leftClimberMotor.setIdleMode(IdleMode.kBrake);
+    rightClimberMotor.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void setCoastMode() {
+    leftClimberMotor.setIdleMode(IdleMode.kCoast);
+    rightClimberMotor.setIdleMode(IdleMode.kCoast);
   }
 
   @Override

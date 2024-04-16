@@ -13,35 +13,39 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
-  private CANSparkMax topShootMotor = new CANSparkMax(ShooterConstants.topShootMotorID, MotorType.kBrushless);
-  private CANSparkMax bottomShootMotor = new CANSparkMax(ShooterConstants.bottomShootMotorID, MotorType.kBrushless);
+  private CANSparkMax leftShootMotor = new CANSparkMax(ShooterConstants.leftShootMotorID, MotorType.kBrushless);
+  private CANSparkMax rightShootMotor = new CANSparkMax(ShooterConstants.rightShootMotorID, MotorType.kBrushless);
 
-  private RelativeEncoder topShootEncoder = topShootMotor.getEncoder();
+  private RelativeEncoder leftShootEncoder = leftShootMotor.getEncoder();
 
   /** Creates a new Shooter. */
   public Shooter() {
-    topShootMotor.restoreFactoryDefaults();
-    bottomShootMotor.restoreFactoryDefaults();
+    leftShootMotor.restoreFactoryDefaults();
+    rightShootMotor.restoreFactoryDefaults();
 
-    topShootMotor.setIdleMode(IdleMode.kBrake);
-    bottomShootMotor.setIdleMode(IdleMode.kBrake);
+    rightShootMotor.setInverted(true);
 
-    topShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
-    bottomShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+    leftShootMotor.setIdleMode(IdleMode.kBrake);
+    rightShootMotor.setIdleMode(IdleMode.kBrake);
 
-    bottomShootMotor.follow(topShootMotor);
+    leftShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+    rightShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+
+    rightShootMotor.follow(leftShootMotor);
+
+    leftShootEncoder = leftShootMotor.getEncoder();
   }
 
   public void spinShooter(double speed) {
-    topShootMotor.set(speed);
+    leftShootMotor.set(speed);
   }
 
   public boolean isReady() {
-    return -topShootEncoder.getVelocity() > ShooterConstants.targetFlywheelVelocity;
+    return leftShootEncoder.getVelocity() > ShooterConstants.targetFlywheelVelocity;
   }
 
   public void stopShooter() {
-    topShootMotor.stopMotor();
+    leftShootMotor.stopMotor();
   }
 
   @Override

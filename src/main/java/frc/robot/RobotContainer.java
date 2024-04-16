@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -13,8 +12,6 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.Rumble;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
-import frc.robot.commands.armCommands.MoveArm;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
@@ -52,19 +49,17 @@ public class RobotContainer {
   private final DigitalInput beamBreak = new DigitalInput(0);
 
   private final Drivebase drivebase = new Drivebase(gyro);
-  private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
   private final Climber climber = new Climber();
 
   private static XboxController driveStick = new XboxController(0);
 
-  // private static CommandXboxController c_driveStick2 = new CommandXboxController(1);
+  // private static CommandXboxController c_driveStick2 = new
+  // CommandXboxController(1);
   private static CommandXboxController c_driveStick = new CommandXboxController(0);
 
   private SendableChooser<Command> autoChooser;
-
-  private double mapped = 0;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -75,22 +70,6 @@ public class RobotContainer {
     var shootComp = Commands.race(new Shoot(shooter, -0.95),
         Commands.sequence(Commands.waitSeconds(0.55),
             Commands.race(new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
-
-    var armUp = Commands.sequence(
-        Commands.runOnce(arm::armUp, arm),
-        Commands.waitSeconds(0.75));
-
-    // var armDown = Commands.race(
-    // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-    // Commands.waitSeconds(1.5));
-
-    var armDown = Commands.runOnce(arm::armDown, arm);
-
-    var ampShoot = Commands.race(
-        Commands.parallel(
-            new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed)),
-        Commands.waitSeconds(0.4));
 
     var defenceShoot = Commands.parallel(
         new Shoot(shooter, -0.15),
@@ -105,8 +84,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
-    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
-        armDown));
     NamedCommands.registerCommand("Defence Shoot", defenceShoot);
     NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
 
@@ -119,12 +96,6 @@ public class RobotContainer {
             drivebase,
             () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
-
-    arm.setDefaultCommand(
-        new MoveArm(
-            arm,
-            () -> getArmControl(driveStick.getRightTriggerAxis() -
-                driveStick.getLeftTriggerAxis())));
 
     configureBindings();
   }
@@ -140,18 +111,6 @@ public class RobotContainer {
     } else {
       return input;
     }
-  }
-
-  private double getArmControl(double trigger) {
-    if (trigger > 0) {
-      mapped = trigger * ArmConstants.raiseArmSpeed;
-    } else if (trigger < 0) {
-      mapped = -trigger * ArmConstants.lowerArmSpeed;
-    } else {
-      mapped = 0;
-    }
-
-    return mapped;
   }
 
   private double[] getXY() {
@@ -255,9 +214,6 @@ public class RobotContainer {
                     new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed),
                     new Rumble(driveStick, beamBreak, shooter::isReady)),
                 new WaitCommand(0.5))));
-
-    // Set arm to podium angle
-    c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
 
     // Spit out note
     c_driveStick.start()
