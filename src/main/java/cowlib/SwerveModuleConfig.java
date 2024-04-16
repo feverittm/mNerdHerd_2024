@@ -8,13 +8,21 @@ package cowlib;
 public class SwerveModuleConfig {
   public final int driveMotorId;
   public final int angleMotorId;
-  public final int encoderId;
-  public final boolean drive_inverted;
+  public final boolean driveMotorReversed;
+  public final boolean angleMotorReversed;
+  public final boolean angleEncoderReversed;
+  public final double angleEncoderConversionFactor;
+  public final double angleEncoderOffset;
 
-  public SwerveModuleConfig(int driveMotorId, int angleMotorId, int encoderId, boolean drive_inverted) {
-    this.driveMotorId = driveMotorId;
-    this.angleMotorId = angleMotorId;
-    this.encoderId = encoderId;
-    this.drive_inverted = drive_inverted;
+  public SwerveModuleConfig(int driveMotorId, int angleMotorId, boolean driveMotorReversed,
+            boolean angleMotorReversed, boolean angleEncoderReversed, double angleEncoderConversionFactor,
+            double angleEncoderOffset) {
+      this.driveMotorId = driveMotorId;
+      this.angleMotorId = angleMotorId;
+      this.driveMotorReversed = driveMotorReversed;
+      this.angleMotorReversed = angleMotorReversed;
+      this.angleEncoderReversed = angleEncoderReversed;
+      this.angleEncoderOffset = angleEncoderOffset;
+      this.angleEncoderConversionFactor = angleEncoderConversionFactor;
   }
 }

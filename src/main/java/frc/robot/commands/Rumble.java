@@ -10,19 +10,16 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CANdleSystem;
 
 public class Rumble extends Command {
   private final XboxController driveStick;
   private final DigitalInput beamBreak;
-  private final CANdleSystem candle;
   private final BooleanSupplier shooterReady;
 
   /** Creates a new Rumble. */
-  public Rumble(XboxController driveStick, DigitalInput beamBreak, CANdleSystem candle, BooleanSupplier shooterReady) {
+  public Rumble(XboxController driveStick, DigitalInput beamBreak, BooleanSupplier shooterReady) {
     this.driveStick = driveStick;
     this.beamBreak = beamBreak;
-    this.candle = candle;
     this.shooterReady = shooterReady;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -37,13 +34,10 @@ public class Rumble extends Command {
   public void execute() {
     if (beamBreak.get()) {
       driveStick.setRumble(RumbleType.kBothRumble, 0);
-      candle.setBlue();
     } else if (shooterReady.getAsBoolean()) {
       driveStick.setRumble(RumbleType.kBothRumble, 0);
-      candle.setGreen();
     } else {
       driveStick.setRumble(RumbleType.kBothRumble, 1);
-      candle.setOrange();
     }
   }
 

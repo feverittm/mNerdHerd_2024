@@ -15,7 +15,6 @@ import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.armCommands.MoveArm;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.CANdleSystem;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
@@ -57,7 +56,6 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
   private final Climber climber = new Climber();
-  private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
 
@@ -239,14 +237,14 @@ public class RobotContainer {
     // Intake
     c_driveStick.leftBumper().whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
-        new Rumble(driveStick, beamBreak, candle, () -> false))); // rumble controller if note is visible
+        new Rumble(driveStick, beamBreak, () -> false))); // rumble controller if note is visible
 
     // Charge Shooter
     c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
             new RunIntake(intake, 0.5, -IntakeConstants.kickupSpeed),
-            new Rumble(driveStick, beamBreak, candle, shooter::isReady))); // spin up flywheels while button is held
+            new Rumble(driveStick, beamBreak, shooter::isReady))); // spin up flywheels while button is held
 
     // Release Shooter
     c_driveStick.rightBumper().onFalse( // shoot note when button is released
@@ -255,7 +253,7 @@ public class RobotContainer {
                 Commands.parallel(
                     new Shoot(shooter, ShooterConstants.shooterSpeed),
                     new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed),
-                    new Rumble(driveStick, beamBreak, candle, shooter::isReady)),
+                    new Rumble(driveStick, beamBreak, shooter::isReady)),
                 new WaitCommand(0.5))));
 
     // Set arm to podium angle
@@ -272,10 +270,6 @@ public class RobotContainer {
     // Codriver climb controls
     // c_driveStick2.y().whileTrue(new Climb(climber, 1));
     // c_driveStick2.a().whileTrue(new Climb(climber, -1));
-  }
-
-  public void ledsOff() {
-    candle.ledsOff();
   }
 
   /**

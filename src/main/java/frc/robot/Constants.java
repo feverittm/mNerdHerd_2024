@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
+
 import cowlib.SwerveModuleConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -33,10 +35,47 @@ public final class Constants {
     }
 
     public static final class SwerveModules {
-      public static final SwerveModuleConfig frontRight = new SwerveModuleConfig(1, 11, 21, false);
-      public static final SwerveModuleConfig frontLeft = new SwerveModuleConfig(2, 12, 22, true);
-      public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(3, 13, 23, false);
-      public static final SwerveModuleConfig backRight = new SwerveModuleConfig(4, 14, 24, true);
+
+      // Front Left Module
+      public static final SwerveModuleConfig Front_Left_Configuration = new SwerveModuleConfig(
+          8,
+          1,
+          true,
+          true,
+          false,
+          2 * Math.PI,
+          .462);
+
+      // Front Right
+      public static final SwerveModuleConfig Front_Right_Configuration = new SwerveModuleConfig(
+          6,
+          7,
+          true,
+          true,
+          false,
+          2 * Math.PI,
+          0);
+
+      // Back Right
+      public static final SwerveModuleConfig Back_Right_Configuration = new SwerveModuleConfig(
+          4,
+          5,
+          true,
+          true,
+          false,
+          2 * Math.PI,
+          .759);
+
+      // Back Left
+      public static final SwerveModuleConfig Back_Left_Configuration = new SwerveModuleConfig(
+          2,
+          3,
+          true,
+          false,
+          false,
+          2 * Math.PI,
+          .158 // 0 to 1
+      );
     }
 
     public static final class ModuleLocations {
