@@ -77,7 +77,7 @@ public class TriPIDDrive extends Command {
         -Math.copySign(Math.min(Math.abs(rOutput), 0.04), rOutput));
 
     if (runIntake) {
-      intake.runIntake(IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed);
+      intake.runIntake(IntakeConstants.intakeSpeed, -IntakeConstants.intakeSpeed);
     }
   }
 

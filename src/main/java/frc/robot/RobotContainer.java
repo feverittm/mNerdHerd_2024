@@ -69,18 +69,18 @@ public class RobotContainer {
 
     var shootComp = Commands.race(new Shoot(shooter, -0.95),
         Commands.sequence(Commands.waitSeconds(0.55),
-            Commands.race(new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
+            Commands.race(new RunIntake(intake, 0.5, IntakeConstants.intakeSpeed), Commands.waitSeconds(0.25))));
 
     var defenceShoot = Commands.parallel(
         new Shoot(shooter, -0.15),
-        new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed));
+        new RunIntake(intake, 0.5, IntakeConstants.intakeSpeed));
 
     var stopDefence = Commands.parallel(
         new Shoot(shooter, 0),
         new RunIntake(intake, 0, 0));
 
     NamedCommands.registerCommand("Intake",
-        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.intakeSpeed));
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
@@ -195,14 +195,14 @@ public class RobotContainer {
 
     // Intake
     c_driveStick.leftBumper().whileTrue(Commands.parallel(
-        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
+        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.indexSpeed), // toggle intake on/off
         new Rumble(driveStick, beamBreak, () -> false))); // rumble controller if note is visible
 
     // Charge Shooter
     c_driveStick.rightBumper()
         .whileTrue(Commands.parallel(
             new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.5, -IntakeConstants.kickupSpeed),
+            new RunIntake(intake, 0.5, -IntakeConstants.intakeSpeed),
             new Rumble(driveStick, beamBreak, shooter::isReady))); // spin up flywheels while button is held
 
     // Release Shooter
@@ -211,13 +211,13 @@ public class RobotContainer {
             Commands.race(
                 Commands.parallel(
                     new Shoot(shooter, ShooterConstants.shooterSpeed),
-                    new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed),
+                    new RunIntake(intake, 0.5, IntakeConstants.intakeSpeed),
                     new Rumble(driveStick, beamBreak, shooter::isReady)),
                 new WaitCommand(0.5))));
 
     // Spit out note
     c_driveStick.start()
-        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
+        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.intakeSpeed));
 
     // Driver climb controls
     c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
