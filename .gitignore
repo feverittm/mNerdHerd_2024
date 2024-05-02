@@ -172,7 +172,7 @@ out/
 *-window.json
 simgui-ds.json
 simgui.json
-networdtables.json
+networktables.json
 
 # Simulation data log directory
 logs/
