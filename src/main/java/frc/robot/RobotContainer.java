@@ -7,16 +7,8 @@ package frc.robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
-import frc.robot.commands.Rumble;
-import frc.robot.commands.RunIntake;
-import frc.robot.commands.Shoot;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -49,9 +41,6 @@ public class RobotContainer {
   private final DigitalInput beamBreak = new DigitalInput(0);
 
   private final Drivebase drivebase = new Drivebase(gyro);
-  private final Intake intake = new Intake();
-  private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber();
 
   private static XboxController driveStick = new XboxController(0);
 
@@ -66,26 +55,6 @@ public class RobotContainer {
    */
   public RobotContainer() {
     SignalLogger.enableAutoLogging(false);
-
-    var shootComp = Commands.race(new Shoot(shooter, -0.95),
-        Commands.sequence(Commands.waitSeconds(0.55),
-            Commands.race(new RunIntake(intake, 0.5, IntakeConstants.intakeSpeed), Commands.waitSeconds(0.25))));
-
-    var defenceShoot = Commands.parallel(
-        new Shoot(shooter, -0.15),
-        new RunIntake(intake, 0.5, IntakeConstants.intakeSpeed));
-
-    var stopDefence = Commands.parallel(
-        new Shoot(shooter, 0),
-        new RunIntake(intake, 0, 0));
-
-    NamedCommands.registerCommand("Intake",
-        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.intakeSpeed));
-    NamedCommands.registerCommand("Stop Intake",
-        new RunIntake(intake, 0, 0));
-    NamedCommands.registerCommand("Shoot", shootComp);
-    NamedCommands.registerCommand("Defence Shoot", defenceShoot);
-    NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -194,34 +163,6 @@ public class RobotContainer {
     c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
 
     // Intake
-    c_driveStick.leftBumper().whileTrue(Commands.parallel(
-        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.indexSpeed), // toggle intake on/off
-        new Rumble(driveStick, beamBreak, () -> false))); // rumble controller if note is visible
-
-    // Charge Shooter
-    c_driveStick.rightBumper()
-        .whileTrue(Commands.parallel(
-            new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.5, -IntakeConstants.intakeSpeed),
-            new Rumble(driveStick, beamBreak, shooter::isReady))); // spin up flywheels while button is held
-
-    // Release Shooter
-    c_driveStick.rightBumper().onFalse( // shoot note when button is released
-        Commands.sequence(
-            Commands.race(
-                Commands.parallel(
-                    new Shoot(shooter, ShooterConstants.shooterSpeed),
-                    new RunIntake(intake, 0.5, IntakeConstants.intakeSpeed),
-                    new Rumble(driveStick, beamBreak, shooter::isReady)),
-                new WaitCommand(0.5))));
-
-    // Spit out note
-    c_driveStick.start()
-        .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.intakeSpeed));
-
-    // Driver climb controls
-    c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
-    c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
 
     // Codriver climb controls
     // c_driveStick2.y().whileTrue(new Climb(climber, 1));
