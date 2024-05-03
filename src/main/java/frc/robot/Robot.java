@@ -58,8 +58,10 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
-    SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
-    SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
+    //SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
+    //SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
+
+    m_robotContainer.updateDashboard();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

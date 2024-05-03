@@ -59,6 +59,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
 
+
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
         new Drive(
@@ -87,6 +88,12 @@ public class RobotContainer {
     xy[0] = deadband(driveStick.getLeftX(), DriveConstants.deadband);
     xy[1] = deadband(driveStick.getLeftY(), DriveConstants.deadband);
     return xy;
+  }
+
+  public void updateDashboard() {
+    SmartDashboard.putNumber("Scaled_X", getScaledXY()[0]);
+    SmartDashboard.putNumber("Scaled_Y", getScaledXY()[1]);
+    SmartDashboard.putNumber("Rotation", scaleRotationAxis(driveStick.getRightX()));
   }
 
   private double[] getScaledXY() {
@@ -129,7 +136,7 @@ public class RobotContainer {
   }
 
   public double getGyroYaw() {
-    return gyro.getYaw();
+    return -gyro.getYaw();
   }
 
   public boolean onBlueAlliance() {
@@ -138,10 +145,6 @@ public class RobotContainer {
       return alliance.get() == Alliance.Blue;
     }
     return false;
-  }
-
-  public boolean getBeamBreak() {
-    return !beamBreak.get();
   }
 
   /**

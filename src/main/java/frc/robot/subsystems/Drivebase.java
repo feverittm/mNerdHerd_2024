@@ -54,8 +54,8 @@ public class Drivebase extends SubsystemBase {
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
       ModuleLocations.frontLeft,
       ModuleLocations.frontRight,
-      ModuleLocations.backLeft,
-      ModuleLocations.backRight);
+      ModuleLocations.backRight,
+      ModuleLocations.backLeft);
 
   private SwerveDriveOdometry odometry;
 
@@ -105,7 +105,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   public double getFieldAngle() {
-    return -gyro.getYaw();
+    return gyro.getYaw();
   }
 
   public void fieldOrientedDrive(double speedX, double speedY, double rot) {
@@ -148,6 +148,10 @@ public class Drivebase extends SubsystemBase {
     this.backRight.drive(moduleStates[3]);
 
     SmartDashboard.putNumber("FL Target Angle", moduleStates[0].angle.getDegrees());
+    SmartDashboard.putNumber("FR Target Angle", moduleStates[1].angle.getDegrees());
+    SmartDashboard.putNumber("BL Target Angle", moduleStates[2].angle.getDegrees());
+    SmartDashboard.putNumber("BR Target Angle", moduleStates[3].angle.getDegrees());
+
   }
 
   public double getMaxVelocity() {
@@ -202,14 +206,12 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("rot", rotation);
     field.setRobotPose(getPose());
 
-    SmartDashboard.putNumber("module output", modules[0].getDriveOutput());
-
-    // TODO: Sendables?
     //
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("FL Encoder", frontLeft.getEncoder());
     SmartDashboard.putNumber("FR Encoder", frontRight.getEncoder());
     SmartDashboard.putNumber("BR Encoder", backRight.getEncoder());
     SmartDashboard.putNumber("BL Encoder", backLeft.getEncoder());
+
   }
 }
