@@ -24,6 +24,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -49,13 +51,14 @@ public class Drivebase extends SubsystemBase {
   private SwerveModule backLeft = new SwerveModule(SwerveModules.backLeft, MAX_VELOCITY, MAX_VOLTAGE);
   private SwerveModule backRight = new SwerveModule(SwerveModules.backRight, MAX_VELOCITY, MAX_VOLTAGE);
 
+  //                                                       0           1          2         3
   private SwerveModule[] modules = new SwerveModule[] { frontLeft, frontRight, backLeft, backRight };
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
       ModuleLocations.frontLeft,
       ModuleLocations.frontRight,
-      ModuleLocations.backRight,
-      ModuleLocations.backLeft);
+      ModuleLocations.backLeft,
+      ModuleLocations.backRight);
 
   private SwerveDriveOdometry odometry;
 
@@ -105,7 +108,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   public double getFieldAngle() {
-    return gyro.getYaw();
+    return -gyro.getYaw();
   }
 
   public void fieldOrientedDrive(double speedX, double speedY, double rot) {
@@ -148,10 +151,6 @@ public class Drivebase extends SubsystemBase {
     this.backRight.drive(moduleStates[3]);
 
     SmartDashboard.putNumber("FL Target Angle", moduleStates[0].angle.getDegrees());
-    SmartDashboard.putNumber("FR Target Angle", moduleStates[1].angle.getDegrees());
-    SmartDashboard.putNumber("BL Target Angle", moduleStates[2].angle.getDegrees());
-    SmartDashboard.putNumber("BR Target Angle", moduleStates[3].angle.getDegrees());
-
   }
 
   public double getMaxVelocity() {
@@ -206,12 +205,15 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("rot", rotation);
     field.setRobotPose(getPose());
 
+    Shuffleboard.selectTab("Drive");
+    SmartDashboard.putNumber("module output", modules[0].getDriveOutput());
+
+    // TODO: Sendables?
     //
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("FL Encoder", frontLeft.getEncoder());
     SmartDashboard.putNumber("FR Encoder", frontRight.getEncoder());
     SmartDashboard.putNumber("BR Encoder", backRight.getEncoder());
     SmartDashboard.putNumber("BL Encoder", backLeft.getEncoder());
-
   }
 }

@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.SwervePID;
 
@@ -52,11 +54,15 @@ public class SwerveModule {
     double WHEEL_DIAMETER = 0.1016;
     double rotationsToDistance = driveReduction * WHEEL_DIAMETER * Math.PI;
 
+
     this.encoder.setZeroOffset(angleEncoderOffset);
     this.encoder.setPositionConversionFactor(1);
     this.encoder.setVelocityConversionFactor(1);
     this.speedEncoder.setPositionConversionFactor(rotationsToDistance);
     this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60);
+
+    // Try and 'tweak' the Rotation2d model to get it to read the correct angle.
+    Rotation2d dummy_rotation = getRotation();
   }
 
   public SwerveModule(SwerveModuleConfig config, double maxVelocity, double maxVoltage) {
@@ -75,14 +81,27 @@ public class SwerveModule {
   }
 
   private void drive(double speedMetersPerSecond, double angle) {
-    double voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
-    speedMotor.setVoltage(voltage);
-    angleMotor.setVoltage(-pidController.calculate(this.getEncoder(), angle));
+    double drive_voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
+    double angle_voltage = -pidController.calculate(this.getEncoder(), angle);
+
+    SmartDashboard.putNumber("Debug/Drive V", drive_voltage);
+    SmartDashboard.putNumber("Debug/Drive A", angle_voltage);
+
+    speedMotor.setVoltage(drive_voltage);
+    angleMotor.setVoltage(angle_voltage);
+
   }
 
   public void drive(SwerveModuleState state) {
-    SwerveModuleState optimized = SwerveModuleState.optimize(state, new Rotation2d(getEncoderRadians()));
+    double rot = getRotation().getRadians();
+    SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
     this.drive(optimized.speedMetersPerSecond, optimized.angle.getDegrees());
+
+    SmartDashboard.putNumber("Debug/Module speed", state.speedMetersPerSecond);
+    SmartDashboard.putNumber("Debug/Module angle", state.angle.getDegrees());
+    SmartDashboard.putNumber("Debug/Optimize Encoder", rot);
+    SmartDashboard.putNumber("Debug/Optimize angle", optimized.angle.getDegrees());
+
   }
 
   public double getEncoder() {

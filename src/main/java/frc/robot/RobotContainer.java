@@ -5,16 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Drive;
 import frc.robot.subsystems.Drivebase;
 import com.ctre.phoenix6.SignalLogger;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -22,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -38,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final AHRS gyro = new AHRS();
-  private final DigitalInput beamBreak = new DigitalInput(0);
 
   private final Drivebase drivebase = new Drivebase(gyro);
 
@@ -90,12 +84,6 @@ public class RobotContainer {
     return xy;
   }
 
-  public void updateDashboard() {
-    SmartDashboard.putNumber("Scaled_X", getScaledXY()[0]);
-    SmartDashboard.putNumber("Scaled_Y", getScaledXY()[1]);
-    SmartDashboard.putNumber("Rotation", scaleRotationAxis(driveStick.getRightX()));
-  }
-
   private double[] getScaledXY() {
     double[] xy = getXY();
 
@@ -115,6 +103,12 @@ public class RobotContainer {
 
   private double squared(double input) {
     return Math.copySign(input * input, input);
+  }
+
+  public void updateDashboard() {
+    SmartDashboard.putNumber("Scaled_X", getScaledXY()[0]);
+    SmartDashboard.putNumber("Scaled_Y", getScaledXY()[1]);
+    SmartDashboard.putNumber("Rotation", scaleRotationAxis(driveStick.getRawAxis(2)));
   }
 
   @SuppressWarnings("unused")
