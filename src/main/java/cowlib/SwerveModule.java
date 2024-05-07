@@ -7,6 +7,7 @@ package cowlib;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -48,6 +49,9 @@ public class SwerveModule {
     this.speedMotor.setInverted(driveMotorReversed);
     this.angleMotor.setInverted(angleMotorReversed);
 
+    this.speedMotor.setIdleMode(IdleMode.kBrake);
+    this.angleMotor.setIdleMode(IdleMode.kBrake);
+
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
     double driveReduction = 1.0 / 6.75;
@@ -84,9 +88,12 @@ public class SwerveModule {
     double drive_voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
     double angle_voltage = -pidController.calculate(this.getEncoder(), angle);
 
+    SmartDashboard.putNumber("Drive/Module drive speed", speedMetersPerSecond);
+    SmartDashboard.putNumber("Drive/Module drive angle", angle);  // should be in degrees (mismatch????)
+    SmartDashboard.putNumber("Drive/Module encoder angle", this.getEncoder()); // return in degrees
     SmartDashboard.putNumber("Debug/Drive V", drive_voltage);
     SmartDashboard.putNumber("Debug/Drive A", angle_voltage);
-
+  
     speedMotor.setVoltage(drive_voltage);
     angleMotor.setVoltage(angle_voltage);
 
@@ -95,13 +102,13 @@ public class SwerveModule {
   public void drive(SwerveModuleState state) {
     double rot = getRotation().getRadians();
     SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
-    this.drive(optimized.speedMetersPerSecond, optimized.angle.getDegrees());
 
     SmartDashboard.putNumber("Debug/Module speed", state.speedMetersPerSecond);
     SmartDashboard.putNumber("Debug/Module angle", state.angle.getDegrees());
     SmartDashboard.putNumber("Debug/Optimize Encoder", rot);
     SmartDashboard.putNumber("Debug/Optimize angle", optimized.angle.getDegrees());
 
+    this.drive(optimized.speedMetersPerSecond, optimized.angle.getDegrees());
   }
 
   public double getEncoder() {
