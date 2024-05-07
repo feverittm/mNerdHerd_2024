@@ -50,16 +50,12 @@ public class RobotContainer {
   public RobotContainer() {
     SignalLogger.enableAutoLogging(false);
 
-    autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
-    SmartDashboard.putData("Auto Mode", autoChooser);
-
-
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
         new Drive(
             drivebase,
             () -> getScaledXY(),
-            () -> scaleRotationAxis(driveStick.getRightX())));
+            () -> scaleRotationAxis(driveStick.getRawAxis(3))));
 
     configureBindings();
   }

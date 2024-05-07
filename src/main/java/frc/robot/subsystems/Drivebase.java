@@ -105,10 +105,13 @@ public class Drivebase extends SubsystemBase {
     }
   }
 
+  /** drive:
+   * Move the robot. Given the requested chassis speed (where do we want to go) in meters/sec and radians.
+   * moduleStates are in meters/sec and radians (for rotation).
+   * This can be a source of angle mismatch degrees <> radians
+   */
   private void drive(ChassisSpeeds speeds) {
-    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds,
-        new Translation2d(Units.inchesToMeters(4), 0));
-
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(0, 0));
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY);
 
     this.frontLeft.drive(moduleStates[0]);
