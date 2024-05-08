@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.SwervePID;
 
@@ -62,9 +61,6 @@ public class SwerveModule {
     this.encoder.setVelocityConversionFactor(1);
     this.speedEncoder.setPositionConversionFactor(rotationsToDistance);
     this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60);
-
-    // Try and 'tweak' the Rotation2d model to get it to read the correct angle.
-    Rotation2d dummy_rotation = getRotation();
   }
 
   public SwerveModule(SwerveModuleConfig config, double maxVelocity, double maxVoltage) {
@@ -91,24 +87,13 @@ public class SwerveModule {
    *                             to the dashboard so that
    *                             we can watch what is happening. Remember that
    *                             everything should be CCW positive.
-   *                             It can be easier to load the Shuffleboard
-   *                             configuration called "Mofule debugging Dashboard"
    */
   private void drive(double speedMetersPerSecond, double angle) {
     double drive_voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
     double angle_voltage = pidController.calculate(this.getEncoder(), angle);
 
-    if (angleMotor.getDeviceId() == 3) {
-      SmartDashboard.putNumber("Drive/Module drive speed", speedMetersPerSecond);
-      SmartDashboard.putNumber("Drive/Module drive angle", angle); // should be in degrees (mismatch????)
-      SmartDashboard.putNumber("Debug/Module encoder angle", this.getEncoder()); // return in degrees
-      SmartDashboard.putNumber("Debug/Drive V", drive_voltage);
-      SmartDashboard.putNumber("Debug/Drive A", angle_voltage);
-    }
-
     speedMotor.setVoltage(drive_voltage);
     angleMotor.setVoltage(angle_voltage);
-
   }
 
   /**
@@ -116,16 +101,9 @@ public class SwerveModule {
    * @param state of the module (velocity and angle)
    */
   public void drive(SwerveModuleState state) {
-    double rot = getRotation().getRadians();
     SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-    if (angleMotor.getDeviceId() == 3) {
-      SmartDashboard.putNumber("Debug/Module speed", state.speedMetersPerSecond);
-      SmartDashboard.putNumber("Debug/Module angle", state.angle.getDegrees());
-      SmartDashboard.putNumber("Debug/Optimize Encoder", rot);
-    }
-
-    // a little wierd logic. Call the other drive code above to actually move the
+    // a little wierd logic. Call the other 'drive' code above to actually move the
     // module.
     this.drive(optimized.speedMetersPerSecond, optimized.angle.getDegrees());
   }

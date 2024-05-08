@@ -9,7 +9,6 @@ import frc.robot.commands.Drive;
 import frc.robot.subsystems.Drivebase;
 import com.ctre.phoenix6.SignalLogger;
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -61,8 +60,6 @@ public class RobotContainer {
   }
 
   /**
-   * TODO: Investigate which has an applyDeadband function
-   *
    * {@link edu.wpi.first.math.MathUtil}
    */
   private double deadband(double input, double deadband) {
