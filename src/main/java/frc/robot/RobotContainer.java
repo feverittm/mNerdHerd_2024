@@ -8,6 +8,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.Drive;
 import frc.robot.subsystems.Drivebase;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
@@ -47,6 +49,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
+    SmartDashboard.putData("Auto Mode", autoChooser);
+
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
         new Drive(
@@ -94,12 +99,6 @@ public class RobotContainer {
 
   private double squared(double input) {
     return Math.copySign(input * input, input);
-  }
-
-  public void updateDashboard() {
-    SmartDashboard.putNumber("Scaled_X", getScaledXY()[0]);
-    SmartDashboard.putNumber("Scaled_Y", getScaledXY()[1]);
-    SmartDashboard.putNumber("Rotation", scaleRotationAxis(driveStick.getRawAxis(4)));
   }
 
   @SuppressWarnings("unused")
@@ -164,6 +163,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new InstantCommand();
+    return autoChooser.getSelected();
   }
 }
