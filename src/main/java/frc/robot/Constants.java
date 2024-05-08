@@ -4,9 +4,9 @@
 
 package frc.robot;
 
-import cowlib.SwerveModuleConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import swervelib.SwerveModuleConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -88,10 +88,20 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int intakeMotorId = 15;
+    public static final boolean intakeReversed = true;
+    public static final double intakeSpeed = 0.5;
+    public static final double outtakeSpeed = -1;
+
+    public static final int currentLimit = 30;
+  }
+
+  public static final class IndexerClass {
     public static final int indexMotorId = 10;
+    public static final boolean indexReversed = false;
+    public static final int noteSensorid = 0;
     public static final double indexSpeed = 0.4;
-    public static final double intakeSpeed = 0.7;
-    public static final int noteSensorId = 0;
+    public static final double indexShootSpeed = 1;
+    public static final double outtakeSpeed = -1;
 
     public static final int currentLimit = 30;
   }
@@ -105,8 +115,10 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final int leftShootMotorID = 11;
+    public static final boolean leftShooterReversed = false;
     public static final int rightShootMotorID = 12;
-    public static final double shooterSpeed = -1;
+    public static final boolean rightShooterReverse = true;
+    public static final double shooterSpeed = 1;
 
     public static final double targetFlywheelVelocity = 3700;
     public static final int currentLimit = 50;
@@ -150,10 +162,5 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-  }
-
-  public static final class CANdleConstants {
-    public static final int id = 50;
-    public static final int ledCount = 50;
   }
 }
