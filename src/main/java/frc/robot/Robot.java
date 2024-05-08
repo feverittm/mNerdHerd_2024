@@ -70,8 +70,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
     //SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
     //SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
-
-    m_robotContainer.updateDashboard();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
