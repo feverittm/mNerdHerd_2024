@@ -119,7 +119,7 @@ public class Drivebase extends SubsystemBase {
     this.backLeft.drive(moduleStates[2]);
     this.backRight.drive(moduleStates[3]);
 
-    SmartDashboard.putNumber("FL Target Angle", moduleStates[0].angle.getDegrees());
+    SmartDashboard.putNumber("BL Target Angle", moduleStates[2].angle.getDegrees());
   }
 
   public double getMaxVelocity() {

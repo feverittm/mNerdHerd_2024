@@ -27,7 +27,7 @@ public final class Constants {
     public static final double slewRate = 20; // lower number for higher center of mass
 
     public static final class SwervePID {
-      public static final double p = 0.012;
+      public static final double p = 0.052;
       public static final double i = 0;
       public static final double d = 0;
     }
@@ -69,7 +69,7 @@ public final class Constants {
           2,
           3,
           true,
-          false,
+          true,
           false,
           1,
           .158 // 0 to 1

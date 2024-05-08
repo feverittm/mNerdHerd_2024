@@ -55,7 +55,7 @@ public class RobotContainer {
         new Drive(
             drivebase,
             () -> getScaledXY(),
-            () -> scaleRotationAxis(driveStick.getRawAxis(3))));
+            () -> scaleRotationAxis(driveStick.getRawAxis(4))));
 
     configureBindings();
   }
@@ -104,7 +104,7 @@ public class RobotContainer {
   public void updateDashboard() {
     SmartDashboard.putNumber("Scaled_X", getScaledXY()[0]);
     SmartDashboard.putNumber("Scaled_Y", getScaledXY()[1]);
-    SmartDashboard.putNumber("Rotation", scaleRotationAxis(driveStick.getRawAxis(2)));
+    SmartDashboard.putNumber("Rotation", scaleRotationAxis(driveStick.getRawAxis(4)));
   }
 
   @SuppressWarnings("unused")

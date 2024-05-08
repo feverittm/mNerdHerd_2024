@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.SwervePID;
@@ -50,7 +49,7 @@ public class SwerveModule {
     this.angleMotor.setInverted(angleMotorReversed);
 
     this.speedMotor.setIdleMode(IdleMode.kBrake);
-    this.angleMotor.setIdleMode(IdleMode.kBrake);
+    this.angleMotor.setIdleMode(IdleMode.kCoast);
 
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
@@ -99,11 +98,13 @@ public class SwerveModule {
     double drive_voltage = (speedMetersPerSecond / maxVelocity) * maxVoltage;
     double angle_voltage = pidController.calculate(this.getEncoder(), angle);
 
-    SmartDashboard.putNumber("Drive/Module drive speed", speedMetersPerSecond);
-    SmartDashboard.putNumber("Drive/Module drive angle", angle); // should be in degrees (mismatch????)
-    SmartDashboard.putNumber("Debug/Module encoder angle", this.getEncoder()); // return in degrees
-    SmartDashboard.putNumber("Debug/Drive V", drive_voltage);
-    SmartDashboard.putNumber("Debug/Drive A", angle_voltage);
+    if (angleMotor.getDeviceId() == 3) {
+      SmartDashboard.putNumber("Drive/Module drive speed", speedMetersPerSecond);
+      SmartDashboard.putNumber("Drive/Module drive angle", angle); // should be in degrees (mismatch????)
+      SmartDashboard.putNumber("Debug/Module encoder angle", this.getEncoder()); // return in degrees
+      SmartDashboard.putNumber("Debug/Drive V", drive_voltage);
+      SmartDashboard.putNumber("Debug/Drive A", angle_voltage);
+    }
 
     speedMotor.setVoltage(drive_voltage);
     angleMotor.setVoltage(angle_voltage);
@@ -118,9 +119,11 @@ public class SwerveModule {
     double rot = getRotation().getRadians();
     SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-    SmartDashboard.putNumber("Debug/Module speed", state.speedMetersPerSecond);
-    SmartDashboard.putNumber("Debug/Module angle", state.angle.getDegrees());
-    SmartDashboard.putNumber("Debug/Optimize Encoder", rot);
+    if (angleMotor.getDeviceId() == 3) {
+      SmartDashboard.putNumber("Debug/Module speed", state.speedMetersPerSecond);
+      SmartDashboard.putNumber("Debug/Module angle", state.angle.getDegrees());
+      SmartDashboard.putNumber("Debug/Optimize Encoder", rot);
+    }
 
     // a little wierd logic. Call the other drive code above to actually move the
     // module.
