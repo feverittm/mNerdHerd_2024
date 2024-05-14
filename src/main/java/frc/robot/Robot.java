@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.IndexSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private IndexSubsystem m_indexer;
   public ShuffleboardTab drive_tab;
   public ShuffleboardTab debug_tab;
 
@@ -44,6 +46,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_indexer = new IndexSubsystem();
     m_robotContainer.resetGyro();
   }
 
@@ -68,8 +71,8 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Yaw", m_robotContainer.getGyroYaw());
-    //SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
-    //SmartDashboard.putBoolean("Note Acquired", m_robotContainer.getBeamBreak());
+    SmartDashboard.putBoolean("On Blue Alliance", m_robotContainer.onBlueAlliance());
+    SmartDashboard.putBoolean("Note Acquired", m_indexer.getNoteLatch());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

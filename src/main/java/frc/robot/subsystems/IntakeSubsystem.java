@@ -18,11 +18,16 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setIdleMode(IdleMode.kCoast);
+    intakeMotor.setInverted(IntakeConstants.intakeReversed);
     intakeMotor.setSmartCurrentLimit(IntakeConstants.currentLimit);
   }
 
   public void runIntake(double intakeMotorSpeed) {
     intakeMotor.set(intakeMotorSpeed);
+  }
+
+  public double getIntakeOutput() {
+    return intakeMotor.getAppliedOutput();
   }
 
   public void stopIntake() {

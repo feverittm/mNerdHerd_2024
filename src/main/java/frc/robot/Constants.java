@@ -95,7 +95,7 @@ public final class Constants {
     public static final int currentLimit = 30;
   }
 
-  public static final class IndexerClass {
+  public static final class IndexerConstants {
     public static final int indexMotorId = 10;
     public static final boolean indexReversed = false;
     public static final int noteSensorid = 0;
@@ -111,6 +111,8 @@ public final class Constants {
     public static final int rightClimberMotorId = 14;
     public static final int leftClimberSensorId = 2;
     public static final int rightClimberSensorId = 3;
+    public static final boolean leftClimberInverted = false;
+    public static final boolean rightClimberInverted = true;
   }
 
   public static final class ShooterConstants {
