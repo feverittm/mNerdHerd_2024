@@ -42,7 +42,9 @@ public final class Constants {
           true,
           false,
           1,
-          .462);
+          //.462 // swervebot
+          0.303 // apollo
+          );
 
       // Front Right
       public static final SwerveModuleConfig frontRight= new SwerveModuleConfig(
@@ -52,7 +54,9 @@ public final class Constants {
           true,
           false,
           1,
-          0);
+          // 0 // swervebot
+          0.966 // apollo
+          );
 
       // Back Right
       public static final SwerveModuleConfig backRight = new SwerveModuleConfig(
@@ -62,7 +66,9 @@ public final class Constants {
           true,
           false,
           1,
-          .759);
+          // .759 // swervebot
+          0.485 // apollo
+          );
 
       // Back Left
       public static final SwerveModuleConfig backLeft = new SwerveModuleConfig(
@@ -72,7 +78,8 @@ public final class Constants {
           true,
           false,
           1,
-          .158 // 0 to 1
+          // .158 // swervebot
+          0.199 // apollo
       );
     }
 
